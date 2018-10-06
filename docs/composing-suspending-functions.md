@@ -45,7 +45,7 @@ delays for a second for the purpose of this example:
 import kotlin.system.*
 -->
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 suspend fun doSomethingUsefulOne(): Int {
@@ -59,7 +59,7 @@ suspend fun doSomethingUsefulTwo(): Int {
 }
 ```
 
-</div>
+
 
 <!--- INCLUDE .*/example-compose-([0-9]+).kt -->
 
@@ -72,7 +72,7 @@ We use a normal sequential invocation, because the code in the coroutine, just l
 code, is _sequential_ by default. The following example demonstrates it by measuring the total 
 time it takes to execute both suspending functions:
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun main(args: Array<String>) = runBlocking<Unit> {
@@ -85,7 +85,7 @@ fun main(args: Array<String>) = runBlocking<Unit> {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-compose-01.kt)
 
@@ -110,7 +110,7 @@ that represents a promise to provide a result later. You can use `.await()` on a
 but `Deferred` is also a `Job`, so you can cancel it if needed.
  
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
  
 ```kotlin
 fun main(args: Array<String>) = runBlocking<Unit> {
@@ -123,7 +123,7 @@ fun main(args: Array<String>) = runBlocking<Unit> {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-compose-02.kt)
 
@@ -146,7 +146,7 @@ It starts coroutine only when its result is needed by some
 [await][Deferred.await] or if a [start][Job.start] function 
 is invoked. Run the following example:
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun main(args: Array<String>) = runBlocking<Unit> {
@@ -162,7 +162,7 @@ fun main(args: Array<String>) = runBlocking<Unit> {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-compose-03.kt)
 
@@ -193,7 +193,7 @@ We name such functions with
 "Async" suffix to highlight the fact that they only start asynchronous computation and one needs
 to use the resulting deferred value to get the result.
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 // The result type of somethingUsefulOneAsync is Deferred<Int>
@@ -207,7 +207,7 @@ fun somethingUsefulTwoAsync() = GlobalScope.async {
 }
 ```
 
-</div>
+
 
 Note, that these `xxxAsync` functions are **not** _suspending_ functions. They can be used from anywhere.
 However, their use always implies asynchronous (here meaning _concurrent_) execution of their action
@@ -215,7 +215,7 @@ with the invoking code.
  
 The following example shows their use outside of coroutine:  
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
  
 ```kotlin
 // note, that we don't have `runBlocking` to the right of `main` in this example
@@ -234,7 +234,7 @@ fun main(args: Array<String>) {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-compose-04.kt)
 
@@ -261,7 +261,7 @@ concurrently performs `doSomethingUsefulOne` and `doSomethingUsefulTwo` and retu
 Because [async] coroutines builder is defined as extension on [CoroutineScope] we need to have it in the 
 scope and that is what [coroutineScope] function provides:
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 suspend fun concurrentSum(): Int = coroutineScope {
@@ -271,12 +271,12 @@ suspend fun concurrentSum(): Int = coroutineScope {
 }
 ```
 
-</div>
+
 
 This way, if something goes wrong inside the code of `concurrentSum` function and it throws an exception,
 all the coroutines that were launched in its scope are cancelled.
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
  
 ```kotlin
 fun main(args: Array<String>) = runBlocking<Unit> {
@@ -287,7 +287,7 @@ fun main(args: Array<String>) = runBlocking<Unit> {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-compose-05.kt)
 
@@ -302,7 +302,7 @@ Completed in 1017 ms
 
 Cancellation is always propagated through coroutines hierarchy:
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun main(args: Array<String>) = runBlocking<Unit> {
@@ -330,7 +330,7 @@ suspend fun failedConcurrentSum(): Int = coroutineScope {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-compose-06.kt)
 

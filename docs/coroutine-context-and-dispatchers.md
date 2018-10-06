@@ -62,7 +62,7 @@ Try the following example:
 import kotlin.coroutines.experimental.*
 -->
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun main(args: Array<String>) = runBlocking<Unit> {
@@ -81,7 +81,7 @@ fun main(args: Array<String>) = runBlocking<Unit> {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-context-01.kt)
 
@@ -128,7 +128,7 @@ this thread with a predictable FIFO scheduling.
 import kotlin.coroutines.experimental.*
 -->
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun main(args: Array<String>) = runBlocking<Unit> {
@@ -145,7 +145,7 @@ fun main(args: Array<String>) = runBlocking<Unit> {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-context-02.kt)
 
@@ -184,7 +184,7 @@ Run the following code with `-Dkotlinx.coroutines.debug` JVM option:
 import kotlin.coroutines.experimental.*
 -->
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun log(msg: String) = println("[${Thread.currentThread().name}] $msg")
@@ -202,7 +202,7 @@ fun main(args: Array<String>) = runBlocking<Unit> {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-context-03.kt)
 
@@ -229,7 +229,7 @@ You can read more about debugging facilities in the documentation for [newCorout
 
 Run the following code with `-Dkotlinx.coroutines.debug` JVM option (see [debug](#debugging-coroutines-and-threads)):
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun log(msg: String) = println("[${Thread.currentThread().name}] $msg")
@@ -249,7 +249,7 @@ fun main(args: Array<String>) {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-context-04.kt)
 
@@ -277,7 +277,7 @@ using `coroutineContext[Job]` expression:
 import kotlin.coroutines.experimental.*
 -->
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun main(args: Array<String>) = runBlocking<Unit> {
@@ -285,7 +285,7 @@ fun main(args: Array<String>) = runBlocking<Unit> {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-context-05.kt)
 
@@ -315,7 +315,7 @@ was launched from and operates independently.
 import kotlin.coroutines.experimental.*
 -->
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun main(args: Array<String>) = runBlocking<Unit> {
@@ -342,7 +342,7 @@ fun main(args: Array<String>) = runBlocking<Unit> {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-context-06.kt)
 
@@ -366,7 +366,7 @@ all the children it launches and it does not have to use [Job.join] to wait for 
 import kotlin.coroutines.experimental.*
 -->
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun main(args: Array<String>) = runBlocking<Unit> {
@@ -385,7 +385,7 @@ fun main(args: Array<String>) = runBlocking<Unit> {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-context-07.kt)
 
@@ -411,7 +411,7 @@ is executing this coroutine when [debugging mode](#debugging-coroutines-and-thre
 
 The following example demonstrates this concept:
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun log(msg: String) = println("[${Thread.currentThread().name}] $msg")
@@ -433,7 +433,7 @@ fun main(args: Array<String>) = runBlocking(CoroutineName("main")) {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-context-08.kt)
 
@@ -458,7 +458,7 @@ name at the same time:
 import kotlin.coroutines.experimental.*
 -->
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun main(args: Array<String>) = runBlocking<Unit> {
@@ -468,7 +468,7 @@ fun main(args: Array<String>) = runBlocking<Unit> {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-context-09.kt)
 
@@ -496,7 +496,7 @@ activity is created and it is cancelled when an activity is destroyed like this:
 import kotlin.coroutines.experimental.*
 -->
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 class Activity : CoroutineScope {
@@ -512,13 +512,13 @@ class Activity : CoroutineScope {
     // to be continued ...
 ```
 
-</div>
+
 
 We also implement [CoroutineScope] interface in this `Actvity` class. We only need to provide an override
 for its [CoroutineScope.coroutineContext] property to specify the context for coroutines launched in its
 scope. We combine the desired dispatcher (we used [Dispatchers.Default] in this example) and a job:
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
     // class Activity continues
@@ -527,12 +527,12 @@ scope. We combine the desired dispatcher (we used [Dispatchers.Default] in this 
     // to be continued ...
 ```
 
-</div>
+
 
 Now, we can launch coroutines in the scope of this `Activity` without having to explicitly
 specify their context. For the demo, we launch ten coroutines that delay for a different time:
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
     // class Activity continues
@@ -548,13 +548,13 @@ specify their context. For the demo, we launch ten coroutines that delay for a d
 } // class Activity ends
 ``` 
 
-</div>
+
 
 In our main function we create activity, call our test `doSomething` function, and destroy activity after 500ms.
 This cancels all the coroutines that were launched which we can confirm by noting that it does not print 
 onto the screen anymore if we wait: 
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun main(args: Array<String>) = runBlocking<Unit> {
@@ -569,7 +569,7 @@ fun main(args: Array<String>) = runBlocking<Unit> {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-context-10.kt)
 
@@ -602,7 +602,7 @@ It is easy to demonstrate it in action:
 import kotlin.coroutines.experimental.*
 -->
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 val threadLocal = ThreadLocal<String?>() // declare thread-local variable
@@ -620,7 +620,7 @@ fun main(args: Array<String>) = runBlocking<Unit> {
 }
 ```  
 
-</div>                                                                                       
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-context-11.kt)
 

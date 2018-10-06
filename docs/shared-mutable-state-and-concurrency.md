@@ -61,7 +61,7 @@ import kotlin.system.*
 import kotlin.coroutines.experimental.*
 -->
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 suspend fun CoroutineScope.massiveRun(action: suspend () -> Unit) {
@@ -79,14 +79,14 @@ suspend fun CoroutineScope.massiveRun(action: suspend () -> Unit) {
 }
 ```
 
-</div> 
+
 
 <!--- INCLUDE .*/example-sync-([0-9a-z]+).kt -->
 
 We start with a very simple action that increments a shared mutable variable using 
 multi-threaded [Dispatchers.Default] that is used in [GlobalScope]. 
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 var counter = 0
@@ -99,7 +99,7 @@ fun main(args: Array<String>) = runBlocking<Unit> {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-sync-01.kt)
 
@@ -115,7 +115,7 @@ increment the `counter` concurrently from multiple threads without any synchroni
 the thread pool is running in only one thread in this case. To reproduce the problem you'll need to make the
 following change:
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 val mtContext = newFixedThreadPoolContext(2, "mtPool") // explicitly define context with two threads
@@ -129,7 +129,7 @@ fun main(args: Array<String>) = runBlocking<Unit> {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-sync-01b.kt)
 
@@ -142,7 +142,7 @@ Counter =
 
 There is common misconception that making a variable `volatile` solves concurrency problem. Let us try it:
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 @Volatile // in Kotlin `volatile` is an annotation 
@@ -156,7 +156,7 @@ fun main(args: Array<String>) = runBlocking<Unit> {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-sync-02.kt)
 
@@ -176,7 +176,7 @@ linearizable, or atomic) data structure that provides all the necessarily synchr
 operations that needs to be performed on a shared state. 
 In the case of a simple counter we can use `AtomicInteger` class which has atomic `incrementAndGet` operations:
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 var counter = AtomicInteger()
@@ -189,7 +189,7 @@ fun main(args: Array<String>) = runBlocking<Unit> {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-sync-03.kt)
 
@@ -209,7 +209,7 @@ state is confined to a single thread. It is typically used in UI applications, w
 the single event-dispatch/application thread. It is easy to apply with coroutines by using a  
 single-threaded context. 
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 val counterContext = newSingleThreadContext("CounterContext")
@@ -225,7 +225,7 @@ fun main(args: Array<String>) = runBlocking<Unit> {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-sync-04.kt)
 
@@ -244,7 +244,7 @@ are confined to the single thread. The following example does it like that, runn
 the single-threaded context to start with. 
 Here we use [CoroutineScope()] function to convert coroutine context reference to [CoroutineScope]:
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 val counterContext = newSingleThreadContext("CounterContext")
@@ -258,7 +258,7 @@ fun main(args: Array<String>) = runBlocking<Unit> {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-sync-05.kt)
 
@@ -279,7 +279,7 @@ delimit a critical section. The key difference is that `Mutex.lock()` is a suspe
 There is also [withLock] extension function that conveniently represents 
 `mutex.lock(); try { ... } finally { mutex.unlock() }` pattern: 
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 val mutex = Mutex()
@@ -295,7 +295,7 @@ fun main(args: Array<String>) = runBlocking<Unit> {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-sync-06.kt)
 
@@ -325,7 +325,7 @@ to get its value. The later needs to send a response. A [CompletableDeferred] co
 primitive, that represents a single value that will be known (communicated) in the future,
 is used here for that purpose.
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 // Message types for counterActor
@@ -334,11 +334,11 @@ object IncCounter : CounterMsg() // one-way message to increment counter
 class GetCounter(val response: CompletableDeferred<Int>) : CounterMsg() // a request with reply
 ```
 
-</div>
+
 
 Then we define a function that launches an actor using an [actor] coroutine builder:
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 // This function launches a new counter actor
@@ -353,11 +353,11 @@ fun CoroutineScope.counterActor() = actor<CounterMsg> {
 }
 ```
 
-</div>
+
 
 The main code is straightforward:
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun main(args: Array<String>) = runBlocking<Unit> {
@@ -373,7 +373,7 @@ fun main(args: Array<String>) = runBlocking<Unit> {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-sync-07.kt)
 

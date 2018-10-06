@@ -42,7 +42,7 @@ For example, a user might have closed the page that launched a coroutine and now
 is no longer needed and its operation can be cancelled. 
 The [launch] function returns a [Job] that can be used to cancel running coroutine:
  
-<div class="sample" markdown="1" theme="idea" data-highlight-only> 
+
  
 ```kotlin
 fun main(args: Array<String>) = runBlocking {
@@ -60,7 +60,7 @@ fun main(args: Array<String>) = runBlocking {
 }
 ``` 
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-cancel-01.kt)
 
@@ -88,7 +88,7 @@ coroutine and throw [CancellationException] when cancelled. However, if a corout
 a computation and does not check for cancellation, then it cannot be cancelled, like the following 
 example shows:
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun main(args: Array<String>) = runBlocking {
@@ -111,7 +111,7 @@ fun main(args: Array<String>) = runBlocking {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-cancel-02.kt)
 
@@ -136,7 +136,7 @@ The other one is to explicitly check the cancellation status. Let us try the lat
 
 Replace `while (i < 5)` in the previous example with `while (isActive)` and rerun it. 
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun main(args: Array<String>) = runBlocking {
@@ -159,7 +159,7 @@ fun main(args: Array<String>) = runBlocking {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-cancel-03.kt)
 
@@ -181,7 +181,7 @@ a usual way. For example, `try {...} finally {...}` expression and Kotlin `use` 
 finalization actions normally when coroutine is cancelled:
  
  
-<div class="sample" markdown="1" theme="idea" data-highlight-only> 
+
  
 ```kotlin
 fun main(args: Array<String>) = runBlocking {
@@ -202,7 +202,7 @@ fun main(args: Array<String>) = runBlocking {
 }
 ``` 
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-cancel-04.kt)
 
@@ -229,7 +229,7 @@ communication channel) are usually non-blocking and do not involve any suspendin
 rare case when you need to suspend in the cancelled coroutine you can wrap the corresponding code in
 `withContext(NonCancellable) {...}` using [withContext] function and [NonCancellable] context as the following example shows:
  
-<div class="sample" markdown="1" theme="idea" data-highlight-only> 
+
  
 ```kotlin
 fun main(args: Array<String>) = runBlocking {
@@ -254,7 +254,7 @@ fun main(args: Array<String>) = runBlocking {
 }
 ``` 
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-cancel-05.kt)
 
@@ -276,7 +276,7 @@ While you can manually track the reference to the corresponding [Job] and launch
 the tracked one after delay, there is a ready to use [withTimeout] function that does it.
 Look at the following example:
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun main(args: Array<String>) = runBlocking {
@@ -289,7 +289,7 @@ fun main(args: Array<String>) = runBlocking {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-cancel-06.kt)
 
@@ -314,7 +314,7 @@ You can wrap the code with timeout in `try {...} catch (e: TimeoutCancellationEx
 you need to do some additional action specifically on any kind of timeout or use [withTimeoutOrNull] function
 that is similar to [withTimeout], but returns `null` on timeout instead of throwing an exception:
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun main(args: Array<String>) = runBlocking {
@@ -329,7 +329,7 @@ fun main(args: Array<String>) = runBlocking {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-cancel-07.kt)
 

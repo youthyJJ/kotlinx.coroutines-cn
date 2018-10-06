@@ -54,7 +54,7 @@ exception, for example via [await][Deferred.await] or [receive][ReceiveChannel.r
 
 It can be demonstrated by a simple example that creates new coroutines in [GlobalScope]:
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun main(args: Array<String>) = runBlocking {
@@ -77,7 +77,7 @@ fun main(args: Array<String>) = runBlocking {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-exceptions-01.kt)
 
@@ -109,7 +109,7 @@ On Android, `uncaughtExceptionPreHandler` is installed as a global coroutine exc
 [CoroutineExceptionHandler] is invoked only on exceptions which are not expected to be handled by the user, 
 so registering it in [async] builder and the like of it has no effect.
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun main(args: Array<String>) = runBlocking {
@@ -126,7 +126,7 @@ fun main(args: Array<String>) = runBlocking {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-exceptions-02.kt)
 
@@ -150,7 +150,7 @@ Cancelling without cause is a mechanism for parent to cancel its children withou
 import kotlin.coroutines.experimental.*
 -->
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun main(args: Array<String>) = runBlocking {
@@ -173,7 +173,7 @@ fun main(args: Array<String>) = runBlocking {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-exceptions-03.kt)
 
@@ -202,7 +202,7 @@ when its child completes with exception despite the installed handler.
 import kotlin.coroutines.experimental.*
 -->
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun main(args: Array<String>) = runBlocking {
@@ -231,7 +231,7 @@ fun main(args: Array<String>) = runBlocking {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-exceptions-04.kt)
 
@@ -263,7 +263,7 @@ import kotlin.coroutines.experimental.*
 import java.io.*
 -->
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun main(args: Array<String>) = runBlocking {
@@ -288,7 +288,7 @@ fun main(args: Array<String>) = runBlocking {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-exceptions-05.kt)
 
@@ -312,7 +312,7 @@ import kotlin.coroutines.experimental.*
 import java.io.*
 -->
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun main(args: Array<String>) = runBlocking {
@@ -338,7 +338,7 @@ fun main(args: Array<String>) = runBlocking {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-exceptions-06.kt)
 
@@ -371,7 +371,7 @@ only downwards. It is easy to demonstrate with an example:
 import kotlin.coroutines.experimental.*
 -->
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun main(args: Array<String>) = runBlocking {
@@ -403,7 +403,7 @@ fun main(args: Array<String>) = runBlocking {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-supervision-01.kt)
 
@@ -428,7 +428,7 @@ just like [coroutineScope] does.
 import kotlin.coroutines.experimental.*
 -->
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun main(args: Array<String>) = runBlocking {
@@ -453,7 +453,7 @@ fun main(args: Array<String>) = runBlocking {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-supervision-02.kt)
 
@@ -477,7 +477,7 @@ This difference comes from the fact that child's failure is not propagated to th
 import kotlin.coroutines.experimental.*
 -->
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun main(args: Array<String>) = runBlocking {
@@ -495,7 +495,7 @@ fun main(args: Array<String>) = runBlocking {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-supervision-03.kt)
 

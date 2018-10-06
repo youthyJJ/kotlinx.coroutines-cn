@@ -54,7 +54,7 @@ import kotlinx.coroutines.experimental.*
 import kotlin.coroutines.experimental.*
 -->
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun CoroutineScope.fizz() = produce<String> {
@@ -65,11 +65,11 @@ fun CoroutineScope.fizz() = produce<String> {
 }
 ```
 
-</div>
+
 
 And the `buzz` produces "Buzz!" string every 500 ms:
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun CoroutineScope.buzz() = produce<String> {
@@ -80,13 +80,13 @@ fun CoroutineScope.buzz() = produce<String> {
 }
 ```
 
-</div>
+
 
 Using [receive][ReceiveChannel.receive] suspending function we can receive _either_ from one channel or the
 other. But [select] expression allows us to receive from _both_ simultaneously using its
 [onReceive][ReceiveChannel.onReceive] clauses:
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 suspend fun selectFizzBuzz(fizz: ReceiveChannel<String>, buzz: ReceiveChannel<String>) {
@@ -101,11 +101,11 @@ suspend fun selectFizzBuzz(fizz: ReceiveChannel<String>, buzz: ReceiveChannel<St
 }
 ```
 
-</div>
+
 
 Let us run it all seven times:
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun main(args: Array<String>) = runBlocking<Unit> {
@@ -118,7 +118,7 @@ fun main(args: Array<String>) = runBlocking<Unit> {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-select-01.kt)
 
@@ -147,7 +147,7 @@ the result of its selected clause:
 import kotlin.coroutines.experimental.*
 -->
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 suspend fun selectAorB(a: ReceiveChannel<String>, b: ReceiveChannel<String>): String =
@@ -167,12 +167,12 @@ suspend fun selectAorB(a: ReceiveChannel<String>, b: ReceiveChannel<String>): St
     }
 ```
 
-</div>
+
 
 Let's use it with channel `a` that produces "Hello" string four times and 
 channel `b` that produces "World" four times:
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun main(args: Array<String>) = runBlocking<Unit> {
@@ -189,7 +189,7 @@ fun main(args: Array<String>) = runBlocking<Unit> {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-select-02.kt)
 
@@ -230,7 +230,7 @@ the consumers on its primary channel cannot keep up with it:
 import kotlin.coroutines.experimental.*
 -->
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun CoroutineScope.produceNumbers(side: SendChannel<Int>) = produce<Int> {
@@ -244,11 +244,11 @@ fun CoroutineScope.produceNumbers(side: SendChannel<Int>) = produce<Int> {
 }
 ```
 
-</div>
+
 
 Consumer is going to be quite slow, taking 250 ms to process each number:
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun main(args: Array<String>) = runBlocking<Unit> {
@@ -265,7 +265,7 @@ fun main(args: Array<String>) = runBlocking<Unit> {
 }
 ```
 
-</div> 
+
  
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-select-03.kt)
   
@@ -297,7 +297,7 @@ a random delay:
 import java.util.*
 -->
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun CoroutineScope.asyncString(time: Int) = async {
@@ -306,11 +306,11 @@ fun CoroutineScope.asyncString(time: Int) = async {
 }
 ```
 
-</div>
+
 
 Let us start a dozen of them with a random delay.
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun CoroutineScope.asyncStringsList(): List<Deferred<String>> {
@@ -319,14 +319,14 @@ fun CoroutineScope.asyncStringsList(): List<Deferred<String>> {
 }
 ```
 
-</div>
+
 
 Now the main function awaits for the first of them to complete and counts the number of deferred values
 that are still active. Note, that we've used here the fact that `select` expression is a Kotlin DSL, 
 so we can provide clauses for it using an arbitrary code. In this case we iterate over a list
 of deferred values to provide `onAwait` clause for each deferred value.
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun main(args: Array<String>) = runBlocking<Unit> {
@@ -344,7 +344,7 @@ fun main(args: Array<String>) = runBlocking<Unit> {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-select-04.kt)
 
@@ -367,7 +367,7 @@ deferred value, but only until the next deferred value comes over or the channel
 import kotlin.coroutines.experimental.*
 -->
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun CoroutineScope.switchMapDeferreds(input: ReceiveChannel<Deferred<String>>) = produce<String> {
@@ -392,12 +392,12 @@ fun CoroutineScope.switchMapDeferreds(input: ReceiveChannel<Deferred<String>>) =
 }
 ```
 
-</div>
+
 
 To test it, we'll use a simple async function that resolves to a specified string after a specified time:
 
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun CoroutineScope.asyncString(str: String, time: Long) = async {
@@ -406,12 +406,12 @@ fun CoroutineScope.asyncString(str: String, time: Long) = async {
 }
 ```
 
-</div>
+
 
 The main function just launches a coroutine to print results of `switchMapDeferreds` and sends some test
 data to it:
 
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
+
 
 ```kotlin
 fun main(args: Array<String>) = runBlocking<Unit> {
@@ -433,7 +433,7 @@ fun main(args: Array<String>) = runBlocking<Unit> {
 }
 ```
 
-</div>
+
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-select-05.kt)
 
