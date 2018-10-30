@@ -48,7 +48,7 @@ class BasicsGuideTest {
 ```kotlin
 fun main(args: Array<String>) {
     GlobalScope.launch { // launch new coroutine in background and continue
-        delay(1000L) // 无阻塞的等待1秒钟(默认时间单位是好喵)
+        delay(1000L) // 无阻塞的等待1秒钟(默认时间单位是毫秒)
         println("World!") // 在延迟后打印输出
     }
     println("Hello,") // 主线程的协程将会继续等待
