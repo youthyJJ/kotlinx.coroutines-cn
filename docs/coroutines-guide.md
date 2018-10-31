@@ -11,7 +11,7 @@ future 与 promise 更安全、不易出错的抽象。
 本文是关于 `kotlinx.coroutines` 核心特性的指南，包含一系列示例，分为不同的主题。
 
 为了使用协程以及按照本指南中的示例演练，需要添加对 `kotlinx-coroutines-core` 模块的依赖，如<!--
--->[项目中的 README 文件](../README.md#using-in-your-projects)所述。
+-->[项目中的 README 文件](https://github.com/hltj/kotlinx.coroutines-cn/blob/master/README.md#using-in-your-projects)所述。
 
 ## 目录
 
