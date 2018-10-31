@@ -25,7 +25,7 @@ class BasicsGuideTest {
   * [桥接阻塞和非阻塞的世界](#bridging-blocking-and-non-blocking-worlds)
   * [等待一个任务](#waiting-for-a-job)
   * [结构性的并发](#structured-concurrency)
-  * [范围建造器](#scope-builder)
+  * [作用域建造器](#scope-builder)
   * [提取函数重构](#extract-function-refactoring)
   * [协程是轻量级的](#coroutines-are-light-weight)
   * [像守护线程一样的全局协程](#global-coroutines-are-like-daemon-threads)
@@ -70,7 +70,7 @@ World!
 <!--- TEST -->
 
 本质上，协程是轻量级的线程。
-它们在 [CoroutineScope] 上下文中和 [launch] _协同构造器_ 一起被启动。
+它们在 [CoroutineScope] 上下文中和 [launch] _协同构建器_ 一起被启动。
 这里我们在 [GlobalScope] 中启动了一些新的协程, 存活时间是指新的<!--
 -->协程的存活时间被限制在了整个应用的存活时间之内。
 
@@ -90,7 +90,7 @@ Error: Kotlin: Suspend functions are only allowed to be called from a coroutine 
 
 第一个例子中在相似的代码中包含了 _非阻塞的_ `delay(...)` 和 _阻塞的_ `Thread.sleep(...)`。
 它非让容易的让我们看出来哪一个是阻塞的，哪一个是非阻塞的。
-来一起使用明确的阻塞 [runBlocking] 协程构造器：
+来一起使用明确的阻塞 [runBlocking] 协程构建器：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -217,12 +217,12 @@ World!
 
 这有一个更好的解决办法。我们可以在你的代码中使用结构性并发。
 用来代替在 [GlobalScope] 中启动协程，就像我们使用线程时那样(线程总是全局的)，
-我们可以在一个具体的范围中启动协程并操作。
+我们可以在一个具体的作用域中启动协程并操作。
 
-在我们的例子中, 我们有一个被转换成使用[runBlocking]的协程构造器的`main`函数
-每一个协程构造器, 包括`runBlocking`, 添加了一个实例在[CoroutineScope]范围的代码块中.
-我们可以在一个协程还没有明确的调用`join`之前在这个范围内启动它们, 因为一个外部的协程
-(我们的例子中的`runBlocking`) 没有在所有的协程在它们的范围内启动完成后执行<!--
+在我们的例子中, 我们有一个被转换成使用[runBlocking]的协程构建器的`main`函数
+每一个协程构建器, 包括`runBlocking`, 添加了一个实例在[CoroutineScope]作用域的代码块中.
+我们可以在一个协程还没有明确的调用`join`之前在这个作用域内启动它们, 因为一个外部的协程
+(我们的例子中的`runBlocking`) 没有在所有的协程在它们的作用域内启动完成后执行<!--
 -->完毕, 从而, 我们可以使我们的例子更简单:
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
@@ -248,9 +248,9 @@ Hello,
 World!
 -->
 
-### 范围构造器
-除了由不同的构造器提供的协程范围，也是可以使用 [coroutineScope] 构造器来声明你自己<!--
--->的范围。它启动了一个新的协程范围并且在所有子协程执行结束后并没有执行<!--
+### 作用域构建器
+除了由不同的构建器提供的协程作用域，也是可以使用 [coroutineScope] 构建器来声明你自己<!--
+-->的作用域。它启动了一个新的协程作用域并且在所有子协程执行结束后并没有执行<!--
 -->完毕。[runBlocking] 和 [coroutineScope] 主要的不同之处在于后者在等待所有的子协程<!--
 -->执行完毕时并没有使当前线程阻塞.
 
@@ -265,7 +265,7 @@ fun main() = runBlocking { // this: CoroutineScope
         println("Task from runBlocking")
     }
     
-    coroutineScope { // 创建一个新的协程范围
+    coroutineScope { // 创建一个新的协程作用域
         launch {
             delay(500L) 
             println("Task from nested launch")
@@ -324,13 +324,13 @@ World!
 -->
 
 
-但是如果提取函数包含了一个调用当前范围的协程构造器？
+但是如果提取函数包含了一个调用当前作用域的协程构建器？
 在这个例子中仅仅使用 `suspend` 来修饰提取出来的函数是不够的. 在 `CoroutineScope` 调用 `doWorld` 方法
 是一种解决方案, 但它并非总是适用, 因为它不会使API看起来更清晰。
 惯用的解决方法是使 `CoroutineScope` 在一个类中作为一个属性并包含一个目标函数，
 或者使它外部的类实现 `CoroutineScope` 接口。
 作为最后的手段，[CoroutineScope(coroutineContext)][CoroutineScope()] 也是可以使用的，但是这样的结构是不安全的
-因为你将无法在这个范围内控制方法的执行。只有私有的API可以使用这样的写法。
+因为你将无法在这个作用域内控制方法的执行。只有私有的API可以使用这样的写法。
 
 ### 协程是轻量级的
 
