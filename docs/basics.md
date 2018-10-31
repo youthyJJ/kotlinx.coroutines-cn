@@ -4,14 +4,12 @@
  */
 
 // This file was automatically generated from coroutines-guide.md by Knit tool. Do not edit.
-package kotlinx.coroutines.experimental.guide.$$1$$2
-
-import kotlinx.coroutines.experimental.*
+package kotlinx.coroutines.guide.$$1$$2
 -->
 <!--- KNIT     ../core/kotlinx-coroutines-core/test/guide/.*\.kt -->
 <!--- TEST_OUT ../core/kotlinx-coroutines-core/test/guide/test/BasicsGuideTest.kt
 // This file was automatically generated from coroutines-guide.md by Knit tool. Do not edit.
-package kotlinx.coroutines.experimental.guide.test
+package kotlinx.coroutines.guide.test
 
 import org.junit.Test
 
@@ -46,7 +44,9 @@ Run the following code:
 
 
 ```kotlin
-fun main(args: Array<String>) {
+import kotlinx.coroutines.*
+
+fun main() {
     GlobalScope.launch { // launch new coroutine in background and continue
         delay(1000L) // non-blocking delay for 1 second (default time unit is ms)
         println("World!") // print after delay
@@ -60,7 +60,7 @@ fun main(args: Array<String>) {
 
 > You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-basic-01.kt)
 
-Run this code:
+You will see the following result:
 
 ```text
 Hello,
@@ -95,7 +95,9 @@ Let's be explicit about blocking using [runBlocking] coroutine builder:
 
 
 ```kotlin
-fun main(args: Array<String>) { 
+import kotlinx.coroutines.*
+
+fun main() {
     GlobalScope.launch { // launch new coroutine in background and continue
         delay(1000L)
         println("World!")
@@ -125,7 +127,9 @@ the execution of the main function:
 
 
 ```kotlin
-fun main(args: Array<String>) = runBlocking { // start main coroutine
+import kotlinx.coroutines.*
+
+fun main() = runBlocking<Unit> { // start main coroutine
     GlobalScope.launch { // launch new coroutine in background and continue
         delay(1000L)
         println("World!")
@@ -148,6 +152,10 @@ Here `runBlocking<Unit> { ... }` works as an adaptor that is used to start the t
 We explicitly specify its `Unit` return type, because a well-formed `main` function in Kotlin has to return `Unit`.
 
 This is also a way to write unit-tests for suspending functions:
+
+<!--- INCLUDE
+import kotlinx.coroutines.*
+-->
 
 
  
@@ -172,13 +180,17 @@ wait (in a non-blocking way) until the background [Job] that we have launched is
 
 
 ```kotlin
-fun main(args: Array<String>) = runBlocking {
+import kotlinx.coroutines.*
+
+fun main() = runBlocking {
+//sampleStart
     val job = GlobalScope.launch { // launch new coroutine and keep a reference to its Job
         delay(1000L)
         println("World!")
     }
     println("Hello,")
     job.join() // wait until child coroutine completes
+//sampleEnd
 }
 ```
 
@@ -208,7 +220,7 @@ Instead of launching coroutines in the [GlobalScope], just like we usually do wi
 we can launch coroutines in the specific scope of the operation we are performing. 
 
 In our example, we have `main` function that is turned into a coroutine using [runBlocking] coroutine builder.
-Every coroutine builder, including `runBlocking`, adds an instance of [CoroutineScope] to the scope its code block. 
+Every coroutine builder, including `runBlocking`, adds an instance of [CoroutineScope] to the scope of its code block.
 We can launch coroutines in this scope without having to `join` them explicitly, because
 an outer coroutine (`runBlocking` in our example) does not complete until all the coroutines launched
 in its scope complete. Thus, we can make our example simpler:
@@ -216,7 +228,9 @@ in its scope complete. Thus, we can make our example simpler:
 
 
 ```kotlin
-fun main(args: Array<String>) = runBlocking { // this: CoroutineScope
+import kotlinx.coroutines.*
+
+fun main() = runBlocking { // this: CoroutineScope
     launch { // launch new coroutine in the scope of runBlocking
         delay(1000L)
         println("World!")
@@ -243,7 +257,9 @@ while waiting for all children to complete.
 
 
 ```kotlin
-fun main(args: Array<String>) = runBlocking { // this: CoroutineScope
+import kotlinx.coroutines.*
+
+fun main() = runBlocking { // this: CoroutineScope
     launch { 
         delay(200L)
         println("Task from runBlocking")
@@ -285,7 +301,9 @@ use other suspending functions, like `delay` in this example, to _suspend_ execu
 
 
 ```kotlin
-fun main(args: Array<String>) = runBlocking {
+import kotlinx.coroutines.*
+
+fun main() = runBlocking {
     launch { doWorld() }
     println("Hello,")
 }
@@ -322,7 +340,9 @@ Run the following code:
 
 
 ```kotlin
-fun main(args: Array<String>) = runBlocking {
+import kotlinx.coroutines.*
+
+fun main() = runBlocking {
     repeat(100_000) { // launch a lot of coroutines
         launch {
             delay(1000L)
@@ -349,7 +369,10 @@ returns from the main function after some delay:
 
 
 ```kotlin
-fun main(args: Array<String>) = runBlocking {
+import kotlinx.coroutines.*
+
+fun main() = runBlocking {
+//sampleStart
     GlobalScope.launch {
         repeat(1000) { i ->
             println("I'm sleeping $i ...")
@@ -357,6 +380,7 @@ fun main(args: Array<String>) = runBlocking {
         }
     }
     delay(1300L) // just quit after delay
+//sampleEnd
 }
 ```
 
@@ -377,16 +401,16 @@ I'm sleeping 2 ...
 Active coroutines that were launched in [GlobalScope] do not keep the process alive. They are like daemon threads.
 
 <!--- MODULE kotlinx-coroutines-core -->
-<!--- INDEX kotlinx.coroutines.experimental -->
-[launch]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.experimental/launch.html
-[CoroutineScope]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.experimental/-coroutine-scope/index.html
-[GlobalScope]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.experimental/-global-scope/index.html
-[delay]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.experimental/delay.html
-[runBlocking]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.experimental/run-blocking.html
-[Job]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.experimental/-job/index.html
-[Job.join]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.experimental/-job/join.html
-[coroutineScope]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.experimental/coroutine-scope.html
-[CoroutineScope()]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.experimental/-coroutine-scope.html
+<!--- INDEX kotlinx.coroutines -->
+[launch]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/launch.html
+[CoroutineScope]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-coroutine-scope/index.html
+[GlobalScope]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-global-scope/index.html
+[delay]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/delay.html
+[runBlocking]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/run-blocking.html
+[Job]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-job/index.html
+[Job.join]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-job/join.html
+[coroutineScope]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/coroutine-scope.html
+[CoroutineScope()]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-coroutine-scope.html
 <!--- END -->
 
 
