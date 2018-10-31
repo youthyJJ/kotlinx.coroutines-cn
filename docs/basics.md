@@ -25,7 +25,7 @@ class BasicsGuideTest {
   * [桥接阻塞和非阻塞的世界](#bridging-blocking-and-non-blocking-worlds)
   * [等待一个任务](#waiting-for-a-job)
   * [结构性的并发](#structured-concurrency)
-  * [作用域建造器](#scope-builder)
+  * [作用域构建器](#scope-builder)
   * [提取函数重构](#extract-function-refactoring)
   * [协程是轻量级的](#coroutines-are-light-weight)
   * [像守护线程一样的全局协程](#global-coroutines-are-like-daemon-threads)
@@ -89,7 +89,7 @@ Error: Kotlin: Suspend functions are only allowed to be called from a coroutine 
 ### 桥接阻塞和非阻塞的世界
 
 第一个例子中在相似的代码中包含了 _非阻塞的_ `delay(...)` 和 _阻塞的_ `Thread.sleep(...)`。
-它非让容易的让我们看出来哪一个是阻塞的，哪一个是非阻塞的。
+它非常容易的让我们看出来哪一个是阻塞的，哪一个是非阻塞的。
 来一起使用明确的阻塞 [runBlocking] 协程构建器：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
@@ -175,7 +175,7 @@ class MyTest {
 ### 等待一个任务
 
 延迟一段时间来等待另一个协程开始工作并不是一个好的选择。让我们明确地<!--
--->等待(使用非阻塞的方法)一个后台[Job]执行结束:
+-->等待(使用非阻塞的方法)一个后台 [Job] 执行结束:
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
