@@ -84,7 +84,7 @@ main: Now I can quit.
 
 ### 取消协作
 
-协程的取消是 _协作_ 的。一段协程代码必须合作才能被取消。
+协程的取消是 _协作_ 的。一段协程代码必须协作才能被取消。
 所有 `kotlinx.coroutines` 中的挂起函数都是 _可被取消的_ 。它们检查协程的取消，
 并在取消时抛出 [CancellationException]。 然而，如果协程正在执行<!--
 -->计算任务，并且没有检查取消的话，那么它是不能被取消的，就如如下示例<!--
@@ -331,7 +331,7 @@ Exception in thread "main" kotlinx.coroutines.TimeoutCancellationException: Time
 -->在被取消的协程中 `CancellationException` 被认为是协程执行结束的正常原因。
 然而，在这个示例中我们在 `main` 函数中正确地使用了 `withTimeout`。
 
-由于取消只是一个例外, 所有的资源都使用常用的方法来关闭。
+由于取消只是一个例外，所有的资源都使用常用的方法来关闭。
 如果你需要做一些各类使用超时的特别的额外操作，可以使用类似 [withTimeout]
 的 [withTimeoutOrNull] 函数，并把这些会超时的代码包装在 `try {...} catch (e: TimeoutCancellationException) {...}`
 代码块中，而 [withTimeoutOrNull] 通过返回 `null` 来进行超时操作，从而替代抛出一个异常：
