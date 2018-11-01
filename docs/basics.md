@@ -83,7 +83,7 @@ World!
 Error: Kotlin: Suspend functions are only allowed to be called from a coroutine or another suspend function
 ```
 
-这是因为 [delay] 是一个特别的 _暂停函数_ ,它不会造成线程阻塞，但是 _暂停_<!--
+这是因为 [delay] 是一个特别的 _挂起函数_ ，它不会造成线程阻塞，但是 _挂起_<!--
 -->函数只能在协程中使用.
 
 ### 桥接阻塞和非阻塞的世界
@@ -151,7 +151,7 @@ World!
 这里的 `runBlocking<Unit> { ... }` 作为一个适配器被用来启动最高优先级的主协程。
 我们明确的声明 `Unit` 为返回值类型，因为Kotlin中的`main`函数返回`Unit`类型。
 
-这也是一种使用暂停函数来实现单元测试的方法：
+这也是一种使用挂起函数来实现单元测试的方法：
 
 <!--- INCLUDE
 import kotlinx.coroutines.*
@@ -163,7 +163,7 @@ import kotlinx.coroutines.*
 class MyTest {
     @Test
     fun testMySuspendingFunction() = runBlocking<Unit> {
-        // 这里我们可以使用暂停函数来实现任何我们喜欢的断言风格
+        // 这里我们可以使用挂起函数来实现任何我们喜欢的断言风格
     }
 }
 ```
@@ -294,8 +294,8 @@ Coroutine scope is over
 
 让我们在 `launch { ... }` 中提取代码块并分离到另一个函数中. 当你
 在这段代码上展示"提取函数"函数的时候, 你的到了一个新的函数并用 `suspend` 修饰.
-这是你的第一个 _暂停函数_ 。暂停函数可以像一个普通的函数一样使用内部协程，但是它们拥有一些额外的特性，反过来说，
-使用其它的暂停函数, 比如这个例子中的 `delay`，可以使协程暂停执行。
+这是你的第一个 _挂起函数_ 。挂起函数可以像一个普通的函数一样使用内部协程，但是它们拥有一些额外的特性，反过来说，
+使用其它的挂起函数, 比如这个例子中的 `delay`，可以使协程暂停执行。
 
 
 
@@ -307,7 +307,7 @@ fun main() = runBlocking {
     println("Hello,")
 }
 
-// 你的第一个暂停函数
+// 你的第一个挂起函数
 suspend fun doWorld() {
     delay(1000L)
     println("World!")
