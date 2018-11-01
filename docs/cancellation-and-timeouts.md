@@ -46,7 +46,7 @@ class CancellationTimeOutsGuideTest {
 import kotlinx.coroutines.*
 
 fun main() = runBlocking {
-//示例开始
+//sampleStart
     val job = launch {
         repeat(1000) { i ->
             println("I'm sleeping $i ...")
@@ -58,7 +58,7 @@ fun main() = runBlocking {
     job.cancel() // 取消该任务
     job.join() // 等待任务执行结束
     println("main: Now I can quit.")
-//示例结束
+//sampleEnd
 }
 ``` 
 
@@ -85,7 +85,7 @@ main: Now I can quit.
 ### 取消协作
 
 协程的取消是 _协作_ 的。一段协程代码必须合作才能被取消。
-所有 `kotlinx.coroutines` 中的暂停函数都是 _可被取消的_ 。它们检查协程的取消，
+所有 `kotlinx.coroutines` 中的挂起函数都是 _可被取消的_ 。它们检查协程的取消，
 并在取消时抛出 [CancellationException]。 然而，如果协程正在执行<!--
 -->计算任务，并且没有检查取消的话，那么它是不能被取消的，就如如下示例<!--
 -->代码所示：
@@ -96,7 +96,7 @@ main: Now I can quit.
 import kotlinx.coroutines.*
 
 fun main() = runBlocking {
-//示例开始
+//sampleStart
     val startTime = System.currentTimeMillis()
     val job = launch(Dispatchers.Default) {
         var nextPrintTime = startTime
@@ -113,7 +113,7 @@ fun main() = runBlocking {
     println("main: I'm tired of waiting!")
     job.cancelAndJoin() // 取消一个任务并且等待它结束
     println("main: Now I can quit.")
-//示例结束   
+//sampleEnd 
 }
 ```
 
@@ -137,7 +137,7 @@ main: Now I can quit.
 ### 使执行计算的代码可被取消
 
 我们有两种方法来使执行计算的代码可以被取消。第一种方法是定期<!--
--->调用暂停函数来检查取消。 对于这种目的 [yield] 是一个好的选择。
+-->调用挂起函数来检查取消。 对于这种目的 [yield] 是一个好的选择。
 另一种方法是明确的检查取消状态。让我们试试第二种方法。
 
 将前一个示例中的 `while (i < 5)` 替换为 `while (isActive)` 并重新运行它。 
@@ -148,7 +148,7 @@ main: Now I can quit.
 import kotlinx.coroutines.*
 
 fun main() = runBlocking {
-//示例开始
+//sampleStart
     val startTime = System.currentTimeMillis()
     val job = launch(Dispatchers.Default) {
         var nextPrintTime = startTime
@@ -165,7 +165,7 @@ fun main() = runBlocking {
     println("main: I'm tired of waiting!")
     job.cancelAndJoin() // 取消该任务并等待它结束
     println("main: Now I can quit.")
-//示例结束   
+//sampleEnd  
 }
 ```
 
@@ -187,7 +187,7 @@ main: Now I can quit.
 ### 在finally中释放资源
 
 我们通常使用如下的方法处理在被取消时抛出 [CancellationException] 的可被取消<!--
--->的暂停函数。比如说，`try {...} finally {...}` 表达式以及 Kotlin 的 `use` 函数一般在协程被取消的时候<!--
+-->的挂起函数。比如说，`try {...} finally {...}` 表达式以及 Kotlin 的 `use` 函数一般在协程被取消的时候<!--
 -->执行它们的终结动作：
  
  
@@ -197,7 +197,7 @@ main: Now I can quit.
 import kotlinx.coroutines.*
 
 fun main() = runBlocking {
-//示例开始
+//sampleStart
     val job = launch {
         try {
             repeat(1000) { i ->
@@ -212,7 +212,7 @@ fun main() = runBlocking {
     println("main: I'm tired of waiting!")
     job.cancelAndJoin() // 取消该任务并且等待它结束
     println("main: Now I can quit.")
-//示例结束  
+//sampleEnd 
 }
 ``` 
 
@@ -236,10 +236,10 @@ main: Now I can quit.
 
 ### 运行不能被取消的代码块
 
-在前一个例子中任何尝试在 `finally` 块中调用暂停函数的行为都会抛出
+在前一个例子中任何尝试在 `finally` 块中调用挂起函数的行为都会抛出
 [CancellationException]，因为这里持续运行的代码是可以被取消的。通常，这并不是一个<!--
 -->问题，所有良好的关闭操作（关闭一个文件、取消一个任务，或是关闭任何一种<!--
--->通信通道）通常都是非阻塞的，并且不会调用任何暂停函数。然而，在<!--
+-->通信通道）通常都是非阻塞的，并且不会调用任何挂起函数。然而，在<!--
 -->真实的案例中，当你需要挂起一个被取消的协程，你可以将相应的代码包装在
 `withContext(NonCancellable) {...}` 中，并使用 [withContext] 函数以及 [NonCancellable] 上下文，见如下示例所示：
  
@@ -249,7 +249,7 @@ main: Now I can quit.
 import kotlinx.coroutines.*
 
 fun main() = runBlocking {
-//示例开始
+//sampleStart
     val job = launch {
         try {
             repeat(1000) { i ->
@@ -268,7 +268,7 @@ fun main() = runBlocking {
     println("main: I'm tired of waiting!")
     job.cancelAndJoin() // 取消该任务并等待它结束
     println("main: Now I can quit.")
-//示例结束  
+//sampleEnd
 }
 ``` 
 
@@ -300,14 +300,14 @@ main: Now I can quit.
 import kotlinx.coroutines.*
 
 fun main() = runBlocking {
-//示例开始
+//sampleStart
     withTimeout(1300L) {
         repeat(1000) { i ->
             println("I'm sleeping $i ...")
             delay(500L)
         }
     }
-//示例结束
+//sampleEnd
 }
 ```
 
@@ -342,7 +342,7 @@ Exception in thread "main" kotlinx.coroutines.TimeoutCancellationException: Time
 import kotlinx.coroutines.*
 
 fun main() = runBlocking {
-//示例开始
+//sampleStart
     val result = withTimeoutOrNull(1300L) {
         repeat(1000) { i ->
             println("I'm sleeping $i ...")
@@ -351,7 +351,7 @@ fun main() = runBlocking {
         "Done" // 在它运行得到结果之前取消它
     }
     println("Result is $result")
-//示例结束
+//sampleEnd
 }
 ```
 
