@@ -35,7 +35,7 @@ class ChannelsGuideTest {
 
 ## 通道 (实验性的) 
 
-延期的值提供了一种方便的方法在单个值和协程之间进行相互转换。
+延期的值提供了一种方便的方法使单个值在多个协程之间进行相互传输。
 通道提供了一种在流中传输值的方法。
 
 > 通道在 `kotlinx.coroutines` 中是一个实验性的特性。这些API在 `kotlinx.coroutines` <!--
@@ -133,10 +133,10 @@ Done!
 
 协程生成一系列元素的模式很常见。 
 这是 _生产者-消费者_ 模式的一部分，并且经常能在并发的代码中看到它。
-你可以将生产者抽象成一个函数，并且使通道作为它的参数，单这与<!--
--->必须从函数中返回结果的尝试相违悖。
+你可以将生产者抽象成一个函数，并且使通道作为它的参数，但这与<!--
+-->必须从函数中返回结果的常识相违悖。
 
-这里有一个名为 [produce] 的方便的协程构建器，可以很容易的在生产者端进行。
+这里有一个名为 [produce] 的方便的协程构建器，可以很容易的在生产者端正确工作，
 并且我们使用扩展函数 [consumeEach] 在消费者端替代 `for` 循环：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
@@ -251,7 +251,7 @@ Done!
 
 ### 素数与管道
 
-让我们来展示一个极端的例子—— 在协程中是哟哦那个管道来生成<!--
+让我们来展示一个极端的例子——在协程中使用一个管道来生成<!--
 -->素数。我们开启了一个数字的无限序列。
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
@@ -377,7 +377,7 @@ fun CoroutineScope.produceNumbers() = produce<Int> {
 
 </div>
 
-接下来我们可以得到几个协程处理器。在这个示例中，它们只是打印它们的 id 和<!--
+接下来我们可以得到几个处理者协程。在这个示例中，它们只是打印它们的 id 和<!--
 -->接收到的数字：
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
@@ -392,7 +392,7 @@ fun CoroutineScope.launchProcessor(id: Int, channel: ReceiveChannel<Int>) = laun
 
 </div>
 
-现在让我们启动五个协程处理器并让它们工作将近一秒。看看发生了什么：
+现在让我们启动五个矗立着协程并让它们工作将近一秒。看看发生了什么：
 
 <!--- CLEAR -->
 
@@ -431,7 +431,7 @@ fun CoroutineScope.launchProcessor(id: Int, channel: ReceiveChannel<Int>) = laun
 > 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-channel-06.kt)获得完整代码
 
 该输出将类似于如下所示，尽管接收的是处理器的 id 
-单每个整数也许会不同：
+但每个整数也许会不同：
 
 ```
 Processor #2 received 1
@@ -448,11 +448,11 @@ Processor #3 received 10
 
 <!--- TEST lines.size == 10 && lines.withIndex().all { (i, line) -> line.startsWith("Processor #") && line.endsWith(" received ${i + 1}") } -->
 
-注意，取消生产者协程并关闭它的通道，因此通过正在执行的协程处理器通道来<!--
+注意，取消生产者协程并关闭它的通道，因此通过正在执行的处理者协程通道来<!--
 -->终止迭代。
 
 还有，注意我们如何使用 `for` 循环显式迭代通道以在 `launchProcessor` 代码中执行扇出。
-与 `consumeEach`不同，这个 `for` 循环是安全完美地使用多协程的。如果其中一个处理器<!--
+与 `consumeEach` 不同，这个 `for` 循环是安全完美地使用多个协程的。如果其中一个处理者<!--
 -->协程执行失败，其它的处理器协程仍然会继续处理通道，而通过 `consumeEach` <!--
 -->编写的处理器始终在正常或非正常完成时消耗（取消）底层通道。  
 
@@ -525,8 +525,8 @@ BAR!
 
 ### 带缓冲的通道
 
-到目前为止显示的通道都是没有缓冲区的。无缓冲的通道在发送者和接收者相遇时
-传输元素（aka rendezvous（这句话应该是个俚语，意思好像是又是约会的意思，不知道怎么翻））。 如果发送先被调用，则它将被挂起直到接收被调用，
+到目前为止显示的通道都是没有缓冲区的。无缓冲的通道在发送者和接收者相遇时<!--
+-->传输元素（aka rendezvous（这句话应该是个俚语，意思好像是“又是约会”的意思，不知道怎么翻））。 如果发送先被调用，则它将被挂起直到接收被调用，
 如果接收先被调用，它将被挂起直到发送被调用。
 
 [Channel()] 工厂函数与 [produce] 建造器通过一个可选的参数 `capacity` 
@@ -579,7 +579,7 @@ Sending 4
 ### 通道是公平的
 
 发送和接收操作是 _公平的_ 并且尊重调用它们的<!--
--->多个协程。它们遵守先进先出规则，看看第一个协程调用 `receive` 
+-->多个协程。它们遵守先进先出原则，看看第一个协程调用 `receive` 
 并得到了元素。在下面的例子中两个协程 “乒” 和 "乓" 都<!-- 
 -->从共享的“桌子”通道都接收这个“球”元素。
 
@@ -618,7 +618,7 @@ suspend fun player(name: String, table: Channel<Ball>) {
 > 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-channel-09.kt)得到完整代码
 
 “乒”协程首先被启动，所以它首先接收到了球。甚至虽然“乒”
-协程在将球发送会桌子以后立即开始接收，球还是被“乓”
+协程在将球发送会桌子以后立即开始接收，但是球还是被“乓”
 协程接收了，因为它一直在等待着接收球：
 
 ```text
@@ -635,15 +635,15 @@ pong Ball(hits=4)
 
 ### 钟摆通道
 
-Ticker channel is a special rendezvous channel that produces `Unit` every time given delay passes since last consumption from this channel.
-Though it may seem to be useless standalone, it is a useful building block to create complex time-based [produce] 
-pipelines and operators that do windowing and other time-dependent processing.
-Ticker channel can be used in [select] to perform "on tick" action.
+钟摆通道是一种特别的会合通道，每次经过特定的延迟都会从该通道进行消费并产生 `Unit`。
+虽然它看起来似乎没用，它被用来构建分段来创建复杂的基于时间的 [produce] 
+管道和进行窗口化操作以及其它时间相关的处理。
+可以在 [select] 中使用钟摆通道来进行“打勾”操作。
 
-To create such channel use a factory method [ticker]. 
-To indicate that no further elements are needed use [ReceiveChannel.cancel] method on it.
+使用工厂方法 [ticker] 来创建这些通道。
+为了表明不需要其它元素，请使用 [ReceiveChannel.cancel] 方法。
 
-Now let's see how it works in practice:
+现在让我们看看它是如何在实践中工作的：
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
 
@@ -652,35 +652,35 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.*
 
 fun main() = runBlocking<Unit> {
-    val tickerChannel = ticker(delayMillis = 100, initialDelayMillis = 0) // create ticker channel
+    val tickerChannel = ticker(delayMillis = 100, initialDelayMillis = 0) //创建钟摆通道
     var nextElement = withTimeoutOrNull(1) { tickerChannel.receive() }
-    println("Initial element is available immediately: $nextElement") // initial delay hasn't passed yet
+    println("Initial element is available immediately: $nextElement") // 初始尚未经过的延迟
 
-    nextElement = withTimeoutOrNull(50) { tickerChannel.receive() } // all subsequent elements has 100ms delay
+    nextElement = withTimeoutOrNull(50) { tickerChannel.receive() } // 所有随后到来的元素都经过了100浩渺的延迟
     println("Next element is not ready in 50 ms: $nextElement")
 
     nextElement = withTimeoutOrNull(60) { tickerChannel.receive() }
     println("Next element is ready in 100 ms: $nextElement")
 
-    // Emulate large consumption delays
+    // 模拟大量消费延迟
     println("Consumer pauses for 150ms")
     delay(150)
-    // Next element is available immediately
+    // 下一个元素立即可用
     nextElement = withTimeoutOrNull(1) { tickerChannel.receive() }
     println("Next element is available immediately after large consumer delay: $nextElement")
-    // Note that the pause between `receive` calls is taken into account and next element arrives faster
+    // 请注意，`receive` 调用之间的暂停被考虑在内，下一个元素的到达速度更快
     nextElement = withTimeoutOrNull(60) { tickerChannel.receive() } 
     println("Next element is ready in 50ms after consumer pause in 150ms: $nextElement")
 
-    tickerChannel.cancel() // indicate that no more elements are needed
+    tickerChannel.cancel() // 表明不再需要更多的元素
 }
 ```
 
 </div>
 
-> You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-channel-10.kt)
+> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-channel-10.kt)获得完整代码
 
-It prints following lines:
+它的打印如下：
 
 ```text
 Initial element is available immediately: kotlin.Unit
@@ -693,11 +693,11 @@ Next element is ready in 50ms after consumer pause in 150ms: kotlin.Unit
 
 <!--- TEST -->
 
-Note that [ticker] is aware of possible consumer pauses and, by default, adjusts next produced element 
-delay if a pause occurs, trying to maintain a fixed rate of produced elements.
+请注意，[ticker]知道可能的消费者暂停，并且默认情况下会调整下一个生成的元素<!--
+-->如果发生暂停则延迟，试图保持固定的生成元素率。
  
-Optionally, a `mode` parameter equal to [TickerMode.FIXED_DELAY] can be specified to maintain a fixed
-delay between elements.  
+给可选的 `mode` 参数传入 [TickerMode.FIXED_DELAY] 可以保持固定<!--
+-->元素之间的延迟。
 
 
 <!--- MODULE kotlinx-coroutines-core -->
