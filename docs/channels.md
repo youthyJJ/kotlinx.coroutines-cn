@@ -45,8 +45,8 @@ class ChannelsGuideTest {
 ### 通道基础
 
 一个 [Channel] 是一个和 `BlockingQueue` 非常相似的概念。其中一个不同是<!--
--->它代替了阻塞的 `put` 操作并提供了挂起的 [send][SendChannel.send]，还替代了
-阻塞的 `take` 操作并提供了挂起的 [receive][ReceiveChannel.receive]。
+-->它代替了阻塞的 `put` 操作并提供了挂起的 [send][SendChannel.send]，还替代了<!--
+-->阻塞的 `take` 操作并提供了挂起的 [receive][ReceiveChannel.receive]。
 
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
@@ -289,8 +289,8 @@ numbersFrom(2) -> filter(2) -> filter(3) -> filter(5) -> filter(7) ...
 在主线程的上下文中运行整个管道。直到所有的协程在<!--
 -->该主协程 [runBlocking] 的作用域中被启动完成。
 我们不必使用一个明确的列表来保存所有被我们已经启动的协程。
-我们使用 [cancelChildren][kotlin.coroutines.CoroutineContext.cancelChildren] 
-扩展函数在我们打印了前十个素数以后<!--
+我们使用 [cancelChildren][kotlin.coroutines.CoroutineContext.cancelChildren] <!--
+-->扩展函数在我们打印了前十个素数以后<!--
 -->来取消所有的子协程。
 
 <!--- CLEAR -->
@@ -344,9 +344,9 @@ fun CoroutineScope.filter(numbers: ReceiveChannel<Int>, prime: Int) = produce<In
 
 <!--- TEST -->
 
-注意，你可以在标准库中使用
-[`buildIterator`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/build-iterator.html) 
-协程构建器来构建一个相似的管道。 
+注意，你可以在标准库中使用<!--
+-->[`buildIterator`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/build-iterator.html)<!--
+-->协程构建器来构建一个相似的管道。 
 使用 `produce` 替换 `buildIterator`、`send` 替换 `yield`、`receive` 替换 `next`、
 `ReceiveChannel` 替换 `Iterator` 来摆脱协程作用域，你将不再需要 `runBlocking`。
 然而，如上所示，如果你在 [Dispatchers.Default] 上下文中运行它，使用通道的管道的好处在于<!--
@@ -354,8 +354,8 @@ fun CoroutineScope.filter(numbers: ReceiveChannel<Int>, prime: Int) = produce<In
 
 不过，这是一种非常不切实际的寻找素数的方法。在实践中，管道调用了另外的一些<!--
 -->挂起中的调用（就像异步调用远程服务）并且这些管道不能<!--
--->内置使用 `buildSequence`/`buildIterator`，因为它们不被允许随意的挂起，不像
-`produce` 是完全异步的。
+-->内置使用 `buildSequence`/`buildIterator`，因为它们不被允许随意的挂起，不像<!--
+--> `produce` 是完全异步的。
  
 ### 扇出
 
@@ -430,8 +430,8 @@ fun CoroutineScope.launchProcessor(id: Int, channel: ReceiveChannel<Int>) = laun
 
 > 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-channel-06.kt)获得完整代码
 
-该输出将类似于如下所示，尽管接收的是处理器的 id 
-但每个整数也许会不同：
+该输出将类似于如下所示，尽管接收的是处理器的 id <!--
+-->但每个整数也许会不同：
 
 ```
 Processor #2 received 1
@@ -475,8 +475,8 @@ suspend fun sendString(channel: SendChannel<String>, s: String, time: Long) {
 
 </div>
 
-现在，我们启动了几个发送字符串的协程，让我们看看会发生什么
-（在示例中，我们在主线程的上下文中作为主协程的子协程来启动它们）：
+现在，我们启动了几个发送字符串的协程，让我们看看会发生什么<!--
+-->（在示例中，我们在主线程的上下文中作为主协程的子协程来启动它们）：
 
 <!--- CLEAR -->
 
@@ -526,11 +526,11 @@ BAR!
 ### 带缓冲的通道
 
 到目前为止显示的通道都是没有缓冲区的。无缓冲的通道在发送者和接收者相遇时<!--
--->传输元素（aka rendezvous（这句话应该是个俚语，意思好像是“又是约会”的意思，不知道怎么翻））。 如果发送先被调用，则它将被挂起直到接收被调用，
+-->传输元素（aka rendezvous（这句话应该是个俚语，意思好像是“又是约会”的意思，不知道怎么翻））。如果发送先被调用，则它将被挂起直到接收被调用，
 如果接收先被调用，它将被挂起直到发送被调用。
 
-[Channel()] 工厂函数与 [produce] 建造器通过一个可选的参数 `capacity` 
-来指定 _缓冲区大小_ 。缓冲允许发送者在被挂起前发送多个元素，
+[Channel()] 工厂函数与 [produce] 建造器通过一个可选的参数 `capacity` <!--
+-->来指定 _缓冲区大小_ 。缓冲允许发送者在被挂起前发送多个元素，
 就像 `BlockingQueue` 有指定的容量一样，当缓冲区被占满的时候将会引起阻塞。
 
 看看如下代码的表现：
@@ -579,8 +579,8 @@ Sending 4
 ### 通道是公平的
 
 发送和接收操作是 _公平的_ 并且尊重调用它们的<!--
--->多个协程。它们遵守先进先出原则，看看第一个协程调用 `receive` 
-并得到了元素。在下面的例子中两个协程 “乒” 和 "乓" 都<!-- 
+-->多个协程。它们遵守先进先出原则，看看第一个协程调用 `receive` <!--
+-->并得到了元素。在下面的例子中两个协程 “乒” 和 "乓" 都<!-- 
 -->从共享的“桌子”通道都接收这个“球”元素。
 
 
@@ -617,9 +617,9 @@ suspend fun player(name: String, table: Channel<Ball>) {
 
 > 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-channel-09.kt)得到完整代码
 
-“乒”协程首先被启动，所以它首先接收到了球。甚至虽然“乒”
-协程在将球发送会桌子以后立即开始接收，但是球还是被“乓”
-协程接收了，因为它一直在等待着接收球：
+“乒”协程首先被启动，所以它首先接收到了球。甚至虽然“乒”<!--
+-->协程在将球发送会桌子以后立即开始接收，但是球还是被“乓”<!--
+-->协程接收了，因为它一直在等待着接收球：
 
 ```text
 ping Ball(hits=1)
@@ -630,14 +630,14 @@ pong Ball(hits=4)
 
 <!--- TEST -->
 
-注意，有时候通道执行时由于线程池的性质而看起来
-不那么公平。点击[这个提案](https://github.com/Kotlin/kotlinx.coroutines/issues/111)来查看更多细节。
+注意，有时候通道执行时由于执行者的性质而看起来<!--
+-->不那么公平。点击[这个提案](https://github.com/Kotlin/kotlinx.coroutines/issues/111)来查看更多细节。
 
 ### 钟摆通道
 
 钟摆通道是一种特别的会合通道，每次经过特定的延迟都会从该通道进行消费并产生 `Unit`。
-虽然它看起来似乎没用，它被用来构建分段来创建复杂的基于时间的 [produce] 
-管道和进行窗口化操作以及其它时间相关的处理。
+虽然它看起来似乎没用，它被用来构建分段来创建复杂的基于时间的 [produce] <!--
+-->管道和进行窗口化操作以及其它时间相关的处理。
 可以在 [select] 中使用钟摆通道来进行“打勾”操作。
 
 使用工厂方法 [ticker] 来创建这些通道。
@@ -693,7 +693,7 @@ Next element is ready in 50ms after consumer pause in 150ms: kotlin.Unit
 
 <!--- TEST -->
 
-请注意，[ticker]知道可能的消费者暂停，并且默认情况下会调整下一个生成的元素<!--
+请注意，[ticker] 知道可能的消费者暂停，并且默认情况下会调整下一个生成的元素<!--
 -->如果发生暂停则延迟，试图保持固定的生成元素率。
  
 给可选的 `mode` 参数传入 [TickerMode.FIXED_DELAY] 可以保持固定<!--
