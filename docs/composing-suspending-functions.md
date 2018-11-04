@@ -408,7 +408,7 @@ fun main() = runBlocking<Unit> {
 suspend fun failedConcurrentSum(): Int = coroutineScope {
     val one = async<Int> { 
         try {
-            delay(Long.MAX_VALUE) // 模拟一个长时间的计算
+            delay(Long.MAX_VALUE) // 模拟一个长时间的运算
             42
         } finally {
             println("First child was cancelled")
