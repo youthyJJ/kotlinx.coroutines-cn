@@ -22,8 +22,8 @@ class DispatchersGuideTest {
 
 * [协程上下文与调度器](#coroutine-context-and-dispatchers)
   * [调度器与线程](#dispatchers-and-threads)
-  * [不受限的调度器 vs 受限的调度器](#unconfined-vs-confined-dispatcher)
-  * [在协程于线程上调试](#debugging-coroutines-and-threads)
+  * [非受限调度器 vs 受限调度器](#unconfined-vs-confined-dispatcher)
+  * [在协程和线程上调试](#debugging-coroutines-and-threads)
   * [在线程之间跳转](#jumping-between-threads)
   * [上下文中的任务](#job-in-the-context)
   * [子协程](#children-of-a-coroutine)
@@ -95,7 +95,7 @@ main runBlocking      : I'm working in thread main
 <!--- TEST LINES_START_UNORDERED -->
 
 当调用 `launch { ... }` 时不传参数，它从启动了它的 [CoroutineScope]
-承袭了上下文(以及调度器)。在这个案例中，它从 `main` 线程中的 `runBlocking`
+承袭了上下文（以及调度器）。在这个案例中，它从 `main` 线程中的 `runBlocking`
 主协程承袭了上下文。
 
 [Dispatchers.Unconfined] 是一个特殊的调度器且似乎也运行在 `main` 线程中，但实际上，
@@ -110,17 +110,17 @@ main runBlocking      : I'm working in thread main
 在真实的应用程序中两者都必须被释放，当不再需要的时候，使用 [close][ExecutorCoroutineDispatcher.close] 
 函数，或存储在一个顶级变量中使它在整个应用程序中被重用。
 
-### 不受限的调度器 vs 受限的调度器
+### 非受限调度器 vs 受限调度器
  
 [Dispatchers.Unconfined] 协程调度器在被调用的线程中启动协程，但是这只有直到程序运行到<!--
 -->第一个挂起点的时候才行。挂起后，它将在完全由该所运行的线程中恢复<!--
--->挂起被调用的函数。Unconfined dispatcher is appropriate when coroutine does not
-consume CPU time nor updates any shared data (like UI) that is confined to a specific thread. 
+-->挂起被调用的函数。Unconfined dispatcher is appropriate 当协程没有
+消耗 CPU 时间或更新共享数据（比如UI界面） that is confined to a specific thread. 
 
-On the other side, by default, a dispatcher for the outer [CoroutineScope] is inherited. 
-The default dispatcher for [runBlocking] coroutine, in particular,
-is confined to the invoker thread, so inheriting it has the effect of confining execution to
-this thread with a predictable FIFO scheduling.
+在另一种方法中，默认的，一个调度器时承袭自外部的 [CoroutineScope]。
+而 [runBlocking] 协程的默认调度器，特别是，
+被调用它的线程所限制的，所以承袭它有根据可预测的FIFO调度来限制该线程<!--
+-->执行的效果。
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -129,7 +129,7 @@ import kotlinx.coroutines.*
 
 fun main() = runBlocking<Unit> {
 //sampleStart
-    launch(Dispatchers.Unconfined) { // not confined -- will work with main thread
+    launch(Dispatchers.Unconfined) { // 非受限的--将和主线程一起工作
         println("Unconfined      : I'm working in thread ${Thread.currentThread().name}")
         delay(500)
         println("Unconfined      : After delay in thread ${Thread.currentThread().name}")
@@ -158,25 +158,25 @@ main runBlocking: After delay in thread main
 
 <!--- TEST LINES_START -->
  
-So, the coroutine that had inherited context of `runBlocking {...}` continues to execute
-in the `main` thread, while the unconfined one had resumed in the default executor thread that [delay]
-function is using.
+因此，该协程从 `runBlocking {...}` 协程中承袭了上下文并<!--
+-->在主线程中执行，同时使用非受限调度器的协程从被执行 [delay] 函数的默认执行者线程<!--
+-->中恢复。
 
-> Unconfined dispatcher is an advanced mechanism that can be helpful in certain corner cases where
-dispatching of coroutine for its execution later is not needed or produces undesirable side-effects,
-because some operation in a coroutine must be performed right away. 
-Unconfined dispatcher should not be used in general code.  
+> 非受限的调度器是一种高级机制，可以在某些极端情况下提供帮助<!--
+-->而不需要调度协程以便稍后执行，或产生不希望的副作用，
+因为某些操作必须立即在协程中执行。
+非受限调度器不应该被用在通常的代码中。  
 
-### Debugging coroutines and threads
+### 在协程和线程上调试
 
-Coroutines can suspend on one thread and resume on another thread. 
-Even with a single-threaded dispatcher it might be hard to
-figure out what coroutine was doing, where, and when. The common approach to debugging applications with 
-threads is to print the thread name in the log file on each log statement. This feature is universally supported
-by logging frameworks. When using coroutines, the thread name alone does not give much of a context, so 
-`kotlinx.coroutines` includes debugging facilities to make it easier. 
+协程可以在一个线程上挂起并恢复其它线程。
+甚至一个单线程的调度器是非常难以<!--
+-->弄清楚协程何时，在哪里，正在做什么的。使用通常的方法来调试应用程序是让
+线程在每一个日志文件的日志声明中打印线程的名字。这种特性在日志框架中是<!--
+-->普遍受支持的。使用协程时，单独的线程名称不会给出很多上下文，所以
+`kotlinx.coroutines` 包含了调试工具来让它更简单。
 
-Run the following code with `-Dkotlinx.coroutines.debug` JVM option:
+使用 `-Dkotlinx.coroutines.debug` JVM 参数运行下面的代码：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -202,12 +202,12 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-context-03.kt)
+> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-context-03.kt)获得完整代码
 
-There are three coroutines. The main coroutine (#1) -- `runBlocking` one, 
-and two coroutines computing deferred values `a` (#2) and `b` (#3).
-They are all executing in the context of `runBlocking` and are confined to the main thread.
-The output of this code is:
+这里有三个协程，其中主协程是 (#1) -- `runBlocking`， 
+而另外两个协程计算延期的值 `a` (#2) 和 `b` (#3)。
+它们都在 `runBlocking` 上下文中执行并且被限制在了主线程内。
+这段代码的输出如下：
 
 ```text
 [main @coroutine#2] I'm computing a piece of the answer
@@ -217,15 +217,15 @@ The output of this code is:
 
 <!--- TEST FLEXIBLE_THREAD -->
 
-The `log` function prints the name of the thread in square brackets and you can see, that it is the `main`
-thread, but the identifier of the currently executing coroutine is appended to it. This identifier 
-is consecutively assigned to all created coroutines when debugging mode is turned on.
+该 `log` 函数将线程的名字打印在了方括号中，你可以看到是 `main`
+线程，但是当前正在执行的协程的标识符被附加到它上面。当调试模式开启的时候<!-- 
+-->这个标识符会对已经创建的协程进行连续的签名。
 
-You can read more about debugging facilities in the documentation for [newCoroutineContext] function.
+您可以在 [newCoroutineContext] 函数的文档中阅读有关调试工具的更多信息。
 
 ### 在线程之间跳转
 
-Run the following code with `-Dkotlinx.coroutines.debug` JVM option (see [debug](#debugging-coroutines-and-threads)):
+使用 `-Dkotlinx.coroutines.debug` JVM 参数运行下面的代码（查看[debug](#debugging-coroutines-and-threads)）：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -272,8 +272,8 @@ fun main() {
 
 ### 上下文中的任务
 
-The coroutine's [Job] is part of its context. The coroutine can retrieve it from its own context 
-using `coroutineContext[Job]` expression:
+协程的 [Job] 是它上下文中的一部分。协程可以在它所属的上下文中使用
+`coroutineContext[Job]` 表达式来取回它：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -291,7 +291,7 @@ fun main() = runBlocking<Unit> {
 
 > 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-context-05.kt)获得完整代码
 
-It produces something like that when running in [debug mode](#debugging-coroutines-and-threads):
+当它运行于[调试模式](#debugging-coroutines-and-threads)时将处理一些任务：
 
 ```
 My job is "coroutine#1":BlockingCoroutine{Active}@6d311334
@@ -299,10 +299,10 @@ My job is "coroutine#1":BlockingCoroutine{Active}@6d311334
 
 <!--- TEST lines.size == 1 && lines[0].startsWith("My job is \"coroutine#1\":BlockingCoroutine{Active}@") -->
 
-Note, that [isActive] in [CoroutineScope] is just a convenient shortcut for
-`coroutineContext[Job]?.isActive == true`.
+请注意，[CoroutineScope] 中的 [isActive] 只是
+`coroutineContext[Job]?.isActive == true` 的一种方便的捷径。
 
-### Children of a coroutine
+### 子协程
 
 When a coroutine is launched in the [CoroutineScope] of another coroutine,
 it inherits its context via [CoroutineScope.coroutineContext] and 
