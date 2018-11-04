@@ -408,7 +408,7 @@ fun main() = runBlocking<Unit> {
 suspend fun failedConcurrentSum(): Int = coroutineScope {
     val one = async<Int> { 
         try {
-            delay(Long.MAX_VALUE) // Emulates very long computation
+            delay(Long.MAX_VALUE) // 模拟一个长时间的计算
             42
         } finally {
             println("First child was cancelled")
@@ -424,7 +424,7 @@ suspend fun failedConcurrentSum(): Int = coroutineScope {
 
 </div>
 
-> 你可以点击这里[here](../core/kotlinx-coroutines-core/test/guide/example-compose-06.kt)获得完整代码
+> 你可以点击这里[这里](../core/kotlinx-coroutines-core/test/guide/example-compose-06.kt)获得完整代码
 
 注意，当第一个子协程失败的时候第一个 `async` 是如何等待父线程被取消的：
 ```text
