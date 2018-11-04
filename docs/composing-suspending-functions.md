@@ -23,7 +23,7 @@ class ComposingGuideTest {
 * [组合挂起函数](#composing-suspending-functions)
   * [默认顺序](#sequential-by-default)
   * [使用异步的并发](#concurrent-using-async)
-  * [异步懒启动](#lazily-started-async)
+  * [异步惰性启动](#lazily-started-async)
   * [异步风格的函数](#async-style-functions)
   * [使用异步的结构性并发](#structured-concurrency-with-async)
 
@@ -164,9 +164,9 @@ Completed in 1017 ms
 这里快了两倍，因为我们使用两个协程进行并发。
 注意，使用协程进行并发总是显式的。
 
-### 异步懒启动
+### 异步惰性启动
 
-使用一个可选的参数 `start` 并传值 [CoroutineStart.LAZY]，可以对 [async] 进行懒操作。
+使用一个可选的参数 `start` 并传值 [CoroutineStart.LAZY]，可以对 [async] 进行惰性操作。
 只有当结果需要被 [await][Deferred.await] 或者如果一个 
 [start][Job.start] 函数被调用，协程才会<!--
 -->被启动。运行下面的示例：
@@ -221,7 +221,7 @@ Completed in 1017 ms
 
 注意，如果我们在 `println` 中调用了 [await][Deferred.await] 并且在这个协程中省略调用了
 [start][Job.start]，接下来 [await][Deferred.await] 开始执行协程，我们会得到顺序的<!--
--->行为并且等待执行结束，但这不是懒启动的预期用例。
+-->行为并且等待执行结束，但这不是惰性启动的预期用例。
 当调用挂起函数计算值的时候
 `async(start = CoroutineStart.LAZY)` 用例是标准的 `lazy` 函数的替换方案。
 
