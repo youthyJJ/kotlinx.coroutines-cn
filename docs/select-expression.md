@@ -1,6 +1,5 @@
 <!--- INCLUDE .*/example-([a-z]+)-([0-9a-z]+)\.kt 
 /*
-
  * Copyright 2016-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license.
  */
 
@@ -17,6 +16,9 @@ import org.junit.Test
 class SelectGuideTest {
 --> 
 
+
+## 目录
+
 <!--- TOC -->
 
 * [select 表达式（试验性）](#select-expression-experimental)
@@ -30,11 +32,14 @@ class SelectGuideTest {
 
 
 
-## select 表达式（试验性）
+## select 表达式（实验性的）
 
-select 表达式可以同时等待多个挂起函数，并 _选择_ 第一个可用的。
+select 表达式可以同时等待多个挂起函数，并_选择_<!--
+-->第一个可用的。
 
-> Select 表达式是 `kotlinx.coroutines` 的试验性功能。它们的 API 在 `kotlinx.coroutines` 库即将到来的更新中可能会有很大的变化。
+> Select 表达式在 `kotlinx.coroutines` 中是一个实验性的特性。这些API在<!--
+--> `kotlinx.coroutines` 库即将到来的更新中可能会<!--
+-->发生改变。
 
 ### 从通道中查询
 
@@ -44,14 +49,14 @@ select 表达式可以同时等待多个挂起函数，并 _选择_ 第一个可
 
 ```kotlin
 fun CoroutineScope.fizz() = produce<String> {
-    while (true) { // sends "Fizz" every 300 ms
+    while (true) { // 每 300ms 发送 "Fizz" 
         delay(300)
         send("Fizz")
     }
 }
 ```
 
-
+</div>
 
 接着 `buzz` 每500毫秒产出 “Buzz!” 字符串：
 
@@ -59,33 +64,35 @@ fun CoroutineScope.fizz() = produce<String> {
 
 ```kotlin
 fun CoroutineScope.buzz() = produce<String> {
-    while (true) { // sends "Buzz!" every 500 ms
+    while (true) { // 每 500ms 发送 "Buzz!" 
         delay(500)
         send("Buzz!")
     }
 }
 ```
 
+</div>
 
-
-使用 [receive][ReceiveChannel.receive] 挂起函数，我们可以从一个或另一个通道接收数据。但是 [select] 表达式允许我们使用其 [onReceive][ReceiveChannel.onReceive] 子句同时从两者接收：
+使用 [receive][ReceiveChannel.receive] 挂起函数，我们可以从一个或另一个通道接收数据。<!--
+-->但是 [select] 表达式允许我们使用其<!--
+--> [onReceive][ReceiveChannel.onReceive] 子句_同时_从两者接收：
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
 
 ```kotlin
 suspend fun selectFizzBuzz(fizz: ReceiveChannel<String>, buzz: ReceiveChannel<String>) {
-    select<Unit> { // <Unit> means that this select expression does not produce any result 
-        fizz.onReceive { value ->  // this is the first select clause
+    select<Unit> { // <Unit> 意味着该 select 表达式不返回任何结果
+        fizz.onReceive { value ->  // 这是第一个 select 子句
             println("fizz -> '$value'")
         }
-        buzz.onReceive { value ->  // this is the second select clause
+        buzz.onReceive { value ->  // 这是第二个 select 子句
             println("buzz -> '$value'")
         }
     }
 }
 ```
 
-
+</div>
 
 让我们运行7次：
 
@@ -99,25 +106,25 @@ import kotlinx.coroutines.channels.*
 import kotlinx.coroutines.selects.*
 
 fun CoroutineScope.fizz() = produce<String> {
-    while (true) { // sends "Fizz" every 300 ms
+    while (true) { // 每 300ms 发送 "Fizz" 
         delay(300)
         send("Fizz")
     }
 }
 
 fun CoroutineScope.buzz() = produce<String> {
-    while (true) { // sends "Buzz!" every 500 ms
+    while (true) { // 每 500ms 发送 "Buzz!" 
         delay(500)
         send("Buzz!")
     }
 }
 
 suspend fun selectFizzBuzz(fizz: ReceiveChannel<String>, buzz: ReceiveChannel<String>) {
-    select<Unit> { // <Unit> means that this select expression does not produce any result 
-        fizz.onReceive { value ->  // this is the first select clause
+    select<Unit> { // <Unit> 意味着该 select 表达式不返回任何结果 
+        fizz.onReceive { value ->  // 这是第一个 select 子句
             println("fizz -> '$value'")
         }
-        buzz.onReceive { value ->  // this is the second select clause
+        buzz.onReceive { value ->  // 这是第二个 select 子句
             println("buzz -> '$value'")
         }
     }
@@ -130,7 +137,7 @@ fun main() = runBlocking<Unit> {
     repeat(7) {
         selectFizzBuzz(fizz, buzz)
     }
-    coroutineContext.cancelChildren() // cancel fizz & buzz coroutines
+    coroutineContext.cancelChildren() // 取消 fizz 和 buzz 协程
 //sampleEnd        
 }
 ```
@@ -155,7 +162,10 @@ buzz -> 'Buzz!'
 
 ### 从关闭的通道查询
 
-select 中的 [onReceive][ReceiveChannel.onReceive] 子句在已经关闭的通道会失败，并导致相应的 `select` 抛出异常。我们可以使用 [onReceiveOrNull][ReceiveChannel.onReceiveOrNull] 子句在关闭通道时执行特定操作。以下示例还显示了 `select` 是一个返回其查询方法结果的表达式：
+select 中的 [onReceive][ReceiveChannel.onReceive] 子句执行在已经关闭的通道会失败，并导致相应的 <!--
+-->`select` 抛出异常。我们可以使用 [onReceiveOrNull][ReceiveChannel.onReceiveOrNull] 子句在关闭通道时执行<!--
+-->特定操作。以下示例还显示了 `select` 是一个返回<!--
+-->其查询方法结果的表达式：
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
 
@@ -179,7 +189,8 @@ suspend fun selectAorB(a: ReceiveChannel<String>, b: ReceiveChannel<String>): St
 
 </div>
 
-现在有一个产出四次 “Hello” 字符串的 `a` 通道、一个产出四次 “World” 字符串的 `b` 通道，我们在这两个通道上使用它：
+现在有一个生成四次 “Hello” 字符串的 `a` 通道，<!--
+-->和一个产出四次 “World” 字符串的 `b` 通道，我们在这两个通道上使用它：
 
 <!--- CLEAR -->
 
@@ -214,7 +225,7 @@ fun main() = runBlocking<Unit> {
     val b = produce<String> {
         repeat(4) { send("World $it") }
     }
-    repeat(8) { // print first eight results
+    repeat(8) { // 打印最早的8个结果
         println(selectAorB(a, b))
     }
     coroutineContext.cancelChildren()  
@@ -243,27 +254,31 @@ Channel 'a' is closed
 
 有几个结果可以通过观察得出。
 
-首先，`select` 偏向于第一个子句，当可以同时选到多个子句时，第一个子句将被选中。在这里，两个通道都在不断地生成字符串，因此作为 select 中的第一个子句的通道获胜。然而因为我们使用的是无缓冲通道，所以 `a` 在其发送调用时会不时被挂起，进而 `b` 也有机会发送。
+首先，`select` _偏向于_第一个子句，当可以同时选到多个子句时，<!--
+-->第一个子句将被选中。在这里，两个通道都在不断地生成字符串，因此 `a` 通道<!--
+-->作为 select 中的第一个子句获胜。然而因为我们使用的是无缓冲通道，所以 `a` 在其调用 <!--
+-->[send][SendChannel.send] 时会不时地被挂起，进而 `b` 也有机会发送。
 
-第二个观察结果是，当通道已经关闭时，会立即选择 [onReceiveOrNull][ReceiveChannel.onReceiveOrNull] 。
-
-
+第二个观察结果是，当通道已经关闭时，<!--
+-->会立即选择 [onReceiveOrNull][ReceiveChannel.onReceiveOrNull] 。
 
 ### 查询并发送
 
-Select 表达式具有 [onSend][SendChannel.onSend] 子句，可以很好的与选择的偏向特性结合使用。
+Select 表达式具有 [onSend][SendChannel.onSend] 子句，可以很好的与<!--
+-->选择的偏向特性结合使用。
 
-我们来编写一个整数生成器的示例，当主通道上的消费者无法跟上它时，它会将值发送到 `side` 通道上：
+我们来编写一个整数生成器的示例，当主通道上的<!--
+-->消费者无法跟上它时，它会将值发送到 `side` 通道上：
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
 
 ```kotlin
 fun CoroutineScope.produceNumbers(side: SendChannel<Int>) = produce<Int> {
-    for (num in 1..10) { // produce 10 numbers from 1 to 10
-        delay(100) // every 100 ms
+    for (num in 1..10) { // 生产从 1 到 10 的10个数值
+        delay(100) // 每 100 ms
         select<Unit> {
-            onSend(num) {} // Send to the primary channel
-            side.onSend(num) {} // or to the side channel     
+            onSend(num) {} // 发送到主通道
+            side.onSend(num) {} // 或者发送到 side 通道     
         }
     }
 }
@@ -283,24 +298,24 @@ import kotlinx.coroutines.channels.*
 import kotlinx.coroutines.selects.*
 
 fun CoroutineScope.produceNumbers(side: SendChannel<Int>) = produce<Int> {
-    for (num in 1..10) { // produce 10 numbers from 1 to 10
-        delay(100) // every 100 ms
+    for (num in 1..10) { // 生产从 1 到 10 的10个数值
+        delay(100) // 每 100 ms
         select<Unit> {
-            onSend(num) {} // Send to the primary channel
-            side.onSend(num) {} // or to the side channel     
+            onSend(num) {} // 发送到主通道
+            side.onSend(num) {} // 或者发送到 side 通道
         }
     }
 }
 
 fun main() = runBlocking<Unit> {
 //sampleStart
-    val side = Channel<Int>() // allocate side channel
-    launch { // this is a very fast consumer for the side channel
+    val side = Channel<Int>() // 分配 side channel
+    launch { // 对于 side 通道来说，这是一个很快的消费者
         side.consumeEach { println("Side channel has $it") }
     }
     produceNumbers(side).consumeEach { 
         println("Consuming $it")
-        delay(250) // let us digest the consumed number properly, do not hurry
+        delay(250) // 让我们不急切地、适当地来消费数值
     }
     println("Done consuming")
     coroutineContext.cancelChildren()  
@@ -332,7 +347,9 @@ Done consuming
 
 ### 查询延迟值
 
-延迟值可以使用 [onAwait][Deferred.onAwait] 子句查询。让我们启动一个延迟随机时间后返回延迟字符串的异步方法：
+延迟值可以使用 [onAwait][Deferred.onAwait] 子句查询。<!--
+-->让我们启动一个异步函数，它在<!--
+-->随机的延迟后会返回延迟字符串：
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
 
@@ -358,7 +375,10 @@ fun CoroutineScope.asyncStringsList(): List<Deferred<String>> {
 
 </div>
 
-现在主函数等待第一个函数完成，并统计仍处于激活状态的延迟值的数量。注意，我们在这里的使用，事实上是把 `select` 表达式作为一种Kotlin DSL，所以我们可以用任意代码为它提供子句。在这种情况下，我们遍历一个延迟值的队列，为每个延迟值提供 `onAwait` 子句。
+现在主函数在等待第一个函数完成，并统计仍处于<!--
+-->激活状态的延迟值的数量。注意，我们在这里的使用，事实上是把 `select` 表达式作为一种Kotlin DSL，<!--
+-->所以我们可以用任意代码为它提供子句。在这种情况下，我们遍历一个<!--
+-->延迟值的队列，并为每个延迟值提供 `onAwait` 子句。
 
 <!--- CLEAR -->
 
@@ -411,26 +431,28 @@ Deferred 4 produced answer 'Waited for 128 ms'
 
 ### 在延迟值通道上切换
 
-我们现在来编写一个通道生产者函数，它消费一个产生延迟字符串的通道，并等待每个接收的延迟值，但只在下一个延迟值到达或者通道关闭之前。此示例将 [onReceiveOrNull][ReceiveChannel.onReceiveOrNull] 和 [onAwait][Deferred.onAwait] 子句放在同一个 `select` 中：
+我们现在来编写一个通道生产者函数，它消费一个产生延迟字符串的通道，并等待每个接收的<!--
+-->延迟值，但只在下一个延迟值到达或者通道关闭之前。此示例将 <!--
+-->[onReceiveOrNull][ReceiveChannel.onReceiveOrNull] 和 [onAwait][Deferred.onAwait] 子句放在同一个 `select` 中：
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
 
 ```kotlin
 fun CoroutineScope.switchMapDeferreds(input: ReceiveChannel<Deferred<String>>) = produce<String> {
-    var current = input.receive() // start with first received deferred value
-    while (isActive) { // loop while not cancelled/closed
-        val next = select<Deferred<String>?> { // return next deferred value from this select or null
+    var current = input.receive() // 从第一个接收到的延迟值开始
+    while (isActive) { // 循环直到被取消或关闭
+        val next = select<Deferred<String>?> { // 从这个 select 中返回下一个延迟值或 null
             input.onReceiveOrNull { update ->
-                update // replaces next value to wait
+                update // 替换下一个要等待的值
             }
             current.onAwait { value ->  
-                send(value) // send value that current deferred has produced
-                input.receiveOrNull() // and use the next deferred from the input channel
+                send(value) // 发送当前延迟生成的值
+                input.receiveOrNull() // 然后使用从输入通道得到的下一个延迟值
             }
         }
         if (next == null) {
             println("Channel was closed")
-            break // out of loop
+            break // 跳出循环
         } else {
             current = next
         }
@@ -454,7 +476,8 @@ fun CoroutineScope.asyncString(str: String, time: Long) = async {
 
 </div>
 
-主函数只是启动一个协程来打印 `switchMapDeferreds` 的结果并向它发送一些测试数据：
+主函数只是启动一个协程来打印 `switchMapDeferreds` 的结果并向它发送一些<!--
+-->测试数据：
 
 <!--- CLEAR -->
 
@@ -466,20 +489,20 @@ import kotlinx.coroutines.channels.*
 import kotlinx.coroutines.selects.*
     
 fun CoroutineScope.switchMapDeferreds(input: ReceiveChannel<Deferred<String>>) = produce<String> {
-    var current = input.receive() // start with first received deferred value
-    while (isActive) { // loop while not cancelled/closed
-        val next = select<Deferred<String>?> { // return next deferred value from this select or null
+    var current = input.receive() // 从第一个接收到的延迟值开始
+    while (isActive) { // 循环直到被取消或关闭
+        val next = select<Deferred<String>?> { // 从这个 select 中返回下一个延迟值或 null
             input.onReceiveOrNull { update ->
-                update // replaces next value to wait
+                update // 替换下一个要等待的值
             }
             current.onAwait { value ->  
-                send(value) // send value that current deferred has produced
-                input.receiveOrNull() // and use the next deferred from the input channel
+                send(value) // 发送当前延迟生成的值
+                input.receiveOrNull() // 然后使用从输入通道得到的下一个延迟值
             }
         }
         if (next == null) {
             println("Channel was closed")
-            break // out of loop
+            break // 跳出循环
         } else {
             current = next
         }
@@ -494,20 +517,20 @@ fun CoroutineScope.asyncString(str: String, time: Long) = async {
 fun main() = runBlocking<Unit> {
 //sampleStart
     val chan = Channel<Deferred<String>>() // the channel for test
-    launch { // launch printing coroutine
+    launch { // 启动打印协程
         for (s in switchMapDeferreds(chan)) 
-            println(s) // print each received string
+            println(s) // 打印每个获得的字符串
     }
     chan.send(asyncString("BEGIN", 100))
-    delay(200) // enough time for "BEGIN" to be produced
+    delay(200) // 充足的时间来生产 "BEGIN"
     chan.send(asyncString("Slow", 500))
-    delay(100) // not enough time to produce slow
+    delay(100) // 不充足的时间来生产 "Slow"
     chan.send(asyncString("Replace", 100))
-    delay(500) // give it time before the last one
+    delay(500) // 在最后一个前给它一点时间
     chan.send(asyncString("END", 500))
-    delay(1000) // give it time to process
-    chan.close() // close the channel ... 
-    delay(500) // and wait some time to let it finish
+    delay(1000) // 给执行一段时间
+    chan.close() // 关闭通道……
+    delay(500) // 然后等待一段时间来让它结束
 //sampleEnd
 }
 ```
@@ -529,7 +552,6 @@ Channel was closed
 
 <!--- MODULE kotlinx-coroutines-core -->
 <!--- INDEX kotlinx.coroutines -->
-
 [Deferred.onAwait]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-deferred/on-await.html
 <!--- INDEX kotlinx.coroutines.channels -->
 [ReceiveChannel.receive]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-receive-channel/receive.html
