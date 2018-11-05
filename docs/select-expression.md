@@ -1,5 +1,6 @@
 <!--- INCLUDE .*/example-([a-z]+)-([0-9a-z]+)\.kt 
 /*
+
  * Copyright 2016-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license.
  */
 
@@ -16,34 +17,28 @@ import org.junit.Test
 class SelectGuideTest {
 --> 
 
-
-## Table of contents
-
 <!--- TOC -->
 
-* [Select expression (experimental)](#select-expression-experimental)
-  * [Selecting from channels](#selecting-from-channels)
-  * [Selecting on close](#selecting-on-close)
-  * [Selecting to send](#selecting-to-send)
-  * [Selecting deferred values](#selecting-deferred-values)
-  * [Switch over a channel of deferred values](#switch-over-a-channel-of-deferred-values)
+* [select 表达式（试验性）](#select-expression-experimental)
+  * [从通道查询](#selecting-from-channels)
+  * [从关闭的通道查询](#selecting-on-close)
+  * [查询并发送](#selecting-to-send)
+  * [查询延迟值](#selecting-deferred-values)
+  * [在延迟值通道上切换](#switch-over-a-channel-of-deferred-values)
 
 <!--- END_TOC -->
 
 
 
-## Select expression (experimental)
+## select 表达式（试验性）
 
-Select expression makes it possible to await multiple suspending functions simultaneously and _select_
-the first one that becomes available.
+select 表达式可以同时等待多个挂起函数，并 _选择_ 第一个可用的。
 
-> Select expressions are an experimental feature of `kotlinx.coroutines`. Their API is expected to 
-evolve in the upcoming updates of the `kotlinx.coroutines` library with potentially
-breaking changes.
+> Select 表达式是 `kotlinx.coroutines` 的试验性功能。它们的 API 在 `kotlinx.coroutines` 库即将到来的更新中可能会有很大的变化。
 
-### Selecting from channels
+### 从通道中查询
 
-Let us have two producers of strings: `fizz` and `buzz`. The `fizz` produces "Fizz" string every 300 ms:
+我们现在有两个字符串生产者：`fizz` 和 `buzz` 。其中 `fizz` 生产者每300毫秒产出 “Fizz” 字符串：
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
 
@@ -56,9 +51,9 @@ fun CoroutineScope.fizz() = produce<String> {
 }
 ```
 
-</div>
 
-And the `buzz` produces "Buzz!" string every 500 ms:
+
+接着 `buzz` 每500毫秒产出 “Buzz!” 字符串：
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
 
@@ -71,11 +66,9 @@ fun CoroutineScope.buzz() = produce<String> {
 }
 ```
 
-</div>
 
-Using [receive][ReceiveChannel.receive] suspending function we can receive _either_ from one channel or the
-other. But [select] expression allows us to receive from _both_ simultaneously using its
-[onReceive][ReceiveChannel.onReceive] clauses:
+
+使用 [receive][ReceiveChannel.receive] 挂起函数，我们可以从一个或另一个通道接收数据。但是 [select] 表达式允许我们使用其 [onReceive][ReceiveChannel.onReceive] 子句同时从两者接收：
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
 
@@ -92,9 +85,9 @@ suspend fun selectFizzBuzz(fizz: ReceiveChannel<String>, buzz: ReceiveChannel<St
 }
 ```
 
-</div>
 
-Let us run it all seven times:
+
+让我们运行7次：
 
 <!--- CLEAR -->
 
@@ -144,9 +137,9 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-select-01.kt)
+> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-select-01.kt)获得完整代码
 
-The result of this code is: 
+这段代码的结果如下： 
 
 ```text
 fizz -> 'Fizz'
@@ -160,12 +153,9 @@ buzz -> 'Buzz!'
 
 <!--- TEST -->
 
-### Selecting on close
+### 从关闭的通道查询
 
-The [onReceive][ReceiveChannel.onReceive] clause in `select` fails when the channel is closed causing the corresponding
-`select` to throw an exception. We can use [onReceiveOrNull][ReceiveChannel.onReceiveOrNull] clause to perform a
-specific action when the channel is closed. The following example also shows that `select` is an expression that returns 
-the result of its selected clause:
+select 中的 [onReceive][ReceiveChannel.onReceive] 子句在已经关闭的通道会失败，并导致相应的 `select` 抛出异常。我们可以使用 [onReceiveOrNull][ReceiveChannel.onReceiveOrNull] 子句在关闭通道时执行特定操作。以下示例还显示了 `select` 是一个返回其查询方法结果的表达式：
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
 
@@ -189,8 +179,7 @@ suspend fun selectAorB(a: ReceiveChannel<String>, b: ReceiveChannel<String>): St
 
 </div>
 
-Let's use it with channel `a` that produces "Hello" string four times and 
-channel `b` that produces "World" four times:
+现在有一个产出四次 “Hello” 字符串的 `a` 通道、一个产出四次 “World” 字符串的 `b` 通道，我们在这两个通道上使用它：
 
 <!--- CLEAR -->
 
@@ -235,9 +224,9 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-select-02.kt)
+> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-select-02.kt)获得完整代码
 
-The result of this code is quite interesting, so we'll analyze it in mode detail:
+这段代码的结果非常有趣，所以我们将在模式细节中分析它：
 
 ```text
 a -> 'Hello 0'
@@ -252,23 +241,19 @@ Channel 'a' is closed
 
 <!--- TEST -->
 
-There are couple of observations to make out of it. 
+有几个结果可以通过观察得出。
 
-First of all, `select` is _biased_ to the first clause. When several clauses are selectable at the same time, 
-the first one among them gets selected. Here, both channels are constantly producing strings, so `a` channel,
-being the first clause in select, wins. However, because we are using unbuffered channel, the `a` gets suspended from
-time to time on its [send][SendChannel.send] invocation and gives a chance for `b` to send, too.
+首先，`select` 偏向于第一个子句，当可以同时选到多个子句时，第一个子句将被选中。在这里，两个通道都在不断地生成字符串，因此作为 select 中的第一个子句的通道获胜。然而因为我们使用的是无缓冲通道，所以 `a` 在其发送调用时会不时被挂起，进而 `b` 也有机会发送。
 
-The second observation, is that [onReceiveOrNull][ReceiveChannel.onReceiveOrNull] gets immediately selected when the 
-channel is already closed.
+第二个观察结果是，当通道已经关闭时，会立即选择 [onReceiveOrNull][ReceiveChannel.onReceiveOrNull] 。
 
-### Selecting to send
 
-Select expression has [onSend][SendChannel.onSend] clause that can be used for a great good in combination 
-with a biased nature of selection.
 
-Let us write an example of producer of integers that sends its values to a `side` channel when 
-the consumers on its primary channel cannot keep up with it:
+### 查询并发送
+
+Select 表达式具有 [onSend][SendChannel.onSend] 子句，可以很好的与选择的偏向特性结合使用。
+
+我们来编写一个整数生成器的示例，当主通道上的消费者无法跟上它时，它会将值发送到 `side` 通道上：
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
 
@@ -286,7 +271,7 @@ fun CoroutineScope.produceNumbers(side: SendChannel<Int>) = produce<Int> {
 
 </div>
 
-Consumer is going to be quite slow, taking 250 ms to process each number:
+消费者将会非常缓慢，每个数值处理需要250毫秒：
 
 <!--- CLEAR -->
 
@@ -324,11 +309,11 @@ fun main() = runBlocking<Unit> {
 ```
 
 </div> 
- 
-> You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-select-03.kt)
-  
-So let us see what happens:
- 
+
+> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-select-03.kt)获得完整代码
+
+让我们看看会发生什么：
+
 ```text
 Consuming 1
 Side channel has 2
@@ -345,11 +330,9 @@ Done consuming
 
 <!--- TEST -->
 
-### Selecting deferred values
+### 查询延迟值
 
-Deferred values can be selected using [onAwait][Deferred.onAwait] clause. 
-Let us start with an async function that returns a deferred string value after 
-a random delay:
+延迟值可以使用 [onAwait][Deferred.onAwait] 子句查询。让我们启动一个延迟随机时间后返回延迟字符串的异步方法：
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
 
@@ -362,7 +345,7 @@ fun CoroutineScope.asyncString(time: Int) = async {
 
 </div>
 
-Let us start a dozen of them with a random delay.
+让我们启动十几个，每个都延迟随机的时间。
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
 
@@ -375,10 +358,7 @@ fun CoroutineScope.asyncStringsList(): List<Deferred<String>> {
 
 </div>
 
-Now the main function awaits for the first of them to complete and counts the number of deferred values
-that are still active. Note, that we've used here the fact that `select` expression is a Kotlin DSL, 
-so we can provide clauses for it using an arbitrary code. In this case we iterate over a list
-of deferred values to provide `onAwait` clause for each deferred value.
+现在主函数等待第一个函数完成，并统计仍处于激活状态的延迟值的数量。注意，我们在这里的使用，事实上是把 `select` 表达式作为一种Kotlin DSL，所以我们可以用任意代码为它提供子句。在这种情况下，我们遍历一个延迟值的队列，为每个延迟值提供 `onAwait` 子句。
 
 <!--- CLEAR -->
 
@@ -418,9 +398,9 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-select-04.kt)
+> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-select-04.kt)获得完整代码
 
-The output is:
+输出如下：
 
 ```text
 Deferred 4 produced answer 'Waited for 128 ms'
@@ -429,11 +409,9 @@ Deferred 4 produced answer 'Waited for 128 ms'
 
 <!--- TEST -->
 
-### Switch over a channel of deferred values
+### 在延迟值通道上切换
 
-Let us write a channel producer function that consumes a channel of deferred string values, waits for each received
-deferred value, but only until the next deferred value comes over or the channel is closed. This example puts together 
-[onReceiveOrNull][ReceiveChannel.onReceiveOrNull] and [onAwait][Deferred.onAwait] clauses in the same `select`:
+我们现在来编写一个通道生产者函数，它消费一个产生延迟字符串的通道，并等待每个接收的延迟值，但只在下一个延迟值到达或者通道关闭之前。此示例将 [onReceiveOrNull][ReceiveChannel.onReceiveOrNull] 和 [onAwait][Deferred.onAwait] 子句放在同一个 `select` 中：
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
 
@@ -462,7 +440,7 @@ fun CoroutineScope.switchMapDeferreds(input: ReceiveChannel<Deferred<String>>) =
 
 </div>
 
-To test it, we'll use a simple async function that resolves to a specified string after a specified time:
+为了测试它，我们将用一个简单的异步函数，它在特定的延迟后返回特定的字符串：
 
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
@@ -476,8 +454,7 @@ fun CoroutineScope.asyncString(str: String, time: Long) = async {
 
 </div>
 
-The main function just launches a coroutine to print results of `switchMapDeferreds` and sends some test
-data to it:
+主函数只是启动一个协程来打印 `switchMapDeferreds` 的结果并向它发送一些测试数据：
 
 <!--- CLEAR -->
 
@@ -537,9 +514,9 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get full code [here](../core/kotlinx-coroutines-core/test/guide/example-select-05.kt)
+> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-select-05.kt)获得完整代码 
 
-The result of this code:
+这段代码的结果：
 
 ```text
 BEGIN
@@ -552,6 +529,7 @@ Channel was closed
 
 <!--- MODULE kotlinx-coroutines-core -->
 <!--- INDEX kotlinx.coroutines -->
+
 [Deferred.onAwait]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-deferred/on-await.html
 <!--- INDEX kotlinx.coroutines.channels -->
 [ReceiveChannel.receive]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-receive-channel/receive.html
