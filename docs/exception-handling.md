@@ -15,26 +15,26 @@ import org.junit.Test
 
 class ExceptionsGuideTest {
 --> 
-## Table of contents
+## 目录
 
 <!--- TOC -->
 
-* [Exception handling](#exception-handling)
-  * [Exception propagation](#exception-propagation)
+* [异常处理](#exception-handling)
+  * [异常的传递](#exception-propagation)
   * [CoroutineExceptionHandler](#coroutineexceptionhandler)
-  * [Cancellation and exceptions](#cancellation-and-exceptions)
-  * [Exceptions aggregation](#exceptions-aggregation)
-* [Supervision](#supervision)
-  * [Supervision job](#supervision-job)
-  * [Supervision scope](#supervision-scope)
-  * [Exceptions in supervised coroutines](#exceptions-in-supervised-coroutines)
+  * [取消与异常](#cancellation-and-exceptions)
+  * [异常的聚合](#exceptions-aggregation)
+* [监督](#supervision)
+  * [监督任务](#supervision-job)
+  * [监督作用域](#supervision-scope)
+  * [监督协程中的异常](#exceptions-in-supervised-coroutines)
 
 <!--- END_TOC -->
 
-## Exception handling
+## 异常处理
 
 
-This section covers exception handling and cancellation on exceptions.
+这部分包括异常处理以及取消异常。
 We already know that cancelled coroutine throws [CancellationException] in suspension points and that it 
 is ignored by coroutines machinery. But what happens if an exception is thrown during cancellation or multiple children of the same 
 coroutine throw an exception?
