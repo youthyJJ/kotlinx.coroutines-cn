@@ -46,8 +46,7 @@ class ExceptionsGuideTest {
 前者对待异常是不处理的，类似于 Java 的 `Thread.uncaughtExceptionHandler`，
 而后者依赖用户来最终消耗<!--
 -->异常，比如说，通过 [await][Deferred.await] 或 [receive][ReceiveChannel.receive] 
-（[produce] 以及 [receive][ReceiveChannel.receive] 在 [Channels](https://github.com/Kotlin/kotlinx.coroutines/blob/master/docs/channels.md)
-中介绍过）。
+（[produce] 以及 [receive][ReceiveChannel.receive] 在 [Channels](https://github.com/Kotlin/kotlinx.coroutines/blob/master/docs/channels.md) 中介绍过）。
 
 可以通过一个在 [GlobalScope] 中创建新协程的简单示例来进行演示：
 
