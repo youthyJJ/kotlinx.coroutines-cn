@@ -315,7 +315,7 @@ fun main() = runBlocking<Unit> {
     }
     produceNumbers(side).consumeEach { 
         println("Consuming $it")
-        delay(250) // 让我们正确消化消耗被发送来的数字，不要着急
+        delay(250) // 不要着急，让我们正确消化消耗被发送来的数字
     }
     println("Done consuming")
     coroutineContext.cancelChildren()  
