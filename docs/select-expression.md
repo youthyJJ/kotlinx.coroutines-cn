@@ -34,7 +34,7 @@ class SelectGuideTest {
 
 ## select 表达式（实验性的）
 
-select 表达式可以同时等待多个挂起函数，并_选择_<!--
+select 表达式可以同时等待多个挂起函数，并 _选择_ <!--
 -->第一个可用的。
 
 > Select 表达式在 `kotlinx.coroutines` 中是一个实验性的特性。这些API在<!--
@@ -75,7 +75,7 @@ fun CoroutineScope.buzz() = produce<String> {
 
 使用 [receive][ReceiveChannel.receive] 挂起函数，我们可以从一个或另一个通道接收数据。<!--
 -->但是 [select] 表达式允许我们使用其<!--
---> [onReceive][ReceiveChannel.onReceive] 子句_同时_从两者接收：
+--> [onReceive][ReceiveChannel.onReceive] 子句 _同时_ 从两者接收：
 
 
 
@@ -254,7 +254,7 @@ Channel 'a' is closed
 
 有几个结果可以通过观察得出。
 
-首先，`select` _偏向于_第一个子句，当可以同时选到多个子句时，<!--
+首先，`select` _偏向于_ 第一个子句，当可以同时选到多个子句时，<!--
 -->第一个子句将被选中。在这里，两个通道都在不断地生成字符串，因此 `a` 通道<!--
 -->作为 select 中的第一个子句获胜。然而因为我们使用的是无缓冲通道，所以 `a` 在其调用 <!--
 -->[send][SendChannel.send] 时会不时地被挂起，进而 `b` 也有机会发送。
@@ -309,7 +309,7 @@ fun CoroutineScope.produceNumbers(side: SendChannel<Int>) = produce<Int> {
 
 fun main() = runBlocking<Unit> {
 //sampleStart
-    val side = Channel<Int>() // 分配 side channel
+    val side = Channel<Int>() // 分配 side 通道
     launch { // 对于 side 通道来说，这是一个很快的消费者
         side.consumeEach { println("Side channel has $it") }
     }
@@ -516,7 +516,7 @@ fun CoroutineScope.asyncString(str: String, time: Long) = async {
 
 fun main() = runBlocking<Unit> {
 //sampleStart
-    val chan = Channel<Deferred<String>>() // the channel for test
+    val chan = Channel<Deferred<String>>() // 测试使用的通道
     launch { // 启动打印协程
         for (s in switchMapDeferreds(chan)) 
             println(s) // 打印每个获得的字符串

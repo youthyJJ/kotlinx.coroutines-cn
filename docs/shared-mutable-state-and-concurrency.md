@@ -111,7 +111,7 @@ Counter =
 这段代码最后打印出什么结果？它不太可能打印出“Counter = 100000”，因为一千个协程<!--
 -->在一百个线程中同时递增计数器而且没有做并发处理。
 
-> 注意：如果你的运行机器使用两个或者更少的cpu，那么你_总是会_看到 100000，因为<!--
+> 注意：如果你的运行机器使用两个或者更少的cpu，那么你 _总是会_ 看到 100000，因为<!--
 -->线程池在这种情况下只有一个线程可运行。要重现这个问题，可以做<!--
 -->如下的变动：
 
@@ -266,7 +266,7 @@ Counter = 100000
 
 ### 以细粒度限制线程
 
-_限制线程_是解决共享可变状态问题的一种方案：对特定共享<!--
+ _限制线程_ 是解决共享可变状态问题的一种方案：对特定共享<!--
 -->状态的所有访问权都限制在单个线程中。它通常应用于UI程序中：所有UI状态都局限于<!--
 -->单个事件分发线程或应用主线程中。这在协程中很容易实现，通过使用一个<!--
 -->单线程上下文：
@@ -317,7 +317,7 @@ Completed 100000 actions in xxx ms
 Counter = 100000
 -->
 
-这段代码运行非常缓慢，因为它进行了_细粒度_的线程限制。每个增量操作都得使用<!--
+这段代码运行非常缓慢，因为它进行了 _细粒度_ 的线程限制。每个增量操作都得使用<!--
 --> [withContext] 块从多线程 [Dispatchers.Default] 上下文切换到单线程上下文。
 
 ### 以粗粒度限制线程
@@ -354,7 +354,7 @@ var counter = 0
 
 fun main() = runBlocking<Unit> {
 //sampleStart
-    CoroutineScope(counterContext).massiveRun { // run each coroutine in the single-threaded context
+    CoroutineScope(counterContext).massiveRun { // 在单线程上下文中运行每个协程
         counter++
     }
     println("Counter = $counter")
@@ -375,7 +375,7 @@ Counter = 100000
 
 ### 互斥
 
-该问题的互斥解决方案：使用永远不会同时执行的_关键代码块_<!--
+该问题的互斥解决方案：使用永远不会同时执行的 _关键代码块_ <!--
 -->来保护共享状态的所有修改。在阻塞的世界中，你通常会为此目的使用 `synchronized` 或者 `ReentrantLock` 。<!--
 -->在协程中的替代品叫做 [Mutex] 。它具有 [lock][Mutex.lock]  和 [unlock][Mutex.unlock] 方法，<!--
 -->可以隔离关键的部分。关键的区别在于 `Mutex.lock()` 是一个挂起函数，它不会阻塞线程。
@@ -437,7 +437,7 @@ Counter = 100000
 ### Actors
 
 一个 [actor](https://en.wikipedia.org/wiki/Actor_model) 是由以下元素组成的一个实体：一个协程、它的状态受限封装在此协程中、<!--
--->以及一个与其他协程通信的_通道_。一个简单的 actor 可以简单的写成一个函数，<!--
+-->以及一个与其他协程通信的 _通道_ 。一个简单的 actor 可以简单的写成一个函数，<!--
 -->但是一个拥有复杂状态的 actor 更适合由类来表示。
 
 有一个 [actor] 协程构建器，它可以方便地将 actor 的邮箱通道组合到其<!--
@@ -532,7 +532,7 @@ fun main() = runBlocking<Unit> {
     val response = CompletableDeferred<Int>()
     counter.send(GetCounter(response))
     println("Counter = ${response.await()}")
-    counter.close() // shutdown the actor
+    counter.close() // 关闭该actor
 //sampleEnd
 }
 ```
