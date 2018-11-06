@@ -41,7 +41,7 @@ class ExceptionsGuideTest {
 
 ### 异常的传递
 
-协程构建器有两种风格：自动的传递异常（[launch] 以及 [actor]）或者
+协程构建器有两种风格：自动的传递异常（[launch] 以及 [actor]）
 或者将它们暴露给用户（[async] 以及 [produce]）。
 前者对待异常是不处理的，类似于 Java 的 `Thread.uncaughtExceptionHandler`，
 而后者依赖用户来最终消耗<!--
@@ -101,7 +101,7 @@ Caught ArithmeticException
 [`ServiceLoader`](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html) 注册到 [CoroutineExceptionHandler]。
 全局异常处理者就如同
 [`Thread.defaultUncaughtExceptionHandler`](https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html#setDefaultUncaughtExceptionHandler(java.lang.Thread.UncaughtExceptionHandler)) 
-一样，用于在没有更多的指定的异常处理者被注册的时候。
+一样，在没有更多的指定的异常处理者被注册的时候被使用。
 在 Android 中， `uncaughtExceptionPreHandler` 被设置在全局协程异常处理者中。
 
 [CoroutineExceptionHandler] 仅在预计不会由用户处理的异常上调用，
@@ -145,7 +145,7 @@ Caught java.lang.AssertionError
 取消与异常紧密相关。协程内部使用 `CancellationException` 来进行取消，这个<!--
 -->异常会被所有的处理者忽略，所以那些可以被 `catch` 代码块捕获的异常<!--
 -->仅仅应该被用来作为额外调试信息的资源。
-当一个协程使用 [Job.cancel] 在没有任何理由的情况下被取消的时候，它会被终止，但是它不会取消它的父协程。
+当一个协程在没有任何理由的情况下使用 [Job.cancel] 取消的时候，它会被终止，但是它不会取消它的父协程。
 无理由取消是父协程取消其子协程而非取消其自身的机制。
 
 
@@ -360,8 +360,8 @@ Caught original java.io.IOException
 在我们开始学习之前，取消是一种双向机制，在协程的整个层次结构<!--
 -->之间传递。但是如果需要单向取消怎么办？
 
-此类需求的一个良好示例是可以在其作用域内定义任务的的 UI 组件。如果任何一个 UI 的子任务
-执行失败了，它并不总是有必要取消（有效地杀死）整个 UI 组件，
+此类需求的一个良好示例是可以在其作用域内定义任务的的 UI 组件。如果任何一个 UI 的子任务<!--
+-->执行失败了，它并不总是有必要取消（有效地杀死）整个 UI 组件，
 但是如果 UI 组件被销毁了（并且它的任务也被取消了），由于它的结果不再被需要了，它有必要使所有的子任务执行失败。
 
 另一个例子是服务进程孵化了一些子任务并且需要 _监督_
@@ -370,7 +370,7 @@ Caught original java.io.IOException
 ### 监督任务
 
 [SupervisorJob][SupervisorJob()] 可以被用于这些目的。它类似于常规的 [Job][Job()]，唯一的取消异常将<!--
--->只会向下传播。这是非常容易从示例中观察到的：
+-->只会向下传递。这是非常容易从示例中观察到的：
 
 
 
