@@ -35,7 +35,7 @@ class ChannelsGuideTest {
 
 ## 通道 (实验性的)
 
-延期的值提供了一种方便的方法使单个值在多个协程之间进行相互传输。
+延期的值提供了一种便捷的方法使单个值在多个协程之间进行相互传输。
 通道提供了一种在流中传输值的方法。
 
 > 通道在 `kotlinx.coroutines` 中是一个实验性的特性。这些API在 `kotlinx.coroutines`
@@ -136,7 +136,7 @@ Done!
 你可以将生产者抽象成一个函数，并且使通道作为它的参数，但这与<!--
 -->必须从函数中返回结果的常识相违悖。
 
-这里有一个名为 [produce] 的方便的协程构建器，可以很容易的在生产者端正确工作，
+这里有一个名为 [produce] 的便捷的协程构建器，可以很容易的在生产者端正确工作，
 并且我们使用扩展函数 [consumeEach] 在消费者端替代 `for` 循环：
 
 
@@ -288,7 +288,7 @@ numbersFrom(2) -> filter(2) -> filter(3) -> filter(5) -> filter(7) ...
 下面的例子打印了前十个素数，
 在主线程的上下文中运行整个管道。直到所有的协程在<!--
 -->该主协程 [runBlocking] 的作用域中被启动完成。
-我们不必使用一个明确的列表来保存所有被我们已经启动的协程。
+我们不必使用一个显式的列表来保存所有被我们已经启动的协程。
 我们使用 [cancelChildren][kotlin.coroutines.CoroutineContext.cancelChildren]
 扩展函数在我们打印了前十个素数以后<!--
 -->来取消所有的子协程。
@@ -345,8 +345,8 @@ fun CoroutineScope.filter(numbers: ReceiveChannel<Int>, prime: Int) = produce<In
 <!--- TEST -->
 
 注意，你可以在标准库中使用
-[`buildIterator`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/build-iterator.html)<!--
--->协程构建器来构建一个相似的管道。
+[`buildIterator`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/build-iterator.html)
+协程构建器来构建一个相似的管道。
 使用 `produce` 替换 `buildIterator`、`send` 替换 `yield`、`receive` 替换 `next`、
 `ReceiveChannel` 替换 `Iterator` 来摆脱协程作用域，你将不再需要 `runBlocking`。
 然而，如上所示，如果你在 [Dispatchers.Default] 上下文中运行它，使用通道的管道的好处在于<!--
@@ -392,7 +392,7 @@ fun CoroutineScope.launchProcessor(id: Int, channel: ReceiveChannel<Int>) = laun
 
 
 
-现在让我们启动五个矗立着协程并让它们工作将近一秒。看看发生了什么：
+现在让我们启动五个处理者协程并让它们工作将近一秒。看看发生了什么：
 
 <!--- CLEAR -->
 
@@ -460,7 +460,7 @@ Processor #3 received 10
 
 多个协程可以发送到同一个通道。
 比如说，让我们创建一个字符串的通道，和一个在这个通道中<!--
--->以指定的延迟反复发送一个指定的字符串的挂起函数：
+-->以指定的延迟反复发送一个指定字符串的挂起函数：
 
 
 
@@ -525,7 +525,7 @@ BAR!
 
 ### 带缓冲的通道
 
-到目前为止显示的通道都是没有缓冲区的。无缓冲的通道在发送者和接收者相遇时<!--
+到目前为止展示的通道都是没有缓冲区的。无缓冲的通道在发送者和接收者相遇时<!--
 -->传输元素（aka rendezvous（这句话应该是个俚语，意思好像是“又是约会”的意思，不知道怎么翻））。如果发送先被调用，则它将被挂起直到接收被调用，
 如果接收先被调用，它将被挂起直到发送被调用。
 
@@ -579,9 +579,9 @@ Sending 4
 ### 通道是公平的
 
 发送和接收操作是 _公平的_ 并且尊重调用它们的<!--
--->多个协程。它们遵守先进先出原则，看看第一个协程调用 `receive`
+-->多个协程。它们遵守先进先出原则，可以看到第一个协程调用 `receive`
 并得到了元素。在下面的例子中两个协程 “乒” 和 "乓" 都<!--
--->从共享的“桌子”通道都接收这个“球”元素。
+-->从共享的“桌子”通道接收到这个“球”元素。
 
 
 

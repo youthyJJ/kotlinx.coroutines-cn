@@ -39,7 +39,7 @@ class DispatchersGuideTest {
 
 协程总是运行在一些以
 [CoroutineContext](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/-coroutine-context/)
-类型为代表的上下文中，它们被定义在了 Kotlin 的标准库中。
+类型为代表的上下文中，它们被定义在了 Kotlin 的标准库里。
 
 协程上下文是各种不同元素的集合。其中主元素是协程中的 [Job]，
 我们在前面的文档中见过它以及它的调度器，而本文将对它进行介绍。
@@ -171,8 +171,8 @@ main runBlocking: After delay in thread main
 
 协程可以在一个线程上挂起并恢复其它线程。
 甚至一个单线程的调度器是非常难以<!--
--->弄清楚协程何时，在哪里，正在做什么的。使用通常的方法来调试应用程序是让
-线程在每一个日志文件的日志声明中打印线程的名字。这种特性在日志框架中是<!--
+-->弄清楚协程何时，在哪里，正在做什么的。使用通常的方法来调试应用程序是让<!--
+-->线程在每一个日志文件的日志声明中打印线程的名字。这种特性在日志框架中是<!--
 -->普遍受支持的。使用协程时，单独的线程名称不会给出很多上下文，所以
 `kotlinx.coroutines` 包含了调试工具来让它更简单。
 
@@ -268,7 +268,7 @@ fun main() {
 <!--- TEST -->
 
 注意，在这个例子中，当我们不再需要某个在 [newSingleThreadContext] 中创建的线程的时候，
-它使用了标准库中的 Kotlin 标准库中的 `use` 函数来释放该线程。
+它使用了 Kotlin 标准库中的 `use` 函数来释放该线程。
 
 ### 上下文中的任务
 
@@ -408,9 +408,9 @@ Now processing of the request is complete
 
 协程日志会频繁记录的时候以及当你只是需要来自相同协程的关联日志记录，
 自动分配 id 是非常棒的。然而，当协程与执行一个明确的请求<!--
--->或与执行一些显式的后台任务有关的时候，对于调试的目的给它明确的命名是更好的。
-[CoroutineName] 上下文元素可以给线程像给函数命名一样命名。它将显示线程的名字<!--
--->当协程被执行且 [调试模式](#debugging-coroutines-and-threads) 被开启时。
+-->或与执行一些显式的后台任务有关的时候，出于调试的目的给它明确的命名是更好的。
+[CoroutineName] 上下文元素可以给线程像给函数命名一样命名。它在协程被执行且
+[调试模式](#debugging-coroutines-and-threads)被开启时将显示线程的名字。
 
 下面的例子演示了这一概念：
 
@@ -458,7 +458,7 @@ fun main() = runBlocking(CoroutineName("main")) {
 ### 组合上下文中的元素
 
 有时我们需要在协程上下文中定义多个元素。我们可以使用 `+` 操作符来实现。
-比如说，我们可以明确的指定一个调度器来启动协程并且同时明确指定<!--
+比如说，我们可以显式地指定一个调度器来启动协程并且同时显式指定<!--
 -->一个命名：
 
 
@@ -629,12 +629,12 @@ Destroying activity!
 
 ### 线程局部的数据
 
-有时能够传递一些线程局部的数据很方便，但是，对于协程来说, 它们不受<!--
+有时能够传递一些线程局部的数据很方便，但是，对于协程来说，它们不受<!--
 -->任何特定线程的约束，所以很难手动的去实现它并且不写出大量的样板代码。
 
-对于 [`ThreadLocal`](https://docs.oracle.com/javase/8/docs/api/java/lang/ThreadLocal.html)，
-[asContextElement] 扩展函数在这里拯救了一切。它创建了额外的上下文元素，
-它保留给定 `ThreadLocal` 的值，并在每次协同程序切换其上下文时恢复它。
+[`ThreadLocal`](https://docs.oracle.com/javase/8/docs/api/java/lang/ThreadLocal.html)，
+[asContextElement] 扩展函数在这里会充当救兵。它创建了额外的上下文元素，
+且保留给定 `ThreadLocal` 的值，并在每次协同程序切换其上下文时恢复它。
 
 它很容易在下面的代码中演示：
 
@@ -689,7 +689,7 @@ Post-main, current thread: Thread[main @coroutine#1,5,main], thread local value:
 -->可能的对这个可变的域进行的并发的修改。
 
 对于高级的使用，例如，那些在内部使用线程局部传递数据的<!--
--->用于与日志记录MDC集成，以及事务上下文或任何其他库，文件中应该实现
+-->用于与日志记录 MDC 集成，以及事务上下文或任何其他库，文件中应该实现
 [ThreadContextElement] 接口。
 
 <!--- MODULE kotlinx-coroutines-core -->

@@ -79,8 +79,8 @@ main: Now I can quit.
 <!--- TEST -->
 
 一旦 main 函数调用了 `job.cancel`，我们在其它的协程中就看不到任何输出，因为它被取消了。
-这里也有一个可以使 [Job] 挂起的函数 [cancelAndJoin]<!--
--->它合并了对 [cancel][Job.cancel] 以及 [join][Job.join] 的调用。
+这里也有一个可以使 [Job] 挂起的函数 [cancelAndJoin]
+它合并了对 [cancel][Job.cancel] 以及 [join][Job.join] 的调用。
 
 ### 取消协作
 
@@ -121,7 +121,7 @@ fun main() = runBlocking {
 
 > 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-cancel-02.kt)获得完整代码
 
-运行示例代码，并且我们可以看到它连续打印出了 “I'm sleeping” ，甚至在调用取消后，
+运行示例代码，并且我们可以看到它连续打印出了“I'm sleeping” ，甚至在调用取消后，
 任务仍然执行了五次循环迭代并运行到了它结束为止。
 
 <!--- TEST 
@@ -137,8 +137,8 @@ main: Now I can quit.
 ### 使执行计算的代码可被取消
 
 我们有两种方法来使执行计算的代码可以被取消。第一种方法是定期<!--
--->调用挂起函数来检查取消。 对于这种目的 [yield] 是一个好的选择。
-另一种方法是明确的检查取消状态。让我们试试第二种方法。
+-->调用挂起函数来检查取消。对于这种目的 [yield] 是一个好的选择。
+另一种方法是显式的检查取消状态。让我们试试第二种方法。
 
 将前一个示例中的 `while (i < 5)` 替换为 `while (isActive)` 并重新运行它。
 
@@ -173,8 +173,8 @@ fun main() = runBlocking {
 
 > 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-cancel-03.kt)获得完整代码
 
-你可以看到，现在循环被取消了。[isActive] 是一个可以被使用在<!--
--->[CoroutineScope] 中的扩展属性。
+你可以看到，现在循环被取消了。[isActive] 是一个可以被使用在
+[CoroutineScope] 中的扩展属性。
 
 <!--- TEST
 I'm sleeping 0 ...
@@ -238,7 +238,7 @@ main: Now I can quit.
 
 在前一个例子中任何尝试在 `finally` 块中调用挂起函数的行为都会抛出
 [CancellationException]，因为这里持续运行的代码是可以被取消的。通常，这并不是一个<!--
--->问题，所有良好的关闭操作（关闭一个文件、取消一个任务，或是关闭任何一种<!--
+-->问题，所有良好的关闭操作（关闭一个文件、取消一个任务、或是关闭任何一种<!--
 -->通信通道）通常都是非阻塞的，并且不会调用任何挂起函数。然而，在<!--
 -->真实的案例中，当你需要挂起一个被取消的协程，你可以将相应的代码包装在
 `withContext(NonCancellable) {...}` 中，并使用 [withContext] 函数以及 [NonCancellable] 上下文，见如下示例所示：
