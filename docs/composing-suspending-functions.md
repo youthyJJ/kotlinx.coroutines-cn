@@ -31,7 +31,7 @@ class ComposingGuideTest {
 
 ## 组合挂起函数
 
-本节介绍了挂起函数组合的各种方法。
+本节介绍了将挂起函数组合的各种方法。
 
 ### 默认顺序
 
@@ -56,10 +56,10 @@ suspend fun doSomethingUsefulTwo(): Int {
 </div>
 
 
-如果需要按 _顺序_ 调用它们，我们接下来会做什么 -- 首先调用 `doSomethingUsefulOne` _接下来_ 
+如果需要按 _顺序_ 调用它们，我们接下来会做什么--首先调用 `doSomethingUsefulOne` _接下来_ 
 调用 `doSomethingUsefulTwo` 并且计算它们结果的和吗？
 实际上，如果我们要根据第一个函数的结果来决定是否我们需要<!--
--->调用第二个函数或者决定如何调用它，我们就会这样做。
+-->调用第二个函数或者决定如何调用它时，我们就会这样做。
 
 我们使用普通的顺序来进行调用，因为这些代码是运行在协程中的，只要像常规的<!--
 -->代码一样 _顺序_ 都是默认的。下面的示例展示了测量<!--
@@ -115,7 +115,7 @@ Completed in 2017 ms
  
 在概念上，[async] 就类似于 [launch]。它启动了一个单独的协程，这是一个轻量级的线程<!--
 -->并与其它所有的协程一起并发的工作。不同之处在于 `launch` 返回一个 [Job] 并且<!--
--->不附带任何结果值，而 `async` 返回一个 [Deferred] -- 一个轻量级的非阻塞 future，
+-->不附带任何结果值，而 `async` 返回一个 [Deferred] —— 一个轻量级的非阻塞 future，
 这代表了一个将会在稍后提供结果的 promise。你可以使用 `.await()` 在一个延期的值上得到它的最终结果，
 但是 `Deferred` 也是一个 `Job`，所以如果需要的话，你可以取消它。
  
@@ -182,7 +182,7 @@ fun main() = runBlocking<Unit> {
     val time = measureTimeMillis {
         val one = async(start = CoroutineStart.LAZY) { doSomethingUsefulOne() }
         val two = async(start = CoroutineStart.LAZY) { doSomethingUsefulTwo() }
-        // some computation
+        // 执行一些计算
         one.start() // 启动第一个
         two.start() // 启动第二个
         println("The answer is ${one.await() + two.await()}")
@@ -220,8 +220,8 @@ Completed in 1017 ms
 调用 `one`，然后调用 `two`，接下来等待这个协程执行完毕。
 
 注意，如果我们在 `println` 中调用了 [await][Deferred.await] 并且在这个协程中省略调用了
-[start][Job.start]，接下来 [await][Deferred.await] 开始执行协程，我们会得到顺序的<!--
--->行为并且等待执行结束，但这不是惰性启动的预期用例。
+[start][Job.start]，接下来 [await][Deferred.await] 会开始执行协程并且等待协程执行结束，
+因此我们会得到顺序的行为，但这不是惰性启动的预期用例。
 当调用挂起函数计算值的时候
 `async(start = CoroutineStart.LAZY)` 用例是标准的 `lazy` 函数的替换方案。
 
@@ -264,7 +264,7 @@ import kotlinx.coroutines.*
 import kotlin.system.*
 
 //sampleStart
-// note, that we don't have `runBlocking` to the right of `main` in this example
+// 注意，在这个示例中我们在 `main` 函数的右边没有加上 `runBlocking` 
 fun main() {
     val time = measureTimeMillis {
         // 我们可以在协程外面启动异步执行
@@ -314,8 +314,8 @@ Completed in 1085 ms
 
 考虑一下如果 `val one = somethingUsefulOneAsync()` 这一行和 `one.await()` 表达式这里在代码中有逻辑错误，
 并且程序抛出了异常以及程序在操作的过程中被中止，将会发生什么。
-通常情况下，一个全局的异常处理者会捕获这个异常，将异常打印成日记并报告给开发者，但是该程序
-否则将会继续执行其它操作。但是这里我们的 `somethingUsefulOneAsync` 仍然在后台执行，
+通常情况下，一个全局的异常处理者会捕获这个异常，将异常打印成日记并报告给开发者，但是反之<!--
+-->该程序将会继续执行其它操作。但是这里我们的 `somethingUsefulOneAsync` 仍然在后台执行，
 尽管如此，启动它的那次操作也会被终止。这个程序将不会进行结构性<!--
 -->并发，如下一小节所示。
 
@@ -339,7 +339,7 @@ suspend fun concurrentSum(): Int = coroutineScope {
 </div>
 
 这种情况下，如果在 `concurrentSum` 函数内部发生了错误，并且它抛出了一个异常，
-所有在作用域中启动的协程将会被取消。
+所有在作用域中启动的协程都将会被取消。
 
 <!--- CLEAR -->
 
@@ -388,7 +388,7 @@ Completed in 1017 ms
 
 <!--- TEST ARBITRARY_TIME -->
 
-取消始终通过协程的层次结构来进行传播：
+取消始终通过协程的层次结构来进行传递：
 
 <!--- CLEAR -->
 
