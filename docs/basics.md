@@ -71,7 +71,7 @@ World!
 
 本质上，协程是轻量级的线程。
 它们在 [CoroutineScope] 上下文中和 [launch] _协同构建器_ 一起被启动。
-这里我们在 [GlobalScope] 中启动了一些新的协程, 存活时间是指新的<!--
+这里我们在 [GlobalScope] 中启动了一些新的协程，存活时间是指新的<!--
 -->协程的存活时间被限制在了整个应用程序的存活时间之内。
 
 你可以使用一些协程操作来替换一些线程操作，比如：
@@ -83,8 +83,8 @@ World!
 Error: Kotlin: Suspend functions are only allowed to be called from a coroutine or another suspend function
 ```
 
-这是因为 [delay] 是一个特别的 _挂起函数_ ，它不会造成线程阻塞，但是 _挂起_<!--
--->函数只能在协程中使用。
+这是因为 [delay] 是一个特别的 _挂起函数_ ，它不会造成线程阻塞，但是 _挂起_
+函数只能在协程中使用。
 
 ### 桥接阻塞与非阻塞的世界
 
