@@ -19,18 +19,18 @@ class SharedStateGuideTest {
 
 <!--- TOC -->
 
-* [共享的可变状态和并发](#shared-mutable-state-and-concurrency)
-  * [问题](#the-problem)
-  * [没有发挥作用的 volatile](#volatiles-are-of-no-help)
-  * [线程安全的数据结构](#thread-safe-data-structures)
-  * [以细粒度限制线程](#thread-confinement-fine-grained)
-  * [以粗粒度限制线程](#thread-confinement-coarse-grained)
-  * [互斥](#mutual-exclusion)
+* [共享的可变状态与并发](#共享的可变状态与并发)
+  * [问题](#问题)
+  * [volatile 无济于事](#volatile-无济于事)
+  * [线程安全的数据结构](#线程安全的数据结构)
+  * [以细粒度限制线程](#以细粒度限制线程)
+  * [以粗粒度限制线程](#以粗粒度限制线程)
+  * [互斥](#互斥)
   * [Actors](#actors)
 
 <!--- END_TOC -->
 
-## 共享的可变状态和并发
+## 共享的可变状态与并发
 
 协程可用多线程调度器（比如默认的 [Dispatchers.Default]）并发执行。这样就可以提出<!--
 -->所有常见的并发问题。主要的问题是同步访问**共享的可变状态**。
@@ -159,7 +159,7 @@ Completed 100000 actions in
 Counter =
 -->
 
-### 没有发挥作用的 volatile
+### volatile 无济于事
 
 有一种常见的误解：volatile 可以解决并发问题。让我们尝试一下：
 

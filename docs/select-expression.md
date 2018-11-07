@@ -21,17 +21,17 @@ class SelectGuideTest {
 
 <!--- TOC -->
 
-* [select 表达式（试验性）](#select-expression-experimental)
-  * [从通道查询](#selecting-from-channels)
-  * [从关闭的通道查询](#selecting-on-close)
-  * [查询并发送](#selecting-to-send)
-  * [查询延迟值](#selecting-deferred-values)
-  * [在延迟值通道上切换](#switch-over-a-channel-of-deferred-values)
+* [select 表达式（实验性的）](#select 表达式实验性的)
+  * [在通道中 select](#在通道中-select)
+  * [通道关闭时 select](#通道关闭时-select)
+  * [Select 以发送](#select-以发送)
+  * [Select 延迟值](#select-延迟值)
+  * [在延迟值通道上切换](#在延迟值通道上切换)
 
 <!--- END_TOC -->
 
 
-
+{:#select 表达式实验性的}
 ## select 表达式（实验性的）
 
 select 表达式可以同时等待多个挂起函数，并 _选择_
@@ -41,7 +41,7 @@ select 表达式可以同时等待多个挂起函数，并 _选择_
 `kotlinx.coroutines` 库即将到来的更新中可能会<!--
 -->发生改变。
 
-### 从通道中查询
+### 在通道中 select
 
 我们现在有两个字符串生产者：`fizz` 和 `buzz` 。其中 `fizz` 每300毫秒生成一个 “Fizz” 字符串：
 
@@ -160,7 +160,7 @@ buzz -> 'Buzz!'
 
 <!--- TEST -->
 
-### 从关闭的通道查询
+### 通道关闭时 select
 
 select 中的 [onReceive][ReceiveChannel.onReceive] 子句在已经关闭的通道执行会发生失败，并导致相应的
 `select` 抛出异常。我们可以使用 [onReceiveOrNull][ReceiveChannel.onReceiveOrNull] 子句在关闭通道时执行<!--
@@ -262,7 +262,7 @@ Channel 'a' is closed
 第二个观察结果是，当通道已经关闭时，
 会立即选择 [onReceiveOrNull][ReceiveChannel.onReceiveOrNull]。
 
-### 查询并发送
+### Select 以发送
 
 Select 表达式具有 [onSend][SendChannel.onSend] 子句，可以很好的与<!--
 -->选择的偏向特性结合使用。
@@ -345,7 +345,7 @@ Done consuming
 
 <!--- TEST -->
 
-### 查询延迟值
+### Select 延迟值
 
 延迟值可以使用 [onAwait][Deferred.onAwait] 子句查询。
 让我们启动一个异步函数，它在随机的延迟后<!--

@@ -19,15 +19,15 @@ class ExceptionsGuideTest {
 
 <!--- TOC -->
 
-* [异常处理](#exception-handling)
-  * [异常的传递](#exception-propagation)
+* [异常处理](#异常处理)
+  * [异常的传播](#异常的传播)
   * [CoroutineExceptionHandler](#coroutineexceptionhandler)
-  * [取消与异常](#cancellation-and-exceptions)
-  * [异常聚合](#exceptions-aggregation)
-* [监督](#supervision)
-  * [监督任务](#supervision-job)
-  * [监督作用域](#supervision-scope)
-  * [监督协程中的异常](#exceptions-in-supervised-coroutines)
+  * [取消与异常](#取消与异常)
+  * [异常聚合](#异常聚合)
+* [监督](#监督)
+  * [监督任务](#监督任务)
+  * [监督作用域](#监督作用域)
+  * [监督协程中的异常](#监督协程中的异常)
 
 <!--- END_TOC -->
 
@@ -39,9 +39,9 @@ class ExceptionsGuideTest {
 -->在协程机制中被忽略了。但是如果一个异常在取消期间被抛出或多个子协程在同一个<!--
 -->父协程中抛出异常将会发生什么？
 
-### 异常的传递
+### 异常的传播
 
-协程构建器有两种风格：自动的传递异常（[launch] 以及 [actor]）
+协程构建器有两种风格：自动的传播异常（[launch] 以及 [actor]）
 或者将它们暴露给用户（[async] 以及 [produce]）。
 前者对待异常是不处理的，类似于 Java 的 `Thread.uncaughtExceptionHandler`，
 而后者依赖用户来最终消耗<!--
@@ -191,7 +191,7 @@ Parent is not cancelled
 
 如果协程遇到除 `CancellationException` 以外的异常，它将取消具有该异常的父协程。
 这种行为不能被重写，且它被用来提供一个稳定的协程层次结构来进行
-[结构性并发](https://github.com/Kotlin/kotlinx.coroutines/blob/master/docs/composing-suspending-functions.md#structured-concurrency-with-async) 而无需依赖
+[结构化并发](https://github.com/Kotlin/kotlinx.coroutines/blob/master/docs/composing-suspending-functions.md#structured-concurrency-with-async) 而无需依赖
 [CoroutineExceptionHandler] 的实现。
 且当所有的子协程被终止的时候，原本的异常被父协程所处理。
 

@@ -20,18 +20,18 @@ class DispatchersGuideTest {
 
 <!--- TOC -->
 
-* [协程上下文与调度器](#coroutine-context-and-dispatchers)
-  * [调度器与线程](#dispatchers-and-threads)
-  * [非受限调度器 vs 受限调度器](#unconfined-vs-confined-dispatcher)
-  * [在协程和线程上调试](#debugging-coroutines-and-threads)
-  * [在线程之间跳转](#jumping-between-threads)
-  * [上下文中的任务](#job-in-the-context)
-  * [子协程](#children-of-a-coroutine)
-  * [父协程的职责](#parental-responsibilities)
-  * [命名协程以进行调试](#naming-coroutines-for-debugging)
-  * [组合上下文中的元素](#combining-context-elements)
-  * [可取消的显式任务](#cancellation-via-explicit-job)
-  * [线程局部的数据](#thread-local-data)
+* [协程上下文与调度器](#协程上下文与调度器)
+  * [调度器与线程](#调度器与线程)
+  * [非受限调度器 vs 受限调度器](#非受限调度器-vs-受限调度器)
+  * [调试协程与线程](#调试协程与线程)
+  * [在不同线程间跳转](#在不同线程间跳转)
+  * [上下文中的任务](#上下文中的任务)
+  * [子协程](#子协程)
+  * [父协程的职责](#父协程的职责)
+  * [命名协程以用于调试](#命名协程以用于调试)
+  * [组合上下文中的元素](#组合上下文中的元素)
+  * [通过显式任务取消](#通过显式任务取消)
+  * [线程局部数据](#线程局部数据)
 
 <!--- END_TOC -->
 
@@ -167,7 +167,7 @@ main runBlocking: After delay in thread main
 因为某些操作必须立即在协程中执行。
 非受限调度器不应该被用在通常的代码中。
 
-### 在协程和线程上调试
+### 调试协程与线程
 
 协程可以在一个线程上挂起并恢复其它线程。
 甚至一个单线程的调度器是非常难以<!--
@@ -223,9 +223,9 @@ fun main() = runBlocking<Unit> {
 
 您可以在 [newCoroutineContext] 函数的文档中阅读有关调试工具的更多信息。
 
-### 在线程之间跳转
+### 在不同线程间跳转
 
-使用 `-Dkotlinx.coroutines.debug` JVM 参数运行下面的代码（查看[debug](#debugging-coroutines-and-threads)）：
+使用 `-Dkotlinx.coroutines.debug` JVM 参数运行下面的代码（参见[调试](#调试协程与线程)）：
 
 
 
@@ -291,7 +291,7 @@ fun main() = runBlocking<Unit> {
 
 > 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-context-05.kt)获得完整代码
 
-当它运行于[调试模式](#debugging-coroutines-and-threads)时将处理一些任务：
+当它运行于[调试模式](#调试协程与线程)时将处理一些任务：
 
 ```
 My job is "coroutine#1":BlockingCoroutine{Active}@6d311334
@@ -404,13 +404,13 @@ Now processing of the request is complete
 
 <!--- TEST -->
 
-### 命名协程以进行调试
+### 命名协程以用于调试
 
 协程日志会频繁记录的时候以及当你只是需要来自相同协程的关联日志记录，
 自动分配 id 是非常棒的。然而，当协程与执行一个明确的请求<!--
 -->或与执行一些显式的后台任务有关的时候，出于调试的目的给它明确的命名是更好的。
 [CoroutineName] 上下文元素可以给线程像给函数命名一样命名。它在协程被执行且
-[调试模式](#debugging-coroutines-and-threads)被开启时将显示线程的名字。
+[调试模式](#调试协程与线程)被开启时将显示线程的名字。
 
 下面的例子演示了这一概念：
 
@@ -487,7 +487,7 @@ I'm working in thread DefaultDispatcher-worker-1 @test#2
 
 <!--- TEST FLEXIBLE_THREAD -->
 
-### 可取消的显式任务
+### 通过显式任务取消
 
 让我们把有关上下文、子协程以及任务的知识梳理一下。假设我们的应用程序中有<!--
 -->一个在生命周期中的对象，但这个对象并不是协程。假如，我们写了一个 Android 应用程序<!--
@@ -627,7 +627,7 @@ Destroying activity!
 你可以看到，只有前两个协程打印了消息，而另一个协程在
 `Activity.destroy()` 中被单次调用了 `job.cancel()`。
 
-### 线程局部的数据
+### 线程局部数据
 
 有时能够传递一些线程局部的数据很方便，但是，对于协程来说，它们不受<!--
 -->任何特定线程的约束，所以很难手动的去实现它并且不写出大量的样板代码。
@@ -668,7 +668,7 @@ fun main() = runBlocking<Unit> {
 -->它工作在线程池中的不同线程中，但它仍然具有线程局部变量的值，
 我们指定使用 `threadLocal.asContextElement(value = "launch")`，
 无论协程执行在什么线程中都是没有问题的。
-因此，输出如（[调试](#debugging-coroutines-and-threads)）所示：
+因此，输出如（[调试](#调试协程与线程)）所示：
 
 ```text
 Pre-main, current thread: Thread[main @coroutine#1,5,main], thread local value: 'main'
