@@ -19,20 +19,21 @@ class ChannelsGuideTest {
 
 <!--- TOC -->
 
-* [通道（试验性的）](#channels-experimental)
-  * [通道基础](#channel-basics)
-  * [关闭和迭代通道](#closing-and-iteration-over-channels)
-  * [建造通道生产者](#building-channel-producers)
-  * [管道](#pipelines)
-  * [素数与管道](#prime-numbers-with-pipeline)
-  * [扇出](#fan-out)
-  * [扇入](#fan-in)
-  * [带缓冲的通道](#buffered-channels)
-  * [通道是公平的](#channels-are-fair)
-  * [计时器通道](#ticker-channels)
+* [通道（实验性的）](#通道实验性的)
+  * [通道基础](#通道基础)
+  * [关闭与迭代通道](#关闭与迭代通道)
+  * [构建通道生产者](#构建通道生产者)
+  * [管道](#管道)
+  * [使用管道的素数](#使用管道的素数)
+  * [扇出](#扇出)
+  * [扇入](#扇入)
+  * [带缓冲的通道](#带缓冲的通道)
+  * [通道是公平的](#通道是公平的)
+  * [计时器通道](#计时器通道)
 
 <!--- END_TOC -->
 
+{:#通道实验性的}
 ## 通道 (实验性的) 
 
 延期的值提供了一种便捷的方法使单个值在多个协程之间进行相互传输。
@@ -86,7 +87,7 @@ Done!
 
 <!--- TEST -->
 
-### 关闭和迭代通道
+### 关闭与迭代通道
 
 和队列不同，一个通道可以通过被关闭来表明没有更多的元素将会进入通道。
 在接收者中可以定期的使用 `for` 循环来从通道中<!--
@@ -129,7 +130,7 @@ fun main() = runBlocking {
 Done!
 -->
 
-### 建造通道生产者
+### 构建通道生产者
 
 协程生成一系列元素的模式很常见。 
 这是 _生产者-消费者_ 模式的一部分，并且经常能在并发的代码中看到它。
@@ -246,10 +247,10 @@ Done!
 -->
 
 > 所有创建了协程的函数被定义在了 [CoroutineScope] 的扩展上，
-所以我们可以依靠 [结构性并发](https://kotlinlang.org/docs/reference/coroutines/composing-suspending-functions.html#structured-concurrency-with-async) 来来确保<!--
+所以我们可以依靠 [结构化并发](https://kotlinlang.org/docs/reference/coroutines/composing-suspending-functions.html#structured-concurrency-with-async) 来来确保<!--
 -->没有常驻在我们的应用程序中的全局协程。
 
-### 素数与管道
+### 使用管道的素数
 
 让我们来展示一个极端的例子——在协程中使用一个管道来生成<!--
 -->素数。我们开启了一个数字的无限序列。

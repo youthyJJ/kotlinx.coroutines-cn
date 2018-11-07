@@ -20,12 +20,12 @@ class ComposingGuideTest {
 
 <!--- TOC -->
 
-* [组合挂起函数](#composing-suspending-functions)
-  * [默认顺序](#sequential-by-default)
-  * [使用异步的并发](#concurrent-using-async)
-  * [异步惰性启动](#lazily-started-async)
-  * [异步风格的函数](#async-style-functions)
-  * [使用异步的结构性并发](#structured-concurrency-with-async)
+* [组合挂起函数](#组合挂起函数)
+  * [默认顺序调用](#默认顺序调用)
+  * [使用 async 并发](#使用-async-并发)
+  * [惰性启动的 async](#惰性启动的-async)
+  * [async 风格的函数](#async-风格的函数)
+  * [使用 async 的结构化并发](#使用-async-的结构化并发)
 
 <!--- END_TOC -->
 
@@ -33,7 +33,7 @@ class ComposingGuideTest {
 
 本节介绍了将挂起函数组合的各种方法。
 
-### 默认顺序
+### 默认顺序调用
 
 假设我们在不同的地方定义了两个进行某种调用远程服务或者进行计算的<!--
 -->挂起函数。我们只假设它们都是有用的，但是实际上它们在这个示例中只是<!--
@@ -108,7 +108,7 @@ Completed in 2017 ms
 
 <!--- TEST ARBITRARY_TIME -->
 
-### 使用异步的并发
+### 使用 async 并发
 
 如果 `doSomethingUsefulOne` 与 `doSomethingUsefulTwo` 之间没有依赖，并且<!--
 -->我们想更快的得到结果，让它们进行 _并发_ 吗？这就是 [async] 可以帮助我们的地方。 
@@ -164,7 +164,7 @@ Completed in 1017 ms
 这里快了两倍，因为我们使用两个协程进行并发。
 注意，使用协程进行并发总是显式的。
 
-### 异步惰性启动
+### 惰性启动的 async
 
 使用一个可选的参数 `start` 并传值 [CoroutineStart.LAZY]，可以对 [async] 进行惰性操作。
 只有当结果需要被 [await][Deferred.await] 或者如果一个 
@@ -225,7 +225,7 @@ Completed in 1017 ms
 当调用挂起函数计算值的时候
 `async(start = CoroutineStart.LAZY)` 用例是标准的 `lazy` 函数的替换方案。
 
-### 异步风格的函数
+### async 风格的函数
 
 我们可以定义异步风格的函数来 _异步_ 的调用 `doSomethingUsefulOne` 和 `doSomethingUsefulTwo`
 并使用 [async] 协程建造器并带有一个显式的 [GlobalScope] 引用。
@@ -316,12 +316,12 @@ Completed in 1085 ms
 并且程序抛出了异常以及程序在操作的过程中被中止，将会发生什么。
 通常情况下，一个全局的异常处理者会捕获这个异常，将异常打印成日记并报告给开发者，但是反之<!--
 -->该程序将会继续执行其它操作。但是这里我们的 `somethingUsefulOneAsync` 仍然在后台执行，
-尽管如此，启动它的那次操作也会被终止。这个程序将不会进行结构性<!--
+尽管如此，启动它的那次操作也会被终止。这个程序将不会进行结构化<!--
 -->并发，如下一小节所示。
 
-### 使用异步的结构性并发 
+### 使用 async 的结构化并发
 
-让我们使用[使用异步的并发](#concurrent-using-async)这一小节的例子并且提取出一个函数<!--
+让我们使用[使用 async 的并发](#使用-async-的结构化并发)这一小节的例子并且提取出一个函数<!--
 -->并发的调用 `doSomethingUsefulOne` 与 `doSomethingUsefulTwo` 并且返回它们两个的结果之和。
 由于 [async] 被定义为了 [CoroutineScope] 上的扩展，我们需要将它写在<!--
 -->作用域内，并且这是 [coroutineScope] 函数所提供的：

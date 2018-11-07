@@ -19,13 +19,13 @@ class CancellationTimeOutsGuideTest {
 
 <!--- TOC -->
 
-* [取消与超时](#cancellation-and-timeouts)
-  * [取消协程的执行](#cancelling-coroutine-execution)
-  * [取消协作](#cancellation-is-cooperative)
-  * [使执行计算的代码可被取消](#making-computation-code-cancellable)
-  * [在 finally 中释放资源](#closing-resources-with-finally)
-  * [运行不能被取消的代码块](#run-non-cancellable-block)
-  * [超时](#timeout)
+* [取消与超时](#取消与超时)
+  * [取消协程的执行](#取消协程的执行)
+  * [取消是协作的](#取消是协作的)
+  * [使计算代码可取消](#使计算代码可取消)
+  * [在 finally 中释放资源](#在-finally-中释放资源)
+  * [运行不能取消的代码块](#运行不能取消的代码块)
+  * [超时](#超时)
 
 <!--- END_TOC -->
 
@@ -82,7 +82,7 @@ main: Now I can quit.
 这里也有一个可以使 [Job] 挂起的函数 [cancelAndJoin]
 它合并了对 [cancel][Job.cancel] 以及 [join][Job.join] 的调用。
 
-### 取消协作
+### 取消是协作的
 
 协程的取消是 _协作_ 的。一段协程代码必须协作才能被取消。
 所有 `kotlinx.coroutines` 中的挂起函数都是 _可被取消的_ 。它们检查协程的取消，
@@ -134,7 +134,7 @@ I'm sleeping 4 ...
 main: Now I can quit.
 -->
 
-### 使执行计算的代码可被取消
+### 使计算代码可取消
 
 我们有两种方法来使执行计算的代码可以被取消。第一种方法是定期<!--
 -->调用挂起函数来检查取消。对于这种目的 [yield] 是一个好的选择。
@@ -184,7 +184,7 @@ main: I'm tired of waiting!
 main: Now I can quit.
 -->
 
-### 在finally中释放资源
+### 在 finally 中释放资源
 
 我们通常使用如下的方法处理在被取消时抛出 [CancellationException] 的可被取消<!--
 -->的挂起函数。比如说，`try {...} finally {...}` 表达式以及 Kotlin 的 `use` 函数一般在协程被取消的时候<!--
@@ -234,7 +234,7 @@ main: Now I can quit.
 
 <!--- TEST -->
 
-### 运行不能被取消的代码块
+### 运行不能取消的代码块
 
 在前一个例子中任何尝试在 `finally` 块中调用挂起函数的行为都会抛出
 [CancellationException]，因为这里持续运行的代码是可以被取消的。通常，这并不是一个<!--
