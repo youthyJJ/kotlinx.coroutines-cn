@@ -236,7 +236,7 @@ class ListenableFutureTest : TestBase() {
         try {
             deferred.await()
             expectUnreached()
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             assertTrue(e is TestException)
         }
     }
@@ -252,9 +252,58 @@ class ListenableFutureTest : TestBase() {
         try {
             deferred.await()
             expectUnreached()
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             assertTrue(e is TestException)
         }
+    }
+
+    @Test
+    fun testChildException() = runTest {
+        val result = future(Dispatchers.Unconfined) {
+            // child crashes
+            launch { throw TestException("FAIL") }
+            42
+        }
+
+        result.checkFutureException<TestException>()
+    }
+
+    @Test
+    fun testExternalCancellation() = runTest {
+        val future = future(Dispatchers.Unconfined) {
+            try {
+                delay(Long.MAX_VALUE)
+            } finally {
+                expect(2)
+            }
+        }
+
+        yield()
+        expect(1)
+        future.cancel(true)
+        finish(3)
+    }
+
+    @Test
+    fun testExceptionOnExternalCancellation() = runTest(expected = {it is TestException}) {
+        expect(1)
+        val result = future(Dispatchers.Unconfined) {
+            try {
+                delay(Long.MAX_VALUE)
+            } finally {
+                expect(2)
+                throw TestException()
+            }
+        }
+
+        result.cancel(true)
+        finish(3)
+    }
+
+    private inline fun <reified T: Throwable> ListenableFuture<*>.checkFutureException() {
+        val e = assertFailsWith<ExecutionException> { get() }
+        val cause = e.cause!!
+        assertTrue(cause is T)
     }
 
     private suspend fun CoroutineScope.awaitFutureWithCancel(cancellable: Boolean): ListenableFuture<Int> {
@@ -273,6 +322,4 @@ class ListenableFutureTest : TestBase() {
         latch.countDown()
         return future
     }
-
-    private class TestException : Exception()
 }
