@@ -144,6 +144,7 @@ public final class kotlinx/coroutines/CoroutineExceptionHandlerKt {
 	public static final fun CoroutineExceptionHandler (Lkotlin/jvm/functions/Function2;)Lkotlinx/coroutines/CoroutineExceptionHandler;
 	public static final fun handleCoroutineException (Lkotlin/coroutines/CoroutineContext;Ljava/lang/Throwable;Lkotlinx/coroutines/Job;)V
 	public static synthetic fun handleCoroutineException$default (Lkotlin/coroutines/CoroutineContext;Ljava/lang/Throwable;Lkotlinx/coroutines/Job;ILjava/lang/Object;)V
+	public static final fun handleExceptionViaHandler (Lkotlin/coroutines/CoroutineContext;Ljava/lang/Throwable;)V
 }
 
 public final class kotlinx/coroutines/CoroutineName : kotlin/coroutines/AbstractCoroutineContextElement {
@@ -697,6 +698,23 @@ public final class kotlinx/coroutines/channels/TickerMode : java/lang/Enum {
 	public static final field FIXED_PERIOD Lkotlinx/coroutines/channels/TickerMode;
 	public static fun valueOf (Ljava/lang/String;)Lkotlinx/coroutines/channels/TickerMode;
 	public static fun values ()[Lkotlinx/coroutines/channels/TickerMode;
+}
+
+public class kotlinx/coroutines/scheduling/ExperimentalCoroutineDispatcher : kotlinx/coroutines/ExecutorCoroutineDispatcher {
+	public synthetic fun <init> (II)V
+	public synthetic fun <init> (IIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (IIJLjava/lang/String;)V
+	public synthetic fun <init> (IIJLjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (IILjava/lang/String;)V
+	public synthetic fun <init> (IILjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun blocking (I)Lkotlinx/coroutines/CoroutineDispatcher;
+	public static synthetic fun blocking$default (Lkotlinx/coroutines/scheduling/ExperimentalCoroutineDispatcher;IILjava/lang/Object;)Lkotlinx/coroutines/CoroutineDispatcher;
+	public fun close ()V
+	public fun dispatch (Lkotlin/coroutines/CoroutineContext;Ljava/lang/Runnable;)V
+	public fun dispatchYield (Lkotlin/coroutines/CoroutineContext;Ljava/lang/Runnable;)V
+	public fun getExecutor ()Ljava/util/concurrent/Executor;
+	public final fun limited (I)Lkotlinx/coroutines/CoroutineDispatcher;
+	public fun toString ()Ljava/lang/String;
 }
 
 public abstract interface class kotlinx/coroutines/selects/SelectBuilder {

@@ -7,7 +7,6 @@ package kotlinx.coroutines.scheduling
 import kotlinx.atomicfu.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.internal.*
-import java.lang.UnsupportedOperationException
 import java.util.concurrent.*
 import kotlin.coroutines.*
 
@@ -36,16 +35,20 @@ internal object DefaultScheduler : ExperimentalCoroutineDispatcher() {
 open class ExperimentalCoroutineDispatcher(
     private val corePoolSize: Int,
     private val maxPoolSize: Int,
-    private val idleWorkerKeepAliveNs: Long
+    private val idleWorkerKeepAliveNs: Long,
+    private val schedulerName: String = "CoroutineScheduler"
 ) : ExecutorCoroutineDispatcher() {
     constructor(
         corePoolSize: Int = CORE_POOL_SIZE,
+        maxPoolSize: Int = MAX_POOL_SIZE,
+        schedulerName: String = DEFAULT_SCHEDULER_NAME
+    ) : this(corePoolSize, maxPoolSize, IDLE_WORKER_KEEP_ALIVE_NS, schedulerName)
+
+    @Deprecated(message = "Binary compatibility for Ktor 1.0-beta", level = DeprecationLevel.HIDDEN)
+    constructor(
+        corePoolSize: Int = CORE_POOL_SIZE,
         maxPoolSize: Int = MAX_POOL_SIZE
-    ) : this(
-        corePoolSize,
-        maxPoolSize,
-        IDLE_WORKER_KEEP_ALIVE_NS
-    )
+    ) : this(corePoolSize, maxPoolSize, IDLE_WORKER_KEEP_ALIVE_NS)
 
     override val executor: Executor
         get() = coroutineScheduler
@@ -106,7 +109,7 @@ open class ExperimentalCoroutineDispatcher(
             DefaultExecutor.execute(coroutineScheduler.createTask(block, context))
         }
 
-    private fun createScheduler() = CoroutineScheduler(corePoolSize, maxPoolSize, idleWorkerKeepAliveNs)
+    private fun createScheduler() = CoroutineScheduler(corePoolSize, maxPoolSize, idleWorkerKeepAliveNs, schedulerName)
 
     // fot tests only
     @Synchronized
