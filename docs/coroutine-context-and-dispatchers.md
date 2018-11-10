@@ -204,7 +204,7 @@ fun main() = runBlocking<Unit> {
 
 > 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-context-03.kt)获得完整代码
 
-这里有三个协程，其中主协程是 (#1) -- `runBlocking`， 
+这里有三个协程，其中主协程是 (#1) —— `runBlocking`， 
 而另外两个协程计算延期的值 `a` (#2) 和 `b` (#3)。
 它们都在 `runBlocking` 上下文中执行并且被限制在了主线程内。
 这段代码的输出如下：
