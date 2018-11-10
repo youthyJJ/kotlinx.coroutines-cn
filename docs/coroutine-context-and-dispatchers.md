@@ -48,7 +48,7 @@ class DispatchersGuideTest {
 
 协程上下文包括了一个 _协程调度器_ （请看 [CoroutineDispatcher]），它确定了相应的协程在执行时<!--
 -->使用一个或多个线程。协程调度器可以将协程的执行局限在<!--
--->指定的线程中，指定它运行在线程池中或让它不受限的运行。
+-->指定的线程中，调度它运行在线程池中或让它不受限的运行。
 
 所有的协程建造器诸如 [launch] 和 [async] 接收一个可选的
 [CoroutineContext](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/-coroutine-context/) 
@@ -95,7 +95,7 @@ main runBlocking      : I'm working in thread main
 <!--- TEST LINES_START_UNORDERED -->
 
 当调用 `launch { ... }` 时不传参数，它从启动了它的 [CoroutineScope]
-承袭了上下文（以及调度器）。在这个案例中，它从 `main` 线程中的 `runBlocking`
+中承袭了上下文（以及调度器）。在这个案例中，它从 `main` 线程中的 `runBlocking`
 主协程承袭了上下文。
 
 [Dispatchers.Unconfined] 是一个特殊的调度器且似乎也运行在 `main` 线程中，但实际上，
@@ -103,7 +103,7 @@ main runBlocking      : I'm working in thread main
 
 该默认调度器，当协程在 [GlobalScope] 中启动的时候被使用，
 它代表 [Dispatchers.Default] 使用了共享的后台线程池，
-所以 `GlobalScope.launch { ... }` 也可以使用类似的调度器—— `launch(Dispatchers.Default) { ... }`。
+所以 `GlobalScope.launch { ... }` 也可以使用相同的调度器—— `launch(Dispatchers.Default) { ... }`。
   
 [newSingleThreadContext] 为协程的运行启动了一个新的线程。
 一个专用的线程是一种非常昂贵的资源。
@@ -115,12 +115,12 @@ main runBlocking      : I'm working in thread main
 [Dispatchers.Unconfined] 协程调度器在被调用的线程中启动协程，但是这只有直到程序运行到<!--
 -->第一个挂起点的时候才行。挂起后，它将在完全由该所运行的线程中恢复<!--
 -->挂起被调用的函数。非受限的调度器是合适的，当协程没有<!--
--->消耗 CPU 时间或更新共享数据（比如UI界面）它被限制在了指定的线程中。
+-->消耗 CPU 时间或更新共享数据（比如UI界面）时它被限制在了指定的线程中。
 
-在另一种方法中，默认的，一个调度器承袭自外部的 [CoroutineScope]。
+另一方面，默认的，一个调度器承袭自外部的 [CoroutineScope]。
 而 [runBlocking] 协程的默认调度器，特别是，
-被调用它的线程所限制的，所以承袭它有根据可预测的FIFO调度来限制该线程<!--
--->执行的效果。
+被限制在调用它的线程，因此承袭它在限制有可预测的 FIFO 调度的线程的执行上<!--
+-->是非常有效果的。
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -163,7 +163,7 @@ main runBlocking: After delay in thread main
 -->中恢复。
 
 > 非受限的调度器是一种高级机制，可以在某些极端情况下提供帮助<!--
--->而不需要调度协程以便稍后执行，或产生不希望的副作用，
+-->而不需要调度协程以便稍后执行或产生不希望的副作用，
 因为某些操作必须立即在协程中执行。
 非受限调度器不应该被用在通常的代码中。  
 
@@ -219,9 +219,9 @@ fun main() = runBlocking<Unit> {
 
 该 `log` 函数将线程的名字打印在了方括号中，你可以看到是 `main`
 线程，但是当前正在执行的协程的标识符被附加到它上面。当调试模式开启的时候<!-- 
--->这个标识符会对已经创建的协程进行连续的签名。
+-->该标识符被连续分配给所有已经被创建的协程。
 
-您可以在 [newCoroutineContext] 函数的文档中阅读有关调试工具的更多信息。
+你可以在 [newCoroutineContext] 函数的文档中阅读有关调试工具的更多信息。
 
 ### 在不同线程间跳转
 
@@ -408,7 +408,7 @@ Now processing of the request is complete
 
 协程日志会频繁记录的时候以及当你只是需要来自相同协程的关联日志记录，
 自动分配 id 是非常棒的。然而，当协程与执行一个明确的请求<!--
--->或与执行一些显式的后台任务有关的时候，出于调试的目的给它明确的命名是更好的。
+-->或与执行一些显式的后台任务有关的时候，出于调试的目的给它明确的命名是更好的做法。
 [CoroutineName] 上下文元素可以给线程像给函数命名一样命名。它在协程被执行且
 [调试模式](#调试协程与线程)被开启时将显示线程的名字。
 
@@ -458,7 +458,7 @@ fun main() = runBlocking(CoroutineName("main")) {
 ### 组合上下文中的元素
 
 有时我们需要在协程上下文中定义多个元素。我们可以使用 `+` 操作符来实现。
-比如说，我们可以显式地指定一个调度器来启动协程并且同时显式指定<!--
+比如说，我们可以显式指定一个调度器来启动协程并且同时显式指定<!--
 -->一个命名： 
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
@@ -518,7 +518,7 @@ class Activity : CoroutineScope {
 
 </div>
 
-我们也可以在 `Actvity` 类中实现 [CoroutineScope] 接口。我们只需提供一个重写的
+我们也可以在 `Actvity` 类中实现 [CoroutineScope] 接口。我们只需提供一个覆盖的
 [CoroutineScope.coroutineContext] 属性来在作用域中为协程指定<!--
 -->上下文。我们结合所需要的调度器（我们在这个例子中使用 [Dispatchers.Default]）和任务：
 
@@ -634,7 +634,7 @@ Destroying activity!
 
 [`ThreadLocal`](https://docs.oracle.com/javase/8/docs/api/java/lang/ThreadLocal.html)，
 [asContextElement] 扩展函数在这里会充当救兵。它创建了额外的上下文元素，
-且保留给定 `ThreadLocal` 的值，并在每次协同程序切换其上下文时恢复它。
+且保留给定 `ThreadLocal` 的值，并在每次协程切换其上下文时恢复它。
 
 它很容易在下面的代码中演示：
 
@@ -680,7 +680,7 @@ Post-main, current thread: Thread[main @coroutine#1,5,main], thread local value:
 <!--- TEST FLEXIBLE_THREAD -->
 
 `ThreadLocal` 具有一流的支持，可以与任何原始的 `kotlinx.coroutines` 一起使用。
-它有一个关键限制：当线程局部发生突变，新值不会传播到协程调用者中
+它有一个关键限制：当线程局部发生突变，新值不会传递到协程调用者中
 （作为上下文元素不能跟踪所有的 `ThreadLocal` 对象访问）并且下次挂起时更新的值将丢失。
 在协程中使用 [withContext] 线程局部的值，可以查看 [asContextElement] 的更多细节。
 
@@ -689,8 +689,8 @@ Post-main, current thread: Thread[main @coroutine#1,5,main], thread local value:
 -->可能的对这个可变的域进行的并发的修改。
 
 对于高级的使用，例如，那些在内部使用线程局部传递数据的<!--
--->用于与日志记录 MDC 集成，以及事务上下文或任何其他库，文件中应该实现
-[ThreadContextElement] 接口。
+-->用于与日志记录 MDC 集成，以及事务上下文或任何其它库，请参阅应实现的
+[ThreadContextElement] 接口的文档。
 
 <!--- MODULE kotlinx-coroutines-core -->
 <!--- INDEX kotlinx.coroutines -->
