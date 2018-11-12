@@ -88,8 +88,8 @@ Error: Kotlin: Suspend functions are only allowed to be called from a coroutine 
 
 ### 桥接阻塞与非阻塞的世界
 
-第一个例子中在相似的代码中包含了 _非阻塞的_ `delay(...)` 和 _阻塞的_ `Thread.sleep(...)`。
-它非常容易的让我们看出来哪一个是阻塞的，哪一个是非阻塞的。
+第一个例子中在同一段代码中包含了 _非阻塞的_ `delay(...)` 和 _阻塞的_ `Thread.sleep(...)`。
+这非常容易让我们迷惑哪一个是阻塞的，哪一个是非阻塞的。
 来一起使用显式的阻塞 [runBlocking] 协程构建器：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
