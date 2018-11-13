@@ -113,7 +113,7 @@ fun main() = runBlocking {
     println("main: I'm tired of waiting!")
     job.cancelAndJoin() // 取消一个任务并且等待它结束
     println("main: Now I can quit.")
-//sampleEnd 
+//sampleEnd
 }
 ```
 
@@ -140,7 +140,7 @@ main: Now I can quit.
 -->调用挂起函数来检查取消。对于这种目的 [yield] 是一个好的选择。
 另一种方法是显式的检查取消状态。让我们试试第二种方法。
 
-将前一个示例中的 `while (i < 5)` 替换为 `while (isActive)` 并重新运行它。 
+将前一个示例中的 `while (i < 5)` 替换为 `while (isActive)` 并重新运行它。
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -165,7 +165,7 @@ fun main() = runBlocking {
     println("main: I'm tired of waiting!")
     job.cancelAndJoin() // 取消该任务并等待它结束
     println("main: Now I can quit.")
-//sampleEnd  
+//sampleEnd
 }
 ```
 
@@ -212,7 +212,7 @@ fun main() = runBlocking {
     println("main: I'm tired of waiting!")
     job.cancelAndJoin() // 取消该任务并且等待它结束
     println("main: Now I can quit.")
-//sampleEnd 
+//sampleEnd
 }
 ``` 
 
@@ -220,7 +220,7 @@ fun main() = runBlocking {
 
 > 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-cancel-04.kt)获得完整代码
 
-[join][Job.join] 和 [cancelAndJoin] 等待了所有的终结动作执行完毕， 
+[join][Job.join] 和 [cancelAndJoin] 等待了所有的终结动作执行完毕，
 所以运行示例得到了下面的输出：
 
 ```text
@@ -328,7 +328,7 @@ Exception in thread "main" kotlinx.coroutines.TimeoutCancellationException: Time
 
 [withTimeout] 抛出了 `TimeoutCancellationException`，它是 [CancellationException] 的子类。
 我们之前没有在控制台上看到堆栈跟踪信息的打印。这是因为<!--
--->在被取消的协程中 `CancellationException` 被认为是协程执行结束的正常原因。 
+-->在被取消的协程中 `CancellationException` 被认为是协程执行结束的正常原因。
 然而，在这个示例中我们在 `main` 函数中正确地使用了 `withTimeout`。
 
 由于取消只是一个例外，所有的资源都使用常用的方法来关闭。
