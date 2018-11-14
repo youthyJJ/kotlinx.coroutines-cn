@@ -46,11 +46,11 @@ class DispatchersGuideTest {
 
 ### 调度器与线程
 
-协程上下文包括了一个 _协程调度器_ （请看 [CoroutineDispatcher]），它确定了相应的协程在执行时<!--
+协程上下文包括了一个 _协程调度器_ （请参见 [CoroutineDispatcher]），它确定了相应的协程在执行时<!--
 -->使用一个或多个线程。协程调度器可以将协程的执行局限在<!--
 -->指定的线程中，调度它运行在线程池中或让它不受限的运行。
 
-所有的协程建造器诸如 [launch] 和 [async] 接收一个可选的
+所有的协程构建器诸如 [launch] 和 [async] 接收一个可选的
 [CoroutineContext](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/-coroutine-context/)
 参数，它可以被用来显式的为一个新协程或其它上下文元素指定一个调度器。
 
@@ -66,7 +66,7 @@ fun main() = runBlocking<Unit> {
     launch { // 运行在父协程的上下文中，即 runBlocking 主协程
         println("main runBlocking      : I'm working in thread ${Thread.currentThread().name}")
     }
-    launch(Dispatchers.Unconfined) { // 不受限的--将工作在主线程中
+    launch(Dispatchers.Unconfined) { // 不受限的——将工作在主线程中
         println("Unconfined            : I'm working in thread ${Thread.currentThread().name}")
     }
     launch(Dispatchers.Default) { // 将会获取默认调度器
@@ -129,7 +129,7 @@ import kotlinx.coroutines.*
 
 fun main() = runBlocking<Unit> {
 //sampleStart
-    launch(Dispatchers.Unconfined) { // 非受限的--将和主线程一起工作
+    launch(Dispatchers.Unconfined) { // 非受限的——将和主线程一起工作
         println("Unconfined      : I'm working in thread ${Thread.currentThread().name}")
         delay(500)
         println("Unconfined      : After delay in thread ${Thread.currentThread().name}")
@@ -409,8 +409,8 @@ Now processing of the request is complete
 协程日志会频繁记录的时候以及当你只是需要来自相同协程的关联日志记录，
 自动分配 id 是非常棒的。然而，当协程与执行一个明确的请求<!--
 -->或与执行一些显式的后台任务有关的时候，出于调试的目的给它明确的命名是更好的做法。
-[CoroutineName] 上下文元素可以给线程像给函数命名一样命名。它在协程被执行且
-[调试模式](#调试协程与线程)被开启时将显示线程的名字。
+[CoroutineName] 上下文元素可以给线程像给函数命名一样命名。它在协程被执行且<!--
+-->[调试模式](#调试协程与线程)被开启时将显示线程的名字。
 
 下面的例子演示了这一概念：
 

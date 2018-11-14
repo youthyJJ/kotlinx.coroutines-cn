@@ -46,7 +46,7 @@ class ExceptionsGuideTest {
 前者对待异常是不处理的，类似于 Java 的 `Thread.uncaughtExceptionHandler`，
 而后者依赖用户来最终消耗<!--
 -->异常，比如说，通过 [await][Deferred.await] 或 [receive][ReceiveChannel.receive]
-（[produce] 以及 [receive][ReceiveChannel.receive] 在 [Channels](https://github.com/Kotlin/kotlinx.coroutines/blob/master/docs/channels.md) 中介绍过）。
+（[produce] 以及 [receive][ReceiveChannel.receive] 在[通道](https://www.kotlincn.net/docs/reference/coroutines/channels.html)中介绍过）。
 
 可以通过一个在 [GlobalScope] 中创建新协程的简单示例来进行演示：
 
@@ -105,7 +105,7 @@ Caught ArithmeticException
 在 Android 中， `uncaughtExceptionPreHandler` 被设置在全局协程异常处理者中。
 
 [CoroutineExceptionHandler] 仅在预计不会由用户处理的异常上调用，
-所以在[async]构建器中注册它没有任何效果。
+所以在 [async] 构建器中注册它没有任何效果。
 
 
 
@@ -190,8 +190,8 @@ Parent is not cancelled
 <!--- TEST-->
 
 如果协程遇到除 `CancellationException` 以外的异常，它将取消具有该异常的父协程。
-这种行为不能被重写，且它被用来提供一个稳定的协程层次结构来进行
-[结构化并发](https://github.com/Kotlin/kotlinx.coroutines/blob/master/docs/composing-suspending-functions.md#structured-concurrency-with-async) 而无需依赖
+这种行为不能被覆盖，且它被用来提供一个稳定的协程层次结构来进行<!--
+-->[结构化并发](https://github.com/Kotlin/kotlinx.coroutines/blob/master/docs/composing-suspending-functions.md#structured-concurrency-with-async)而无需依赖
 [CoroutineExceptionHandler] 的实现。
 且当所有的子协程被终止的时候，原本的异常被父协程所处理。
 
@@ -357,8 +357,8 @@ Caught original java.io.IOException
 
 ## 监督
 
-在我们开始学习之前，取消是一种双向机制，在协程的整个层次结构<!--
--->之间传递。但是如果需要单向取消怎么办？
+正如我们之前研究的那样，取消是一种双向机制，在协程的整个层次结构<!--
+-->之间传播。但是如果需要单向取消怎么办？
 
 此类需求的一个良好示例是可以在其作用域内定义任务的的 UI 组件。如果任何一个 UI 的子任务<!--
 -->执行失败了，它并不总是有必要取消（有效地杀死）整个 UI 组件，
@@ -370,7 +370,7 @@ Caught original java.io.IOException
 ### 监督任务
 
 [SupervisorJob][SupervisorJob()] 可以被用于这些目的。它类似于常规的 [Job][Job()]，唯一的取消异常将<!--
--->只会向下传递。这是非常容易从示例中观察到的：
+-->只会向下传播。这是非常容易从示例中观察到的：
 
 
 
@@ -388,12 +388,12 @@ fun main() = runBlocking {
         // 启动第二个子任务
         val secondChild = launch {
             firstChild.join()
-            // 取消了第一个子任务且没有传递给第二个子任务
+            // 取消了第一个子任务且没有传播给第二个子任务
             println("First child is cancelled: ${firstChild.isCancelled}, but second one is still active")
             try {
                 delay(Long.MAX_VALUE)
             } finally {
-                // 但是取消了监督的传递
+                // 但是取消了监督的传播
                 println("Second child is cancelled because supervisor is cancelled")
             }
         }
@@ -423,7 +423,7 @@ Second child is cancelled because supervisor is cancelled
 
 ### 监督作用域
 
-对于 *作用域* 的并发，[supervisorScope] 可以被用来替代 [coroutineScope] 来实现相同的目的。它只会单向的传递<!--
+对于*作用域*的并发，[supervisorScope] 可以被用来替代 [coroutineScope] 来实现相同的目的。它只会单向的传播<!--
 -->并且当子任务自身执行失败的时候将它们全部取消。它也会在所有的子任务执行结束前等待，
 就像 [coroutineScope] 所做的那样。
 
@@ -473,7 +473,7 @@ Caught assertion error
 
 常规的任务和监督任务之间的另一个重要区别是异常处理。
 每一个子任务应该通过异常处理机制处理自身的异常。
-这种差异来自于子任务的执行失败不会传递给它的父任务的事实。
+这种差异来自于子任务的执行失败不会传播给它的父任务的事实。
 
 
 

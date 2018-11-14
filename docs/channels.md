@@ -247,7 +247,7 @@ Done!
 -->
 
 > 所有创建了协程的函数被定义在了 [CoroutineScope] 的扩展上，
-所以我们可以依靠 [结构化并发](https://kotlinlang.org/docs/reference/coroutines/composing-suspending-functions.html#structured-concurrency-with-async) 来来确保<!--
+所以我们可以依靠[结构化并发](https://kotlinlang.org/docs/reference/coroutines/composing-suspending-functions.html#structured-concurrency-with-async)来确保<!--
 -->没有常驻在我们的应用程序中的全局协程。
 
 ### 使用管道的素数
