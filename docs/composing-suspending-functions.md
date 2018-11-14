@@ -229,8 +229,8 @@ Completed in 1017 ms
 
 我们可以定义异步风格的函数来 _异步_ 的调用 `doSomethingUsefulOne` 和 `doSomethingUsefulTwo`
 并使用 [async] 协程建造器并带有一个显式的 [GlobalScope] 引用。
-我们给这样的函数的名称中加上
-"Async" 后缀来突出表明：事实上，它们只做异步计算并且需要<!--
+我们给这样的函数的名称中加上<!--
+-->“Async”后缀来突出表明：事实上，它们只做异步计算并且需要<!--
 -->使用延期的值来获得结果。
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
@@ -249,7 +249,7 @@ fun somethingUsefulTwoAsync() = GlobalScope.async {
 
 </div>
 
-注意，这些 `xxxAsync` 函数 **不是** _挂起_ 函数。它们可以在任何地方被使用。
+注意，这些 `xxxAsync` 函数**不是** _挂起_ 函数。它们可以在任何地方被使用。
 然而，它们总是在调用它们的代码中意味着<!--
 -->异步（这里的意思是 _并发_ ）执行。
  
@@ -309,7 +309,7 @@ Completed in 1085 ms
 -->
 
 > 这种带有异步函数的编程风格仅供参考，因为这在其它编程语言中<!--
--->是一种受欢迎的风格。在 Kotlin 的协程中使用这种风格是 **强烈不推荐** 的，
+-->是一种受欢迎的风格。在 Kotlin 的协程中使用这种风格是**强烈不推荐**的，
 原因如下所述。
 
 考虑一下如果 `val one = somethingUsefulOneAsync()` 这一行和 `one.await()` 表达式这里在代码中有逻辑错误，
