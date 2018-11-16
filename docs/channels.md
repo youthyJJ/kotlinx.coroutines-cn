@@ -283,7 +283,7 @@ fun CoroutineScope.filter(numbers: ReceiveChannel<Int>, prime: Int) = produce<In
 并为每一个我们发现的素数启动一个管道阶段：
  
 ```
-numbersFrom(2) -> filter(2) -> filter(3) -> filter(5) -> filter(7) ... 
+numbersFrom(2) -> filter(2) -> filter(3) -> filter(5) -> filter(7) ……
 ``` 
  
 下面的例子打印了前十个素数，
@@ -552,7 +552,7 @@ fun main() = runBlocking<Unit> {
             channel.send(it) // 将在缓冲区被占满时挂起
         }
     }
-    // 没有接收到东西...只是等待....
+    // 没有接收到东西……只是等待……
     delay(1000)
     sender.cancel() // 取消发送者协程
 //sampleEnd
