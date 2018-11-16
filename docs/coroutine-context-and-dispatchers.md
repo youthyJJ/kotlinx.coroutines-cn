@@ -94,7 +94,7 @@ main runBlocking      : I'm working in thread main
 
 <!--- TEST LINES_START_UNORDERED -->
 
-当调用 `launch { ... }` 时不传参数，它从启动了它的 [CoroutineScope]
+当调用 `launch { …… }` 时不传参数，它从启动了它的 [CoroutineScope]
 中承袭了上下文（以及调度器）。在这个案例中，它从 `main` 线程中的 `runBlocking`
 主协程承袭了上下文。
 
@@ -103,7 +103,7 @@ main runBlocking      : I'm working in thread main
 
 该默认调度器，当协程在 [GlobalScope] 中启动的时候被使用，
 它代表 [Dispatchers.Default] 使用了共享的后台线程池，
-所以 `GlobalScope.launch { ... }` 也可以使用相同的调度器—— `launch(Dispatchers.Default) { ... }`。
+所以 `GlobalScope.launch { …… }` 也可以使用相同的调度器—— `launch(Dispatchers.Default) { …… }`。
   
 [newSingleThreadContext] 为协程的运行启动了一个新的线程。
 一个专用的线程是一种非常昂贵的资源。
@@ -158,7 +158,7 @@ main runBlocking: After delay in thread main
 
 <!--- TEST LINES_START -->
  
-因此，该协程从 `runBlocking {...}` 协程中承袭了上下文并<!--
+因此，该协程从 `runBlocking {……}` 协程中承袭了上下文并<!--
 -->在主线程中执行，同时使用非受限调度器的协程从被执行 [delay] 函数的默认执行者线程<!--
 -->中恢复。
 
@@ -513,7 +513,7 @@ class Activity : CoroutineScope {
     fun destroy() {
         job.cancel()
     }
-    // 继续运行...
+    // 继续运行……
 ```
 
 </div>
@@ -528,7 +528,7 @@ class Activity : CoroutineScope {
     // 在 Activity 类中
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Default + job
-    // 继续运行...
+    // 继续运行……
 ```
 
 </div>
@@ -576,12 +576,12 @@ class Activity : CoroutineScope {
     fun destroy() {
         job.cancel()
     }
-    // 继续运行...
+    // 继续运行……
 
     // Activity 类继续
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Default + job
-    // 继续运行...
+    // 继续运行……
 
     // Activity 类继续
     fun doSomething() {

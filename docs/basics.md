@@ -75,7 +75,7 @@ World!
 -->协程的存活时间被限制在了整个应用程序的存活时间之内。
 
 你可以使用一些协程操作来替换一些线程操作，比如：
-用 `GlobalScope.launch { ... }` 替换 `thread { ... }` 用 `delay(...)` 替换 `Thread.sleep(...)`。 尝试一下。
+用 `GlobalScope.launch { …… }` 替换 `thread { …… }` 用 `delay(……)` 替换 `Thread.sleep(……)`。 尝试一下。
 
 如果你开始使用 `GlobalScope.launch` 来替换 `thread`，编译器将会抛出错误：
 
@@ -88,7 +88,7 @@ Error: Kotlin: Suspend functions are only allowed to be called from a coroutine 
 
 ### 桥接阻塞与非阻塞的世界
 
-第一个例子中在同一段代码中包含了 _非阻塞的_ `delay(...)` 和 _阻塞的_ `Thread.sleep(...)`。
+第一个例子中在同一段代码中包含了 _非阻塞的_ `delay(……)` 和 _阻塞的_ `Thread.sleep(……)`。
 这非常容易让我们记混哪个是阻塞的、哪个是非阻塞的。
 来一起使用显式的阻塞 [runBlocking] 协程构建器：
 
@@ -104,7 +104,7 @@ fun main() {
     }
     println("Hello,") // 主线程中的代码会立即执行
     runBlocking {     // 但是这个函数阻塞了主线程
-        delay(2000L)  // ...我们延迟2秒来保证 JVM 的存活
+        delay(2000L)  // ……我们延迟2秒来保证 JVM 的存活
     } 
 }
 ```
@@ -148,7 +148,7 @@ Hello,
 World!
 -->
 
-这里的 `runBlocking<Unit> { ... }` 作为一个适配器被用来启动最高优先级的主协程。
+这里的 `runBlocking<Unit> { …… }` 作为一个适配器被用来启动最高优先级的主协程。
 我们显式的声明 `Unit` 为返回值类型，因为Kotlin中的 `main` 函数返回 `Unit` 类型。
 
 这也是一种使用挂起函数来实现单元测试的方法：
@@ -292,7 +292,7 @@ Coroutine scope is over
 
 ### 提取函数重构
 
-让我们在 `launch { ... }` 中提取代码块并分离到另一个函数中。当你<!--
+让我们在 `launch { …… }` 中提取代码块并分离到另一个函数中。当你<!--
 -->在这段代码上展示“提取函数”函数的时候，你得到了一个新的函数并用 `suspend` 修饰。
 这是你的第一个 _挂起函数_ 。挂起函数可以像一个普通的函数一样使用内部协程，但是它们拥有一些额外的特性，反过来说，
 使用其它的挂起函数，比如这个例子中的 `delay`，可以使协程暂停执行。

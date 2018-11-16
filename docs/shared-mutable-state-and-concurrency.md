@@ -381,7 +381,7 @@ Counter = 100000
 可以隔离关键的部分。关键的区别在于 `Mutex.lock()` 是一个挂起函数，它不会阻塞线程。
 
 还有 [withLock] 扩展函数，可以方便的替代常用的
-`mutex.lock(); try { ... } finally { mutex.unlock() }` 模式：
+`mutex.lock(); try { …… } finally { mutex.unlock() }` 模式：
 
 <!--- CLEAR -->
 

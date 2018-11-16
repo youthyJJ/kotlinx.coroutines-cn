@@ -187,7 +187,7 @@ main: Now I can quit.
 ### 在 finally 中释放资源
 
 我们通常使用如下的方法处理在被取消时抛出 [CancellationException] 的可被取消<!--
--->的挂起函数。比如说，`try {...} finally {...}` 表达式以及 Kotlin 的 `use` 函数一般在协程被取消的时候<!--
+-->的挂起函数。比如说，`try {……} finally {……}` 表达式以及 Kotlin 的 `use` 函数一般在协程被取消的时候<!--
 -->执行它们的终结动作：
  
  
@@ -241,7 +241,7 @@ main: Now I can quit.
 -->问题，所有良好的关闭操作（关闭一个文件、取消一个任务、或是关闭任何一种<!--
 -->通信通道）通常都是非阻塞的，并且不会调用任何挂起函数。然而，在<!--
 -->真实的案例中，当你需要挂起一个被取消的协程，你可以将相应的代码包装在
-`withContext(NonCancellable) {...}` 中，并使用 [withContext] 函数以及 [NonCancellable] 上下文，见如下示例所示：
+`withContext(NonCancellable) {……}` 中，并使用 [withContext] 函数以及 [NonCancellable] 上下文，见如下示例所示：
  
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
  
