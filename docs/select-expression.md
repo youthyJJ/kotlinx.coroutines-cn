@@ -376,7 +376,7 @@ fun CoroutineScope.asyncStringsList(): List<Deferred<String>> {
 </div>
 
 现在 main 函数在等待第一个函数完成，并统计仍处于<!--
--->激活状态的延迟值的数量。注意，我们在这里使用 `select` 表达式事实上是作为一种Kotlin DSL，
+-->激活状态的延迟值的数量。注意，我们在这里使用 `select` 表达式事实上是作为一种 Kotlin DSL，
 所以我们可以用任意代码为它提供子句。在这种情况下，我们遍历一个<!--
 -->延迟值的队列，并为每个延迟值提供 `onAwait` 子句的调用。
 
