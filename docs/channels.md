@@ -132,8 +132,8 @@ Done!
 
 ### 构建通道生产者
 
-协程生成一系列元素的模式很常见。
-这是 _生产者-消费者_ 模式的一部分，并且经常能在并发的代码中看到它。
+协程生成一系列元素的模式很常见。 
+这是 _生产者——消费者_ 模式的一部分，并且经常能在并发的代码中看到它。
 你可以将生产者抽象成一个函数，并且使通道作为它的参数，但这与<!--
 -->必须从函数中返回结果的常识相违悖。
 
@@ -280,7 +280,7 @@ fun CoroutineScope.filter(numbers: ReceiveChannel<Int>, prime: Int) = produce<In
 
 
 现在我们开启了一个从2开始的数字流管道，从当前的通道中取一个素数，
-并为每一个我们发现的素数启动一个管道阶段：
+并为每一个我们发现的素数启动一个流水线阶段：
  
 ```
 numbersFrom(2) -> filter(2) -> filter(3) -> filter(5) -> filter(7) ……
@@ -348,10 +348,10 @@ fun CoroutineScope.filter(numbers: ReceiveChannel<Int>, prime: Int) = produce<In
 注意，你可以在标准库中使用
 [`buildIterator`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/build-iterator.html)
 协程构建器来构建一个相似的管道。
-使用 `produce` 替换 `buildIterator`、`send` 替换 `yield`、`receive` 替换 `next`、
-`ReceiveChannel` 替换 `Iterator` 来摆脱协程作用域，你将不再需要 `runBlocking`。
+使用 `buildIterator` 替换 `produce`、`yield` 替换 `send`、`next` 替换 `receive`、
+`Iterator` 替换 `ReceiveChannel` 来摆脱协程作用域，你将不再需要 `runBlocking`。
 然而，如上所示，如果你在 [Dispatchers.Default] 上下文中运行它，使用通道的管道的好处在于<!--
--->它可以充分利用多核心CPU。
+-->它可以充分利用多核心 CPU。
 
 不过，这是一种非常不切实际的寻找素数的方法。在实践中，管道调用了另外的一些<!--
 -->挂起中的调用（就像异步调用远程服务）并且这些管道不能<!--
