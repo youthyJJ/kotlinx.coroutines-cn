@@ -436,8 +436,8 @@ Counter = 100000
 
 ### Actors
 
-一个 [actor](https://en.wikipedia.org/wiki/Actor_model) 是由协程、被限制并封装到该协程中的状态
-以及一个与其它协程通信的 _通道_ 组合而成的一个实体。一个简单的 actor 可以简单的写成一个函数，
+一个 [actor](https://en.wikipedia.org/wiki/Actor_model) 是由协程、被限制并封装到该协程中的状态<!--
+-->以及一个与其它协程通信的 _通道_ 组合而成的一个实体。一个简单的 actor 可以简单的写成一个函数，
 但是一个拥有复杂状态的 actor 更适合由类来表示。
 
 有一个 [actor] 协程构建器，它可以方便地将 actor 的邮箱通道组合到其<!--
@@ -528,7 +528,7 @@ fun main() = runBlocking<Unit> {
     GlobalScope.massiveRun {
         counter.send(IncCounter)
     }
-    // 发送一条消息从一个 actor 中获取计数值 
+    // 发送一条消息以用来从一个 actor 中获取计数值 
     val response = CompletableDeferred<Int>()
     counter.send(GetCounter(response))
     println("Counter = ${response.await()}")

@@ -37,7 +37,7 @@ class SelectGuideTest {
 select 表达式可以同时等待多个挂起函数，并 _选择_
 第一个可用的。
 
-> Select 表达式在 `kotlinx.coroutines` 中是一个实验性的特性。这些API在
+> Select 表达式在 `kotlinx.coroutines` 中是一个实验性的特性。这些 API 在
 `kotlinx.coroutines` 库即将到来的更新中可能会<!--
 -->发生改变。
 
