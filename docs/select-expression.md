@@ -17,7 +17,7 @@ class SelectGuideTest {
 --> 
 
 
-## 目录
+**目录**
 
 <!--- TOC -->
 
@@ -49,7 +49,7 @@ select 表达式可以同时等待多个挂起函数，并 _选择_
 
 ```kotlin
 fun CoroutineScope.fizz() = produce<String> {
-    while (true) { // 每300毫秒发送一个 "Fizz" 
+    while (true) { // 每300毫秒发送一个 "Fizz"
         delay(300)
         send("Fizz")
     }
@@ -64,7 +64,7 @@ fun CoroutineScope.fizz() = produce<String> {
 
 ```kotlin
 fun CoroutineScope.buzz() = produce<String> {
-    while (true) { // 每500毫秒发送一个 "Buzz!" 
+    while (true) { // 每500毫秒发送一个 "Buzz!"
         delay(500)
         send("Buzz!")
     }
@@ -106,21 +106,21 @@ import kotlinx.coroutines.channels.*
 import kotlinx.coroutines.selects.*
 
 fun CoroutineScope.fizz() = produce<String> {
-    while (true) { // 每300毫秒发送一个 "Fizz" 
+    while (true) { // 每300毫秒发送一个 "Fizz"
         delay(300)
         send("Fizz")
     }
 }
 
 fun CoroutineScope.buzz() = produce<String> {
-    while (true) { // 每500毫秒发送一个 "Buzz!" 
+    while (true) { // 每500毫秒发送一个 "Buzz!"
         delay(500)
         send("Buzz!")
     }
 }
 
 suspend fun selectFizzBuzz(fizz: ReceiveChannel<String>, buzz: ReceiveChannel<String>) {
-    select<Unit> { // <Unit> 意味着该 select 表达式不返回任何结果 
+    select<Unit> { // <Unit> 意味着该 select 表达式不返回任何结果
         fizz.onReceive { value ->  // 这是第一个 select 子句
             println("fizz -> '$value'")
         }
@@ -146,7 +146,7 @@ fun main() = runBlocking<Unit> {
 
 > 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-select-01.kt)获得完整代码
 
-这段代码的执行结果如下： 
+这段代码的执行结果如下：
 
 ```text
 fizz -> 'Fizz'
@@ -278,7 +278,7 @@ fun CoroutineScope.produceNumbers(side: SendChannel<Int>) = produce<Int> {
         delay(100) // 延迟100毫秒
         select<Unit> {
             onSend(num) {} // 发送到主通道
-            side.onSend(num) {} // 或者发送到 side 通道     
+            side.onSend(num) {} // 或者发送到 side 通道
         }
     }
 }
@@ -537,7 +537,7 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-select-05.kt)获得完整代码 
+> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-select-05.kt)获得完整代码
 
 这段代码的执行结果：
 

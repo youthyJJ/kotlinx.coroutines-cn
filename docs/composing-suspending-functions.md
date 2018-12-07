@@ -16,7 +16,7 @@ import org.junit.Test
 class ComposingGuideTest {
 --> 
 
-## 目录
+**目录**
 
 <!--- TOC -->
 
@@ -56,7 +56,7 @@ suspend fun doSomethingUsefulTwo(): Int {
 </div>
 
 
-如果需要按 _顺序_ 调用它们，我们接下来会做什么--首先调用 `doSomethingUsefulOne` _接下来_ 
+如果需要按 _顺序_ 调用它们，我们接下来会做什么--首先调用 `doSomethingUsefulOne` _接下来_
 调用 `doSomethingUsefulTwo` 并且计算它们结果的和吗？
 实际上，如果我们要根据第一个函数的结果来决定是否我们需要<!--
 -->调用第二个函数或者决定如何调用它时，我们就会这样做。
@@ -111,7 +111,7 @@ Completed in 2017 ms
 ### 使用 async 并发
 
 如果 `doSomethingUsefulOne` 与 `doSomethingUsefulTwo` 之间没有依赖，并且<!--
--->我们想更快的得到结果，让它们进行 _并发_ 吗？这就是 [async] 可以帮助我们的地方。 
+-->我们想更快的得到结果，让它们进行 _并发_ 吗？这就是 [async] 可以帮助我们的地方。
  
 在概念上，[async] 就类似于 [launch]。它启动了一个单独的协程，这是一个轻量级的线程<!--
 -->并与其它所有的协程一起并发的工作。不同之处在于 `launch` 返回一个 [Job] 并且<!--
@@ -167,7 +167,7 @@ Completed in 1017 ms
 ### 惰性启动的 async
 
 使用一个可选的参数 `start` 并传值 [CoroutineStart.LAZY]，可以对 [async] 进行惰性操作。
-只有当结果需要被 [await][Deferred.await] 或者如果一个 
+只有当结果需要被 [await][Deferred.await] 或者如果一个
 [start][Job.start] 函数被调用，协程才会<!--
 -->被启动。运行下面的示例：
 
@@ -264,7 +264,7 @@ import kotlinx.coroutines.*
 import kotlin.system.*
 
 //sampleStart
-// 注意，在这个示例中我们在 `main` 函数的右边没有加上 `runBlocking` 
+// 注意，在这个示例中我们在 `main` 函数的右边没有加上 `runBlocking`
 fun main() {
     val time = measureTimeMillis {
         // 我们可以在协程外面启动异步执行
