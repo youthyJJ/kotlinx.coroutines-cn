@@ -16,7 +16,7 @@ import org.junit.Test
 class DispatchersGuideTest {
 --> 
 
-## 目录
+**目录**
 
 <!--- TOC -->
 
@@ -107,7 +107,7 @@ main runBlocking      : I'm working in thread main
   
 [newSingleThreadContext] 为协程的运行启动了一个新的线程。
 一个专用的线程是一种非常昂贵的资源。
-在真实的应用程序中两者都必须被释放，当不再需要的时候，使用 [close][ExecutorCoroutineDispatcher.close] 
+在真实的应用程序中两者都必须被释放，当不再需要的时候，使用 [close][ExecutorCoroutineDispatcher.close]
 函数，或存储在一个顶级变量中使它在整个应用程序中被重用。
 
 ### 非受限调度器 vs 受限调度器
@@ -165,7 +165,7 @@ main runBlocking: After delay in thread main
 > 非受限的调度器是一种高级机制，可以在某些极端情况下提供帮助<!--
 -->而不需要调度协程以便稍后执行或产生不希望的副作用，
 因为某些操作必须立即在协程中执行。
-非受限调度器不应该被用在通常的代码中。  
+非受限调度器不应该被用在通常的代码中。
 
 ### 调试协程与线程
 
@@ -204,7 +204,7 @@ fun main() = runBlocking<Unit> {
 
 > 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-context-03.kt)获得完整代码
 
-这里有三个协程，其中主协程是 (#1) —— `runBlocking`， 
+这里有三个协程，其中主协程是 (#1) —— `runBlocking`，
 而另外两个协程计算延期的值 `a` (#2) 和 `b` (#3)。
 它们都在 `runBlocking` 上下文中执行并且被限制在了主线程内。
 这段代码的输出如下：
@@ -218,7 +218,7 @@ fun main() = runBlocking<Unit> {
 <!--- TEST FLEXIBLE_THREAD -->
 
 该 `log` 函数将线程的名字打印在了方括号中，你可以看到是 `main`
-线程，但是当前正在执行的协程的标识符被附加到它上面。当调试模式开启的时候<!-- 
+线程，但是当前正在执行的协程的标识符被附加到它上面。当调试模式开启的时候<!--
 -->该标识符被连续赋值给所有已经被创建的协程。
 
 你可以在 [newCoroutineContext] 函数的文档中阅读有关调试工具的更多信息。
@@ -459,7 +459,7 @@ fun main() = runBlocking(CoroutineName("main")) {
 
 有时我们需要在协程上下文中定义多个元素。我们可以使用 `+` 操作符来实现。
 比如说，我们可以显式指定一个调度器来启动协程并且同时显式指定<!--
--->一个命名： 
+-->一个命名：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -479,7 +479,7 @@ fun main() = runBlocking<Unit> {
 
 > 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-context-09.kt)获得完整代码
 
-这段代码使用了 `-Dkotlinx.coroutines.debug` JVM 参数，输出如下所示： 
+这段代码使用了 `-Dkotlinx.coroutines.debug` JVM 参数，输出如下所示：
 
 ```text
 I'm working in thread DefaultDispatcher-worker-1 @test#2
@@ -493,7 +493,7 @@ I'm working in thread DefaultDispatcher-worker-1 @test#2
 -->一个在生命周期中的对象，但这个对象并不是协程。假如，我们写了一个 Android 应用程序<!--
 -->并在上下文中启动了多个协程来为 Android activity 进行异步操作来拉取<!--
 -->以及更新数据，或作动画等。当 activity 被销毁的时候这些协程必须被取消<!--
--->以防止内存泄漏。 
+-->以防止内存泄漏。
   
 我们通过创建一个 [Job] 的实例来管理协程的生命周期，并让它与<!--
 -->我们的 activity 的生命周期相关联。当一个 activity 被创建的时候一个任务（job）实例被使用 [Job()] 工厂函数<!--

@@ -15,7 +15,7 @@ import org.junit.Test
 
 class ChannelsGuideTest {
 --> 
-## 目录
+**目录**
 
 <!--- TOC -->
 
@@ -34,7 +34,7 @@ class ChannelsGuideTest {
 <!--- END_TOC -->
 
 {:#通道实验性的}
-## 通道 (实验性的) 
+## 通道 (实验性的)
 
 延期的值提供了一种便捷的方法使单个值在多个协程之间进行相互传输。
 通道提供了一种在流中传输值的方法。
@@ -93,7 +93,7 @@ Done!
 在接收者中可以定期的使用 `for` 循环来从通道中<!--
 -->接收元素。
  
-从概念上来说，一个 [close][SendChannel.close] 操作就像向通道发送了一个特殊的关闭指令。 
+从概念上来说，一个 [close][SendChannel.close] 操作就像向通道发送了一个特殊的关闭指令。
 这个迭代停止就说明关闭指令已经被接收了。所以这里保证<!--
 -->所有先前发送出去的元素都在通道关闭前被接收到。
 
@@ -132,7 +132,7 @@ Done!
 
 ### 构建通道生产者
 
-协程生成一系列元素的模式很常见。 
+协程生成一系列元素的模式很常见。
 这是 _生产者——消费者_ 模式的一部分，并且经常能在并发的代码中看到它。
 你可以将生产者抽象成一个函数，并且使通道作为它的参数，但这与<!--
 -->必须从函数中返回结果的常识相违悖。
@@ -279,14 +279,14 @@ fun CoroutineScope.filter(numbers: ReceiveChannel<Int>, prime: Int) = produce<In
 
 </div>
 
-现在我们开启了一个从2开始的数字流管道，从当前的通道中取一个素数， 
+现在我们开启了一个从2开始的数字流管道，从当前的通道中取一个素数，
 并为每一个我们发现的素数启动一个流水线阶段：
  
 ```
 numbersFrom(2) -> filter(2) -> filter(3) -> filter(5) -> filter(7) ……
 ``` 
  
-下面的例子打印了前十个素数， 
+下面的例子打印了前十个素数，
 在主线程的上下文中运行整个管道。直到所有的协程在<!--
 -->该主协程 [runBlocking] 的作用域中被启动完成。
 我们不必使用一个显式的列表来保存所有被我们已经启动的协程。
@@ -347,7 +347,7 @@ fun CoroutineScope.filter(numbers: ReceiveChannel<Int>, prime: Int) = produce<In
 
 注意，你可以在标准库中使用
 [`buildIterator`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/build-iterator.html)
-协程构建器来构建一个相似的管道。 
+协程构建器来构建一个相似的管道。
 使用 `buildIterator` 替换 `produce`、`yield` 替换 `send`、`next` 替换 `receive`、
 `Iterator` 替换 `ReceiveChannel` 来摆脱协程作用域，你将不再需要 `runBlocking`。
 然而，如上所示，如果你在 [Dispatchers.Default] 上下文中运行它，使用通道的管道的好处在于<!--
@@ -455,7 +455,7 @@ Processor #3 received 10
 还有，注意我们如何使用 `for` 循环显式迭代通道以在 `launchProcessor` 代码中执行扇出。
 与 `consumeEach` 不同，这个 `for` 循环是安全完美地使用多个协程的。如果其中一个处理者<!--
 -->协程执行失败，其它的处理器协程仍然会继续处理通道，而通过 `consumeEach`
-编写的处理器始终在正常或非正常完成时消耗（取消）底层通道。  
+编写的处理器始终在正常或非正常完成时消耗（取消）底层通道。
 
 ### 扇入
 
@@ -581,7 +581,7 @@ Sending 4
 
 发送和接收操作是 _公平的_ 并且尊重调用它们的<!--
 -->多个协程。它们遵守先进先出原则，可以看到第一个协程调用 `receive`
-并得到了元素。在下面的例子中两个协程 “乒” 和 "乓" 都<!-- 
+并得到了元素。在下面的例子中两个协程 “乒” 和 "乓" 都<!--
 -->从共享的“桌子”通道接收到这个“球”元素。
 
 

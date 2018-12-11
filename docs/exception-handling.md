@@ -15,7 +15,7 @@ import org.junit.Test
 
 class ExceptionsGuideTest {
 --> 
-## 目录
+**目录**
 
 <!--- TOC -->
 
@@ -45,7 +45,7 @@ class ExceptionsGuideTest {
 或者将它们暴露给用户（[async] 以及 [produce]）。
 前者对待异常是不处理的，类似于 Java 的 `Thread.uncaughtExceptionHandler`，
 而后者依赖用户来最终消耗<!--
--->异常，比如说，通过 [await][Deferred.await] 或 [receive][ReceiveChannel.receive] 
+-->异常，比如说，通过 [await][Deferred.await] 或 [receive][ReceiveChannel.receive]
 （[produce] 以及 [receive][ReceiveChannel.receive] 在[通道](https://www.kotlincn.net/docs/reference/coroutines/channels.html)中介绍过）。
 
 可以通过一个在 [GlobalScope] 中创建新协程的简单示例来进行演示：
@@ -104,7 +104,7 @@ Caught ArithmeticException
 一样，在没有更多的指定的异常处理者被注册的时候被使用。
 在 Android 中， `uncaughtExceptionPreHandler` 被设置在全局协程异常处理者中。
 
-[CoroutineExceptionHandler] 仅在预计不会由用户处理的异常上调用， 
+[CoroutineExceptionHandler] 仅在预计不会由用户处理的异常上调用，
 所以在 [async] 构建器中注册它没有任何效果。
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
@@ -307,7 +307,7 @@ Caught java.io.IOException with suppressed [java.lang.ArithmeticException]
 
 <!--- TEST-->
 
-> 注意，这个机制当前只能在 Java 1.7 以上的版本中使用。 
+> 注意，这个机制当前只能在 Java 1.7 以上的版本中使用。
 在 JS 和原生环境下暂时会受到限制，但将来会被修复。
 
 取消异常是透明的并且会在默认情况下解包：

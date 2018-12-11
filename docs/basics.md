@@ -16,7 +16,7 @@ import org.junit.Test
 class BasicsGuideTest {
 --> 
 
-## 目录
+**目录**
 
 <!--- TOC -->
 
@@ -220,10 +220,10 @@ World!
 我们可以在一个具体的作用域中启动协程并操作。
 
 在我们的例子中，我们有一个被转换成使用 [runBlocking] 的协程构建器的 `main` 函数，
-每一个协程构建器，包括 `runBlocking`， 添加了一个实例在 [CoroutineScope] 作用域的代码块中。
-我们可以在一个协程还没有明确的调用 `join` 之前在这个作用域内启动它们，因为一个外部的协程
-（我们的例子中的 `runBlocking`）没有在所有的协程在它们的作用域内启动完成后执行<!--
--->完毕，从而，我们可以使我们的示例更简单：
+每一个协程构建器，包括 `runBlocking`， 在它代码块的作用域内添加一个[CoroutineScope] 实例。
+在这个作用域内启动的协程不需要明确的调用 `join`，因为<!--
+-->一个外围的协程（我们的例子中的 `runBlocking`）只有在它作用域内所有协程执行完毕后<!--
+-->才会结束。从而，我们可以使我们的示例更简单：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
