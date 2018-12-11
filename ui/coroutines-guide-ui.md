@@ -53,56 +53,56 @@ class ExampleApp : Application() {
 -->
 <!--- KNIT     kotlinx-coroutines-javafx/test/guide/.*\.kt -->
 
-# Guide to UI programming with coroutines
+# 使用协程进行 UI 编程指南
 
-This guide assumes familiarity with basic coroutine concepts that are 
-covered in [Guide to kotlinx.coroutines](../docs/coroutines-guide.md) and gives specific 
-examples on how to use coroutines in UI applications. 
+本篇教程假定你已经熟悉了<!-- 
+-->包含[kotlinx.coroutines 指南](../docs/coroutines-guide.md)在内的基础协程概念，并给予<!--
+-->如何在 UI 应用程序中使用协程的明确示例。
 
-All UI application libraries have one thing in common. They have the single main thread where all state of the UI 
-is confined, and all updates to the UI has to happen in this particular thread. With respect to coroutines, 
-it means that you need an appropriate _coroutine dispatcher context_ that confines the coroutine 
-execution to this main UI thread. 
+所有的 UI 程序库都有一个共同的特征。所有的 UI 状态都被限制在单个的<!--
+-->主线程中，并且所有更新 UI 的操作都应该发生在该线程中。在使用协程时，
+这意味着你需要一个适当的 _协程调度器上下文_ 来限制协程<!--
+-->运行与 UI 主线程中。
 
-In particular, `kotlinx.coroutines` has three modules that provide coroutine context for 
-different UI application libraries:
+特别是，`kotlinx.coroutines` 为不同的 UI 应用程序库提供了三个<!--
+-->协程上下文模块：
  
-* [kotlinx-coroutines-android](kotlinx-coroutines-android) -- `Dispatchers.Main` context for Android applications.
-* [kotlinx-coroutines-javafx](kotlinx-coroutines-javafx) -- `Dispatchers.JavaFx` context for JavaFX UI applications.
-* [kotlinx-coroutines-swing](kotlinx-coroutines-swing) -- `Dispatchers.Swing` context for Swing UI applications.
+* [kotlinx-coroutines-android](kotlinx-coroutines-android) -- `Dispatchers.Main` 为 Android 应用程序提供的上下文。
+* [kotlinx-coroutines-javafx](kotlinx-coroutines-javafx) -- `Dispatchers.JavaFx` 为 JavaFX UI 应用程序提供的上下文。
+* [kotlinx-coroutines-swing](kotlinx-coroutines-swing) -- `Dispatchers.Swing` 为 Swing UI 应用程序提供的上下文。
 
-Also, UI dispatcher is available via `Dispatchers.Main` from `kotlinx-coroutines-core` and corresponding 
-implementation (Android, JavaFx or Swing) is discovered by [`ServiceLoader`](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html) API.
-For example, if you are writing JavaFx application, you can use either `Dispatchers.Main` or `Dispachers.JavaFx` extension, it will be the same object.
+当然，UI 调度器被允许通过来自于 `kotlinx-coroutines-core` 的 `Dispatchers.Main` 以及被
+[`ServiceLoader`](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html) API 暴露的相应实现（Android, JavaFx 或 Swing）。
+举例来说，假如你编写了一个 JavaFx 应用程序，你使用 `Dispatchers.Main` 或者 `Dispachers.JavaFx` 扩展都是可以的，它们指向同一个对象。
 
-This guide covers all UI libraries simultaneously, because each of these modules consists of just one
-object definition that is a couple of pages long. You can use any of them as an example to write the corresponding
-context object for your favourite UI library, even if it is not included out of the box here.
+本教程同时包含了所有的 UI 库，因为这些模块中的每一个都只包含一个<!--
+-->对象的定义，长度为几页。你可以使用它们中的任何一个来作为例子来编写<!--
+-->为你最喜爱的 UI 库编写上下文对象，甚至是没有被包含在本文中的。
 
-## Table of contents
+## 目录
 
 <!--- TOC -->
 
-* [Setup](#setup)
+* [体系](#setup)
   * [JavaFx](#javafx)
   * [Android](#android)
-* [Basic UI coroutines](#basic-ui-coroutines)
-  * [Launch UI coroutine](#launch-ui-coroutine)
-  * [Cancel UI coroutine](#cancel-ui-coroutine)
-* [Using actors within UI context](#using-actors-within-ui-context)
-  * [Extensions for coroutines](#extensions-for-coroutines)
-  * [At most one concurrent job](#at-most-one-concurrent-job)
-  * [Event conflation](#event-conflation)
-* [Blocking operations](#blocking-operations)
-  * [The problem of UI freezes](#the-problem-of-ui-freezes)
-  * [Structured concurrency, lifecycle and coroutine parent-child hierarchy](#structured-concurrency-lifecycle-and-coroutine-parent-child-hierarchy)
-  * [Blocking operations](#blocking-operations)
-* [Advanced topics](#advanced-topics)
+* [基础的 UI 协程](#basic-ui-coroutines)
+  * [启动 UI 协程](#launch-ui-coroutine)
+  * [取消 UI 协程](#cancel-ui-coroutine)
+* [在 UI 上下文中使用 actors](#using-actors-within-ui-context)
+  * [协程扩展](#extensions-for-coroutines)
+  * [最多一个的并发任务](#at-most-one-concurrent-job)
+  * [事件归并](#event-conflation)
+* [阻塞操作](#blocking-operations)
+  * [UI 冻结的问题](#the-problem-of-ui-freezes)
+  * [结构性并发，生命周期以及协程父子层级结构](#structured-concurrency-lifecycle-and-coroutine-parent-child-hierarchy)
+  * [阻塞操作](#blocking-operations)
+* [高级主题](#advanced-topics)
   * [Starting coroutine in UI event handlers without dispatch](#starting-coroutine-in-ui-event-handlers-without-dispatch)
 
 <!--- END_TOC -->
 
-## Setup
+## 体系
 
 The runnable examples in this guide are presented for JavaFx. The advantage is that all the examples can 
 be directly started on any OS without the need for emulators or anything like that and they are fully self-contained
@@ -114,7 +114,7 @@ There are separate notes on what changes need to be made (if any) to reproduce t
 The basic example application for JavaFx consists of a window with a text label named `hello` that initially
 contains "Hello World!" string and a pinkish circle in the bottom-right corner named `fab` (floating action button).
 
-![UI example for JavaFx](ui-example-javafx.png)
+![JavaFx 的 UI 示例](ui-example-javafx.png)
 
 The `start` function of JavaFX application invokes `setup` function, passing it reference to `hello` and `fab`
 nodes. That is where various code is placed in the rest of this guide:
