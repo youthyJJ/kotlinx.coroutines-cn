@@ -86,7 +86,7 @@ class ExampleApp : Application() {
 * [体系](#setup)
   * [JavaFx](#javafx)
   * [Android](#android)
-* [基础的 UI 协程](#basic-ui-coroutines)
+* [UI 协程基础](#basic-ui-coroutines)
   * [启动 UI 协程](#launch-ui-coroutine)
   * [取消 UI 协程](#cancel-ui-coroutine)
 * [在 UI 上下文中使用 actors](#using-actors-within-ui-context)
@@ -98,26 +98,26 @@ class ExampleApp : Application() {
   * [结构性并发，生命周期以及协程父子层级结构](#structured-concurrency-lifecycle-and-coroutine-parent-child-hierarchy)
   * [阻塞操作](#blocking-operations)
 * [高级主题](#advanced-topics)
-  * [Starting coroutine in UI event handlers without dispatch](#starting-coroutine-in-ui-event-handlers-without-dispatch)
+  * [没有调度器时在 UI 事件处理器中启动协程](#starting-coroutine-in-ui-event-handlers-without-dispatch)
 
 <!--- END_TOC -->
 
 ## 体系
 
-The runnable examples in this guide are presented for JavaFx. The advantage is that all the examples can 
-be directly started on any OS without the need for emulators or anything like that and they are fully self-contained
-(each example is in one file). 
-There are separate notes on what changes need to be made (if any) to reproduce them on Android. 
+本篇教程中的可运行的示例是通过 JavaFx 来呈现的。其优点是所有的示例可以<!--
+-->直接在任何运行在操作系统中而不需要模拟器或任何类似的东西，并且它们可以完全独立存在
+（每个示例都在同一个文件中）。
+关于在 Android 上重现它们需要进行哪些更改（如果有的话）会有单独的注释。 
 
 ### JavaFx
 
-The basic example application for JavaFx consists of a window with a text label named `hello` that initially
-contains "Hello World!" string and a pinkish circle in the bottom-right corner named `fab` (floating action button).
+这个 JavaFx 的基础的示例应用程度由一个包含名为 `hello` 的文字标签的窗口构成，它最初<!--
+-->包含 "Hello World!" 字符串以及一个右下角的粉色圆形 `fab`（floating action button —— 悬浮动作按钮）。
 
 ![JavaFx 的 UI 示例](ui-example-javafx.png)
 
-The `start` function of JavaFX application invokes `setup` function, passing it reference to `hello` and `fab`
-nodes. That is where various code is placed in the rest of this guide:
+JavaFX 应用程序中的 `start` 函数调用了 `setup` 函数，将它引用到 `hello` 与 `fab`
+节点上。这是本指南其余部分中放置各种代码的地方：
 
 ```kotlin
 fun setup(hello: Text, fab: Circle) {
@@ -125,33 +125,33 @@ fun setup(hello: Text, fab: Circle) {
 }
 ```
 
-> You can get full code [here](kotlinx-coroutines-javafx/test/guide/example-ui-basic-01.kt)
+> 你可以点击[这里](kotlinx-coroutines-javafx/test/guide/example-ui-basic-01.kt)获得完整代码
 
-You can clone [kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines) project from GitHub onto your 
-workstation and open the project in IDE. All the examples from this guide are in the test folder of 
-[`ui/kotlinx-coroutines-javafx`](kotlinx-coroutines-javafx) module. 
-This way you'll be able to run and see how each example works and to 
-experiment with them by making changes.
+你可以在 Github 上 clone  [kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines) 这个项目到你的<!--
+-->工作站中在 IDE 中打开这个项目。所有本教程中的示例都在
+[`ui/kotlinx-coroutines-javafx`](kotlinx-coroutines-javafx) 模块的 test 文件夹中。 
+这样的话你就能够运行并观察每一个示例是如何工作的并<!--
+-->在你对它们进行改变时进行实验。
 
 ### Android
 
-Follow the guide on [Getting Started With Android and Kotlin](https://kotlinlang.org/docs/tutorials/kotlin-android.html)
-to create Kotlin project in Android Studio. You are also encouraged to add 
-[Kotlin Android Extensions](https://kotlinlang.org/docs/tutorials/android-plugin.html)
-to your application.
+请跟随这篇教程——[在 Android 中开始使用 Kotlin](https://kotlinlang.org/docs/tutorials/kotlin-android.html)，
+来在 Android Studio 中创建一个 Kotlin 项目。我们也鼓励你添加<!--
+-->[Android 的 Kotlin 扩展](https://kotlinlang.org/docs/tutorials/android-plugin.html)
+到你的应用程序中。
 
-In Android Studio 2.3 you'll get an application that looks similarly to the one shown below:
+在 Android Studio 2.3 中，您将获得一个类似于下图所示的应用程序：
 
 ![UI example for Android](ui-example-android.png)
 
-Go to the `context_main.xml` of your application and assign an ID of "hello" to the text view with "Hello World!" string,
-so that it is available in your application as `hello` with Kotlin Android extensions. The pinkish floating
-action button is already named `fab` in the project template that gets created.
+到你的应用程序的 `context_main.xml` 文件中，并将 ID "hello" 指定给你写有 "Hello World!" 字符串的文本视图，
+因此它在您的应用程序中可用作 “hello” 和 Kotlin Android 扩展。粉红色的悬浮<!--
+-->动作按钮在已创建的项目模板中已命名为 “fab”。
 
-In the `MainActivity.kt` of your application remove the block `fab.setOnClickListener { ... }` and instead
-add `setup(hello, fab)` invocation as the last line of `onCreate` function.
-Create a placeholder `setup` function at the end of the file. 
-That is where various code is placed in the rest of this guide:
+在你的应用程序的 `MainActivity.kt` 中移除 `fab.setOnClickListener { ... }` 代码块并替换<!--
+-->添加 `setup(hello, fab)` 的调用作为 `onCreate` 函数的最后一行。
+在文件的末尾创建一个占位的 `setup` 函数。
+这是本指南其余部分中放置各种代码的地方：
 
 ```kotlin
 fun setup(hello: TextView, fab: FloatingActionButton) {
@@ -161,23 +161,23 @@ fun setup(hello: TextView, fab: FloatingActionButton) {
 
 <!--- CLEAR -->
 
-Add dependencies on `kotlinx-coroutines-android` module to the `dependencies { ... }` section of
-`app/build.gradle` file:
+在 `app/build.gradle` 文件的 `dependencies { ... }`
+部分中添加 `kotlinx-coroutines-android` 模块的依赖：
 
 ```groovy
 implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.0.1"
 ```
 
-You can clone [kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines) project from GitHub onto your 
-workstation. The resulting template project for Android resides in 
-[`ui/kotlinx-coroutines-android/example-app`](kotlinx-coroutines-android/example-app) directory. 
-You can load it in Android Studio to follow this guide on Android.
+你可以在 Github 上 clone [kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines) 这个项目到你的<!--
+-->工作站中。Android 生成的模板项目位于
+[`ui/kotlinx-coroutines-android/example-app`](kotlinx-coroutines-android/example-app) 目录。
+你可以在 Android Studio 中打开它并跟着本教程在 Android 上学习。
 
-## Basic UI coroutines
+## UI 协程基础
 
-This section shows basic usage of coroutines in UI applications.
+本节将展示协程在 UI 应用程序中的基础用法。
 
-### Launch UI coroutine
+### 启动 UI 协程
 
 The `kotlinx-coroutines-javafx` module contains 
 [Dispatchers.JavaFx][kotlinx.coroutines.Dispatchers.JavaFx] 
@@ -207,7 +207,7 @@ fun setup(hello: Text, fab: Circle) {
 }
 ```
 
-> You can get full code [here](kotlinx-coroutines-javafx/test/guide/example-ui-basic-02.kt)
+> 你可以点击[这里](kotlinx-coroutines-javafx/test/guide/example-ui-basic-02.kt)获得完整代码
 
 So, what happens here? Because we are launching coroutine in the main UI context, we can freely update UI from 
 inside this coroutine and invoke _suspending functions_ like [delay] at the same time. UI is not frozen
@@ -216,7 +216,7 @@ while `delay` waits, because it does not block the UI thread -- it just suspends
 > The corresponding code for Android application is the same. 
   You just need to copy the body of `setup` function into the corresponding function of Android project. 
 
-### Cancel UI coroutine
+### 取消 UI 协程
 
 We can keep a reference to the [Job] object that `launch` function returns and use it to cancel
 coroutine when we want to stop it. Let us cancel the coroutine when pinkish circle is clicked:
