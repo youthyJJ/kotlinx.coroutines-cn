@@ -21,7 +21,7 @@ class SelectGuideTest {
 
 <!--- TOC -->
 
-* [select 表达式（实验性的）](#select 表达式实验性的)
+* [select 表达式（实验性的）](#select)
   * [在通道中 select](#在通道中-select)
   * [通道关闭时 select](#通道关闭时-select)
   * [Select 以发送](#select-以发送)
@@ -31,7 +31,7 @@ class SelectGuideTest {
 <!--- END_TOC -->
 
 
-{:#select 表达式实验性的}
+{:#select}
 ## select 表达式（实验性的）
 
 select 表达式可以同时等待多个挂起函数，并 _选择_
