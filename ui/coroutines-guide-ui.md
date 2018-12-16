@@ -72,7 +72,7 @@ class ExampleApp : Application() {
 * [kotlinx-coroutines-swing](kotlinx-coroutines-swing) -- `Dispatchers.Swing` 为 Swing UI 应用程序提供的上下文。
 
 当然，UI 调度器被允许通过来自于 `kotlinx-coroutines-core` 的 `Dispatchers.Main` 以及被
-[`ServiceLoader`](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html) API 暴露的相应实现（Android, JavaFx 或 Swing）。
+[`ServiceLoader`](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html) API 暴露的相应实现（Android，JavaFx 或 Swing）。
 举例来说，假如你编写了一个 JavaFx 应用程序，你使用 `Dispatchers.Main` 或者 `Dispachers.JavaFx` 扩展都是可以的，它们指向同一个对象。
 
 本教程同时包含了所有的 UI 库，因为这些模块中的每一个都只包含一个<!--
@@ -91,7 +91,7 @@ class ExampleApp : Application() {
   * [取消 UI 协程](#cancel-ui-coroutine)
 * [在 UI 上下文中使用 actors](#using-actors-within-ui-context)
   * [协程扩展](#extensions-for-coroutines)
-  * [最多一个的并发任务](#at-most-one-concurrent-job)
+  * [最多一个并发任务](#at-most-one-concurrent-job)
   * [事件归并](#event-conflation)
 * [阻塞操作](#blocking-operations)
   * [UI 冻结的问题](#the-problem-of-ui-freezes)
@@ -127,11 +127,11 @@ fun setup(hello: Text, fab: Circle) {
 
 > 你可以点击[这里](kotlinx-coroutines-javafx/test/guide/example-ui-basic-01.kt)获得完整代码
 
-你可以在 Github 上 clone  [kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines) 这个项目到你的<!--
+你可以在 Github 上 clone [kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines) 这个项目到你的<!--
 -->工作站中在 IDE 中打开这个项目。所有本教程中的示例都在
 [`ui/kotlinx-coroutines-javafx`](kotlinx-coroutines-javafx) 模块的 test 文件夹中。 
 这样的话你就能够运行并观察每一个示例是如何工作的并<!--
--->在你对它们进行改变时进行实验。
+-->在你对它们修改时进行实验。
 
 ### Android
 
@@ -144,7 +144,7 @@ fun setup(hello: Text, fab: Circle) {
 
 ![UI example for Android](ui-example-android.png)
 
-到你的应用程序的 `context_main.xml` 文件中，并将 ID "hello" 指定给你写有 "Hello World!" 字符串的文本视图，
+到你的应用程序的 `context_main.xml` 文件中，并将 ID “hello” 指定给你写有 “Hello World!” 字符串的文本视图，
 因此它在您的应用程序中可用作 “hello” 和 Kotlin Android 扩展。粉红色的悬浮<!--
 -->动作按钮在已创建的项目模板中已命名为 “fab”。
 
@@ -179,11 +179,11 @@ implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.0.1"
 
 ### 启动 UI 协程
 
-The `kotlinx-coroutines-javafx` module contains 
+`kotlinx-coroutines-javafx` 模块包含
 [Dispatchers.JavaFx][kotlinx.coroutines.Dispatchers.JavaFx] 
-dispatcher that dispatches coroutine execution to
-the JavaFx application thread. We import it as `Main` to make all the presented examples 
-easily portable to Android:
+调度器，其包含执行
+JavaFx 应用程序线程。我们通过 `Main` 引入它，使所有呈现的示例都可以<!--
+-->容易的移植到 Android：
  
 ```kotlin
 import kotlinx.coroutines.javafx.JavaFx as Main
@@ -191,16 +191,16 @@ import kotlinx.coroutines.javafx.JavaFx as Main
  
 <!--- CLEAR -->
 
-Coroutines confined to the main UI thread can freely update anything in UI and suspend without blocking the main thread.
-For example, we can perform animations by coding them in imperative style. The following code updates the
-text with a 10 to 1 countdown twice a second, using [launch] coroutine builder:
+协程被限制在 UI 主线程就可以自如的做任何更新 UI 的操作，并且可以在主线程中进行无阻塞的挂起。
+举例来说，我们可以通过命令式编码来执行动画。下面的代码使用
+[launch] 协程构建器，将文本倒序的 从 10 更新到 1：
 
 ```kotlin
 fun setup(hello: Text, fab: Circle) {
-    GlobalScope.launch(Dispatchers.Main) { // launch coroutine in the main thread
-        for (i in 10 downTo 1) { // countdown from 10 to 1 
-            hello.text = "Countdown $i ..." // update text
-            delay(500) // wait half a second
+    GlobalScope.launch(Dispatchers.Main) { // 在主线程中启动协程
+        for (i in 10 downTo 1) { // 从 10 到 1 的倒数
+            hello.text = "Countdown $i ..." // 更新文本
+            delay(500) // 等待半秒钟
         }
         hello.text = "Done!"
     }
@@ -209,62 +209,62 @@ fun setup(hello: Text, fab: Circle) {
 
 > 你可以点击[这里](kotlinx-coroutines-javafx/test/guide/example-ui-basic-02.kt)获得完整代码
 
-So, what happens here? Because we are launching coroutine in the main UI context, we can freely update UI from 
-inside this coroutine and invoke _suspending functions_ like [delay] at the same time. UI is not frozen
-while `delay` waits, because it does not block the UI thread -- it just suspends the coroutine.
+所以，这里将发生什么？由于我们在主 UI 上下文中启动协程，我们可以在该协程内部<!--
+-->自如的更新 UI，并同时调用就像 [delay] 这样的 _挂起函数_ 。当 `delay` 函数的等待期间<!--
+-->UI 并不会冻结，因为它不会阻塞 UI 线程——它只会挂起协程。
 
-> The corresponding code for Android application is the same. 
-  You just need to copy the body of `setup` function into the corresponding function of Android project. 
+> 相应的代码在 Android 应用程序中表现也是类似的。 
+  你只需要在相应的代码中拷贝 `setup` 的函数体到 Android 项目中。 
 
 ### 取消 UI 协程
 
-We can keep a reference to the [Job] object that `launch` function returns and use it to cancel
-coroutine when we want to stop it. Let us cancel the coroutine when pinkish circle is clicked:
+我们可以对 `launch` 函数返回的 [Job] 对象保持一个引用，来使用它<!--
+-->当我们想停止一个任务的时候来取消协程。让我们在粉色按钮被点击的时候来取消协程：
 
 ```kotlin
 fun setup(hello: Text, fab: Circle) {
-    val job = GlobalScope.launch(Dispatchers.Main) { // launch coroutine in the main thread
-        for (i in 10 downTo 1) { // countdown from 10 to 1 
-            hello.text = "Countdown $i ..." // update text
-            delay(500) // wait half a second
+    val job = GlobalScope.launch(Dispatchers.Main) { // 在主线程中启动协程
+        for (i in 10 downTo 1) { // 从 10 到 1 的倒数
+            hello.text = "Countdown $i ..." // 更新文本
+            delay(500) // 等待半秒钟
         }
         hello.text = "Done!"
     }
-    fab.onMouseClicked = EventHandler { job.cancel() } // cancel coroutine on click
+    fab.onMouseClicked = EventHandler { job.cancel() } // 在点击时取消协程
 }
 ```
 
-> You can get full code [here](kotlinx-coroutines-javafx/test/guide/example-ui-basic-03.kt)
+> 你可以点击[这里](kotlinx-coroutines-javafx/test/guide/example-ui-basic-03.kt)获得完整代码
 
-Now, if the circle is clicked while countdown is still running, the countdown stops. 
-Note, that [Job.cancel] is completely thread-safe and non-blocking. It just signals the coroutine to cancel 
-its job, without waiting for it to actually terminate. It can be invoked from anywhere.
+现在，如果当倒数仍然在运行时点击圆形按钮，倒数会停止。 
+注意，[Job.cancel] 的调用是是完全线程安全和非阻塞的。它仅仅是示意协程取消<!--
+-->它的任务，而不会去等待任务事实上的终止。它可以在任何地方被调用。
 Invoking it on a coroutine that was already cancelled or has completed does nothing. 
 
-> The corresponding line for Android is shown below: 
+> 相关的代码行在 Android 中如下所示：
 
 ```kotlin
-fab.setOnClickListener { job.cancel() }  // cancel coroutine on click
+fab.setOnClickListener { job.cancel() }  // 在点击时取消协程
 ```
 
 <!--- CLEAR -->
 
-## Using actors within UI context
+## 在 UI 上下文中使用 actors
 
-In this section we show how UI applications can use actors within their UI context make sure that 
-there is no unbounded growth in the number of launched coroutines.
+在本节中，我们将展示 UI 应用程序如何在其UI上下文中使用 actor 以确保<!--
+-->被启动的协程的数量没有无限制的增长。
 
-### Extensions for coroutines
+### 协程扩展
 
-Our goal is to write an extension _coroutine builder_ function named `onClick`, 
-so that we can perform countdown animation every time when the circle is clicked with this simple code:
+我们的目标是写一个扩展 _协程构建器_ 函数并命名为 `onClick`，
+所以我们可以在在该示例代码中展示当每次圆形按钮被点击的时候都会进行倒数：
 
 ```kotlin
 fun setup(hello: Text, fab: Circle) {
-    fab.onClick { // start coroutine when the circle is clicked
-        for (i in 10 downTo 1) { // countdown from 10 to 1 
-            hello.text = "Countdown $i ..." // update text
-            delay(500) // wait half a second
+    fab.onClick { // 当圆形按钮被点击的时候启动协程
+        for (i in 10 downTo 1) { // 从 10 到 1 的倒数
+            hello.text = "Countdown $i ..." // 更新文本
+            delay(500) // 等待半秒钟
         }
         hello.text = "Done!"
     }
@@ -273,8 +273,8 @@ fun setup(hello: Text, fab: Circle) {
 
 <!--- INCLUDE .*/example-ui-actor-([0-9]+).kt -->
 
-Our first implementation for `onClick` just launches a new coroutine on each mouse event and
-passes the corresponding mouse event into the supplied action (just in case we need it):
+我们的第一个 `onClick` 实现只是在每次鼠标事件到来时启动了一个新的协程并<!--
+-->将相应的鼠标事件传递给提供的操作（仅仅在每次我们需要它时）：
 
 ```kotlin
 fun Node.onClick(action: suspend (MouseEvent) -> Unit) {
@@ -286,14 +286,14 @@ fun Node.onClick(action: suspend (MouseEvent) -> Unit) {
 }
 ```  
 
-> You can get full code [here](kotlinx-coroutines-javafx/test/guide/example-ui-actor-01.kt)
+> 你可以点击[这里](kotlinx-coroutines-javafx/test/guide/example-ui-actor-01.kt)获得完整代码
 
-Note, that each time the circle is clicked, it starts a new coroutine and they all compete to 
-update the text. Try it. It does not look very good. We'll fix it later.
+注意，当每次圆形按钮被点击时，它启动了一个新的协程并都将竞争<!--
+-->更新文本。尝试一下。它看起来并不是非常棒。我们将在稍后修正它。
 
-> On Android, the corresponding extension can be written for `View` class, so that the code
-  in `setup` function that is shown above can be used without changes. There is no `MouseEvent`
-  used in OnClickListener on Android, so it is omitted.
+> 在 Android 中，相关的扩展可以写给 `View` 类，所以在上面这段代码中展示的
+  `setup` 函数可以无需修改就能使用。而在 Android 的
+  OnClickListener 中 `MouseEvent` 没有被使用，所以省略它。
 
 ```kotlin
 fun View.onClick(action: suspend () -> Unit) {
@@ -307,48 +307,48 @@ fun View.onClick(action: suspend () -> Unit) {
 
 <!--- CLEAR -->
 
-### At most one concurrent job
+### 最多一个并发任务
 
-We can cancel an active job before starting a new one to ensure that at most one coroutine is animating 
-the countdown. However, it is generally not the best idea. The [cancel][Job.cancel] function serves only as a signal
-to abort a coroutine. Cancellation is cooperative and a coroutine may, at the moment, be doing something non-cancellable
-or otherwise ignore a cancellation signal. A better solution is to use an [actor] for tasks that should
-not be performed concurrently. Let us change `onClick` extension implementation:
+在启动一个新协程之前，我们可以取消一个存活中的任务以确保最多一个协程正在进行<!--
+-->倒数。然而，这通常不是一个好的主意。[cancel][Job.cancel] 函数仅仅被用来指示<!--
+-->退出一个协程。协程会协同的进行取消，在这时，做一些不可取消的事情<!--
+-->或以其它方式忽略取消信号。一个好的解决方式是使用一个 [actor] 来执行任务<!--
+-->而不应该进行并发。让我们改变 `onClick` 扩展的实现：
   
 ```kotlin
 fun Node.onClick(action: suspend (MouseEvent) -> Unit) {
-    // launch one actor to handle all events on this node
+    // 在这个节点中启动一个 actor 来处理所有事件
     val eventActor = GlobalScope.actor<MouseEvent>(Dispatchers.Main) {
-        for (event in channel) action(event) // pass event to action
+        for (event in channel) action(event) // 将事件传递给 action
     }
-    // install a listener to offer events to this actor
+    // 设置一个监听器来为这个 actor 添加事件
     onMouseClicked = EventHandler { event ->
         eventActor.offer(event)
     }
 }
 ```  
 
-> You can get full code [here](kotlinx-coroutines-javafx/test/guide/example-ui-actor-02.kt)
+> 你可以点击[这里](kotlinx-coroutines-javafx/test/guide/example-ui-actor-02.kt)获得完整代码
   
-The key idea that underlies an integration of an actor coroutine and a regular event handler is that 
-there is an [offer][SendChannel.offer] function on [SendChannel] that does not wait. It sends an element to the actor immediately,
-if it is possible, or discards an element otherwise. An `offer` actually returns a `Boolean` result which we ignore here.
+构成协程和常规事件处理程序的集成基础的关键思想是
+[SendChannel] 上的 [offer][SendChannel.offer] 函数不会等待。它会立即将一个元素发送到 actor，
+如果可能的话，或者丢弃一个元素。一个 `offer` 事实上返回了一个我们在这里忽略的 `Boolean` 结果。
 
-Try clicking repeatedly on a circle in this version of the code. The clicks are just ignored while the countdown 
-animation is running. This happens because the actor is busy with an animation and does not receive from its channel.
-By default, an actor's mailbox is backed by `RendezvousChannel`, whose `offer` operation succeeds only when 
-the `receive` is active. 
+在这个版本的代码中尝试反复点击圆形按钮。当倒数动作进行中时，
+点击动作会被忽略。这会发生的原因是 actor 正忙于执行而不会从通道中接收元素。
+默认的，一个 actor 的邮箱由 `RendezvousChannel` 支持，只有当 `receive` 在运行中的时候
+`offer` 操作才会成功。 
 
-> On Android, there is `View` sent in OnClickListener, so we send the `View` to the actor as a signal. 
-  The corresponding extension for `View` class looks like this:
+> 在 Android 中，这里有一个 `View` 在 OnClickListener 中发送事件，所以我们发送一个 `View` 到 actor 来作为信号。 
+  相关的 `View` 类的扩展如下所示：
 
 ```kotlin
 fun View.onClick(action: suspend (View) -> Unit) {
-    // launch one actor
+    // 启动一个 actor
     val eventActor = GlobalScope.actor<View>(Dispatchers.Main) {
         for (event in channel) action(event)
     }
-    // install a listener to activate this actor
+    // 设置一个监听器来启用 actor
     setOnClickListener { 
         eventActor.offer(it)
     }
@@ -358,43 +358,43 @@ fun View.onClick(action: suspend (View) -> Unit) {
 <!--- CLEAR -->
 
 
-### Event conflation
+### 事件归并
  
-Sometimes it is more appropriate to process the most recent event, instead of just ignoring events while we were busy
-processing the previous one.  The [actor] coroutine builder accepts an optional `capacity` parameter that 
-controls the implementation of the channel that this actor is using for its mailbox. The description of all 
-the available choices is given in documentation of the [`Channel()`][Channel] factory function.
+有时处理最近的事件更合适，而不是在我们忙于处理前一个事件的时候<!--
+-->忽略事件。[actor] 协程构建器接收一个可选的 `capacity` 参数来<!--
+-->控制此 actor 用于其邮箱的通道的实现。所有关于可用选项的描述于
+[`Channel()`][Channel] 工厂函数的文档中给出。
 
-Let us change the code to use `ConflatedChannel` by passing [Channel.CONFLATED] capacity value. The 
-change is only to the line that creates an actor:
+让我们修改代码来使用 `ConflatedChannel` 通过 [Channel.CONFLATED] 修改容量值。这<!--
+-->只需要在创建 actor 的这一行作出修改：
 
 ```kotlin
 fun Node.onClick(action: suspend (MouseEvent) -> Unit) {
     // launch one actor to handle all events on this node
-    val eventActor = GlobalScope.actor<MouseEvent>(Dispatchers.Main, capacity = Channel.CONFLATED) { // <--- Changed here
-        for (event in channel) action(event) // pass event to action
+    val eventActor = GlobalScope.actor<MouseEvent>(Dispatchers.Main, capacity = Channel.CONFLATED) { // <--- 修改这里
+        for (event in channel) action(event) // 将事件传递给 action
     }
-    // install a listener to offer events to this actor
+    // 设置一个监听器来为这个 actor 添加事件
     onMouseClicked = EventHandler { event ->
         eventActor.offer(event)
     }
 }
 ```  
 
-> You can get full JavaFx code [here](kotlinx-coroutines-javafx/test/guide/example-ui-actor-03.kt).
-  On Android you need to update `val eventActor = ...` line from the previous example. 
+> 你可以点击[这里](kotlinx-coroutines-javafx/test/guide/example-ui-actor-03.kt)获得完整代码。
+  在 Android 中你需要在前面的示例中更新 `val eventActor = ...` 这一行。
 
-Now, if a circle is clicked while the animation is running, it restarts animation after the end of it. Just once. 
-Repeated clicks while the animation is running are _conflated_ and only the most recent event gets to be 
-processed. 
+现在，当倒数运行中时如果这个圆形按钮被点击，倒数将在结束后重新运行。仅仅一次。 
+在倒数进行中时，重复点击将被 _合并_ ，只有最近的事件才会被<!--
+-->处理。
 
-This is also a desired behaviour for UI applications that have to react to incoming high-frequency
-event streams by updating their UI based on the most recently received update. A coroutine that is using
-`ConflatedChannel` avoids delays that are usually introduced by buffering of events.
+对于必须对高频传入的事件做出反应的 UI 应用程序，这也是一种期望的行为，
+事件流通过基于最近收到的更新更新其UI。协程通过使用
+`ConflatedChannel` 来避免通过引入事件缓冲而造成的延迟。
 
-You can experiment with `capacity` parameter in the above line to see how it affects the behaviour of the code.
-Setting `capacity = Channel.UNLIMITED` creates a coroutine with `LinkedListChannel` mailbox that buffers all 
-events. In this case, the animation runs as many times as the circle is clicked.
+您可以在上面的代码行中试验 `capacity` 参数，看看它如何影响代码的行为。
+设置 `capacity = Channel.UNLIMITED` 参数来创建协程以及 `LinkedListChannel` 邮箱来缓冲所有的<!--
+-->事件。在这个案例中，动画会在单击圆形按钮时运行多次。
 
 ## Blocking operations
 
@@ -559,7 +559,7 @@ when the parent job is cancelled. An example of that is shown in the
 ["Children of a coroutine"](../docs/coroutine-context-and-dispatchers.md#children-of-a-coroutine) section of the guide to coroutines.
 <!--- CLEAR -->
 
-### Blocking operations
+### 阻塞操作
 
 The fix for the blocking operations on the main UI thread is quite straightforward with coroutines. We'll 
 convert our "blocking" `fib` function to a non-blocking suspending function that runs the computation in 
