@@ -56,10 +56,10 @@ class ExampleApp : Application() {
 # 使用协程进行 UI 编程指南
 
 本篇教程假定你已经熟悉了<!-- 
--->包含[kotlinx.coroutines 指南](../docs/coroutines-guide.md)在内的基础协程概念，并给予<!--
--->如何在 UI 应用程序中使用协程的明确示例。
+-->包含[kotlinx.coroutines 指南](../docs/coroutines-guide.md)在内的基础协程概念，并提供了<!--
+-->有关如何在 UI 应用程序中使用协同程序的具体示例。
 
-所有的 UI 程序库都有一个共同的特征。所有的 UI 状态都被限制在单个的<!--
+所有的 UI 程序库都有一个共同的特征。即所有的 UI 状态都被限制在单个的<!--
 -->主线程中，并且所有更新 UI 的操作都应该发生在该线程中。在使用协程时，
 这意味着你需要一个适当的 _协程调度器上下文_ 来限制协程<!--
 -->运行与 UI 主线程中。
@@ -71,12 +71,12 @@ class ExampleApp : Application() {
 * [kotlinx-coroutines-javafx](kotlinx-coroutines-javafx) -- `Dispatchers.JavaFx` 为 JavaFX UI 应用程序提供的上下文。
 * [kotlinx-coroutines-swing](kotlinx-coroutines-swing) -- `Dispatchers.Swing` 为 Swing UI 应用程序提供的上下文。
 
-当然，UI 调度器被允许通过来自于 `kotlinx-coroutines-core` 的 `Dispatchers.Main` 以及被
-[`ServiceLoader`](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html) API 暴露的相应实现（Android，JavaFx 或 Swing）。
+当然，UI 调度器被允许通过来自于 `kotlinx-coroutines-core` 的 `Dispatchers.Main` 获得并被
+[`ServiceLoader`](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html) API 发现的相应实现（Android，JavaFx 或 Swing）。
 举例来说，假如你编写了一个 JavaFx 应用程序，你使用 `Dispatchers.Main` 或者 `Dispachers.JavaFx` 扩展都是可以的，它们指向同一个对象。
 
-本教程同时包含了所有的 UI 库，因为这些模块中的每一个都只包含一个<!--
--->对象的定义，长度为几页。你可以使用它们中的任何一个来作为例子来编写<!--
+本教程同时包含了所有的 UI 库，因为每个模块中只包含一个<!--
+-->长度为几页的对象定义。你可以使用它们中的任何一个作为例子来<!--
 -->为你最喜爱的 UI 库编写上下文对象，甚至是没有被包含在本文中的。
 
 ## 目录
@@ -112,7 +112,7 @@ class ExampleApp : Application() {
 ### JavaFx
 
 这个 JavaFx 的基础的示例应用程度由一个包含名为 `hello` 的文字标签的窗口构成，它最初<!--
--->包含 "Hello World!" 字符串以及一个右下角的粉色圆形 `fab`（floating action button —— 悬浮动作按钮）。
+-->包含“Hello World!”字符串以及一个右下角的粉色圆形 `fab`（floating action button —— 悬浮动作按钮）。
 
 ![JavaFx 的 UI 示例](ui-example-javafx.png)
 
@@ -128,7 +128,7 @@ fun setup(hello: Text, fab: Circle) {
 > 你可以点击[这里](kotlinx-coroutines-javafx/test/guide/example-ui-basic-01.kt)获得完整代码
 
 你可以在 Github 上 clone [kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines) 这个项目到你的<!--
--->工作站中在 IDE 中打开这个项目。所有本教程中的示例都在
+-->工作站中并在 IDE 中打开这个项目。所有本教程中的示例都在
 [`ui/kotlinx-coroutines-javafx`](kotlinx-coroutines-javafx) 模块的 test 文件夹中。 
 这样的话你就能够运行并观察每一个示例是如何工作的并<!--
 -->在你对它们修改时进行实验。
@@ -193,12 +193,12 @@ import kotlinx.coroutines.javafx.JavaFx as Main
 
 协程被限制在 UI 主线程就可以自如的做任何更新 UI 的操作，并且可以在主线程中进行无阻塞的挂起。
 举例来说，我们可以通过命令式编码来执行动画。下面的代码使用
-[launch] 协程构建器，将文本倒序的 从 10 更新到 1：
+[launch] 协程构建器，将文本每秒两次倒序的 从 10 更新到 1：
 
 ```kotlin
 fun setup(hello: Text, fab: Circle) {
     GlobalScope.launch(Dispatchers.Main) { // 在主线程中启动协程
-        for (i in 10 downTo 1) { // 从 10 到 1 的倒数
+        for (i in 10 downTo 1) { // 从 10 到 1 的倒计时
             hello.text = "Countdown $i ..." // 更新文本
             delay(500) // 等待半秒钟
         }
@@ -236,10 +236,10 @@ fun setup(hello: Text, fab: Circle) {
 
 > 你可以点击[这里](kotlinx-coroutines-javafx/test/guide/example-ui-basic-03.kt)获得完整代码
 
-现在，如果当倒数仍然在运行时点击圆形按钮，倒数会停止。 
+现在，如果当倒计时仍然在运行时点击圆形按钮，倒计时会停止。 
 注意，[Job.cancel] 的调用是是完全线程安全和非阻塞的。它仅仅是示意协程取消<!--
 -->它的任务，而不会去等待任务事实上的终止。它可以在任何地方被调用。
-Invoking it on a coroutine that was already cancelled or has completed does nothing. 
+在已经取消或已完成的协程上调用它不会做任何事情。
 
 > 相关的代码行在 Android 中如下所示：
 
@@ -257,12 +257,12 @@ fab.setOnClickListener { job.cancel() }  // 在点击时取消协程
 ### 协程扩展
 
 我们的目标是写一个扩展 _协程构建器_ 函数并命名为 `onClick`，
-所以我们可以在在该示例代码中展示当每次圆形按钮被点击的时候都会进行倒数：
+所以我们可以在该示例代码中展示当每次圆形按钮被点击的时候都会进行倒记时动画：
 
 ```kotlin
 fun setup(hello: Text, fab: Circle) {
     fab.onClick { // 当圆形按钮被点击的时候启动协程
-        for (i in 10 downTo 1) { // 从 10 到 1 的倒数
+        for (i in 10 downTo 1) { // 从 10 到 1 的倒记时
             hello.text = "Countdown $i ..." // 更新文本
             delay(500) // 等待半秒钟
         }
@@ -310,10 +310,10 @@ fun View.onClick(action: suspend () -> Unit) {
 ### 最多一个并发任务
 
 在启动一个新协程之前，我们可以取消一个存活中的任务以确保最多一个协程正在进行<!--
--->倒数。然而，这通常不是一个好的主意。[cancel][Job.cancel] 函数仅仅被用来指示<!--
+-->倒计时动画。然而，这通常不是一个好的主意。[cancel][Job.cancel] 函数仅仅被用来指示<!--
 -->退出一个协程。协程会协同的进行取消，在这时，做一些不可取消的事情<!--
 -->或以其它方式忽略取消信号。一个好的解决方式是使用一个 [actor] 来执行任务<!--
--->而不应该进行并发。让我们改变 `onClick` 扩展的实现：
+-->而不应该进行并发。让我们修改 `onClick` 扩展的实现：
   
 ```kotlin
 fun Node.onClick(action: suspend (MouseEvent) -> Unit) {
@@ -334,7 +334,7 @@ fun Node.onClick(action: suspend (MouseEvent) -> Unit) {
 [SendChannel] 上的 [offer][SendChannel.offer] 函数不会等待。它会立即将一个元素发送到 actor，
 如果可能的话，或者丢弃一个元素。一个 `offer` 事实上返回了一个我们在这里忽略的 `Boolean` 结果。
 
-在这个版本的代码中尝试反复点击圆形按钮。当倒数动作进行中时，
+在这个版本的代码中尝试反复点击圆形按钮。当倒计时动画进行中时，
 点击动作会被忽略。这会发生的原因是 actor 正忙于执行而不会从通道中接收元素。
 默认的，一个 actor 的邮箱由 `RendezvousChannel` 支持，只有当 `receive` 在运行中的时候
 `offer` 操作才会成功。 
@@ -384,7 +384,7 @@ fun Node.onClick(action: suspend (MouseEvent) -> Unit) {
 > 你可以点击[这里](kotlinx-coroutines-javafx/test/guide/example-ui-actor-03.kt)获得完整代码。
   在 Android 中你需要在前面的示例中更新 `val eventActor = ...` 这一行。
 
-现在，当倒数运行中时如果这个圆形按钮被点击，倒数将在结束后重新运行。仅仅一次。 
+现在，当动画运行中时如果这个圆形按钮被点击，动画将在结束后重新运行。仅仅一次。 
 在倒数进行中时，重复点击将被 _合并_ ，只有最近的事件才会被<!--
 -->处理。
 
