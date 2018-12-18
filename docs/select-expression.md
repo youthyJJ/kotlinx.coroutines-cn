@@ -432,7 +432,7 @@ Deferred 4 produced answer 'Waited for 128 ms'
 ### 在延迟值通道上切换
 
 我们现在来编写一个通道生产者函数，它消费一个产生延迟字符串的通道，并等待每个接收的<!--
--->延迟值，但它只运行在在下一个延迟值到达或者通道关闭之前。此示例将
+-->延迟值，但它只在下一个延迟值到达或者通道关闭之前处于运行状态。此示例将
 [onReceiveOrNull][ReceiveChannel.onReceiveOrNull] 和 [onAwait][Deferred.onAwait] 子句放在同一个 `select` 中：
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
