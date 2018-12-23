@@ -95,7 +95,7 @@ class ExampleApp : Application() {
   * [事件归并](#event-conflation)
 * [阻塞操作](#blocking-operations)
   * [UI 冻结的问题](#the-problem-of-ui-freezes)
-  * [结构性并发，生命周期以及协程父子层级结构](#structured-concurrency-lifecycle-and-coroutine-parent-child-hierarchy)
+  * [结构化并发，生命周期以及协程父子层级结构](#structured-concurrency-lifecycle-and-coroutine-parent-child-hierarchy)
   * [阻塞操作](#blocking-operations)
 * [高级主题](#advanced-topics)
   * [没有调度器时在 UI 事件处理器中启动协程](#starting-coroutine-in-ui-event-handlers-without-dispatch)
@@ -396,17 +396,17 @@ fun Node.onClick(action: suspend (MouseEvent) -> Unit) {
 设置 `capacity = Channel.UNLIMITED` 参数来创建协程以及 `LinkedListChannel` 邮箱来缓冲所有的<!--
 -->事件。在这个案例中，动画会在单击圆形按钮时运行多次。
 
-## Blocking operations
+## 阻塞操作
 
-This section explains how to use UI coroutines with thread-blocking operations.
+本节说明了如何使用 UI 协程来进行线程阻塞操作。
 
-### The problem of UI freezes 
+### UI 冻结的问题
 
-It would have been great if all APIs out there were written as suspending functions that never blocks an 
-execution thread. However, it is quite often not the case. Sometimes you need to do a CPU-consuming computation
-or just need to invoke some 3rd party APIs for network access, for example, that blocks the invoker thread. 
-You cannot do that from the main UI thread nor from the UI-confined coroutine directly, because that would
-block the main UI thread and cause the freeze up of the UI.
+如果那里的所有API都被编写为永不阻塞执行线程的挂起函数，
+那就太好了。然而，通常情况并非如此。有时你需要做一些消耗 CPU 的运算<!--
+-->或者只是需要调用第三部分的 API 来进行网络访问，举例来说，那将阻塞调用它的线程。
+你不能在 UI 主线程中那样做，也不能直接在 UI 限定的协程中直接调用，因为那将<!--
+-->阻塞 UI 主线程 并冻结 UI。
 
 <!--- INCLUDE .*/example-ui-blocking-([0-9]+).kt
 
@@ -420,10 +420,10 @@ fun Node.onClick(action: suspend (MouseEvent) -> Unit) {
 }
 -->
 
-The following example illustrates the problem. We are going to use `onClick` extension with UI-confined
-event-conflating actor from the last section to process the last click in the main UI thread. 
-For this example, we are going to 
-perform naive computation of [Fibonacci numbers](https://en.wikipedia.org/wiki/Fibonacci_number):
+下面的示例将说明这个问题。我们将使用最后一节中的 UI 限定的
+`onClick`事件合并 actor 在 UI 主线程中处理最后一次点击。
+在这个例子中，我们将<!--
+-->展示[斐波那契数列](https://en.wikipedia.org/wiki/Fibonacci_number)的简单计算：
  
 ```kotlin
 fun fib(x: Int): Int =
@@ -454,14 +454,14 @@ fun setup(hello: Text, fab: Circle) {
 }
 ```
  
-> You can get full JavaFx code [here](kotlinx-coroutines-javafx/test/guide/example-ui-blocking-01.kt).
+> 你可以从[这里](kotlinx-coroutines-javafx/test/guide/example-ui-blocking-01.kt)获得完整的 JavaFx 代码。
   You can just copy the `fib` function and the body of the `setup` function to your Android project.
 
 Try clicking on the circle in this example. After around 30-40th click our naive computation is going to become
 quite slow and you would immediately see how the main UI thread freezes, because the animation stops running 
 during UI freeze.
 
-### Structured concurrency, lifecycle and coroutine parent-child hierarchy
+### 结构化并发，生命周期以及协程父子层级结构
 
 A typical UI application has a number of elements with a lifecycle. Windows, UI controls, activities, views, fragments
 and other visual elements are created and destroyed. A long-running coroutine, performing some IO or a background 
@@ -617,7 +617,7 @@ fun fibBlocking(x: Int): Int =
     if (x <= 1) x else fibBlocking(x - 1) + fibBlocking(x - 2)
 ```
 
-> You can get full code [here](kotlinx-coroutines-javafx/test/guide/example-ui-blocking-03.kt).
+> 你可以从[这里](kotlinx-coroutines-javafx/test/guide/example-ui-blocking-03.kt)获得完整代码。
 
 You can now enjoy full-speed naive Fibonacci computation without blocking the main UI thread. 
 All we need is `withContext(Dispatchers.Default)`.
@@ -626,7 +626,7 @@ Note, that because the `fib` function is invoked from the single actor in our co
 computation of it at any given time, so this code has a natural limit on the resource utilization. 
 It can saturate at most one CPU core.
   
-## Advanced topics
+## 高级主题
 
 This section covers various advanced topics. 
 
@@ -651,7 +651,7 @@ fun setup(hello: Text, fab: Circle) {
 }
 ```
  
-> You can get full JavaFx code [here](kotlinx-coroutines-javafx/test/guide/example-ui-advanced-01.kt).
+> 你可以[这里](kotlinx-coroutines-javafx/test/guide/example-ui-advanced-01.kt)获得完整的 JavaFX 代码。
 
 When we start this code and click on a pinkish circle, the following messages are printed to the console:
  
