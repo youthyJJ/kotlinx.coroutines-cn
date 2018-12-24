@@ -412,7 +412,7 @@ fun Node.onClick(action: suspend (MouseEvent) -> Unit) {
 
 fun Node.onClick(action: suspend (MouseEvent) -> Unit) {
     val eventActor = GlobalScope.actor<MouseEvent>(Dispatchers.Main, capacity = Channel.CONFLATED) {
-        for (event in channel) action(event) // pass event to action
+        for (event in channel) action(event) // 将事件传递给 action
     }
     onMouseClicked = EventHandler { event ->
         eventActor.offer(event)
@@ -430,22 +430,22 @@ fun fib(x: Int): Int =
     if (x <= 1) x else fib(x - 1) + fib(x - 2)
 ``` 
  
-We'll be computing larger and larger Fibonacci number each time the circle is clicked. 
-To make the UI freeze more obvious, there is also a fast counting animation that is always running 
-and is constantly updating the text in the main UI dispatcher:
+我们将在每次点击圆圈时计算越来越大的斐波纳契数。
+为了让 UI 冻结更明显，还有一个始终在运行的快速计数动画<!--
+-->并时刻在 UI 主线程调度器中更新文本：
 
 ```kotlin
 fun setup(hello: Text, fab: Circle) {
-    var result = "none" // the last result
+    var result = "none" // 最后一个结果
     // counting animation 
     GlobalScope.launch(Dispatchers.Main) {
         var counter = 0
         while (true) {
             hello.text = "${++counter}: $result"
-            delay(100) // update the text every 100ms
+            delay(100) // 每 100 毫秒更新一次文本
         }
     }
-    // compute the next fibonacci number of each click
+    // 在每次点击时计算下一个斐波那契数
     var x = 1
     fab.onClick {
         result = "fib($x) = ${fib(x)}"
@@ -455,17 +455,17 @@ fun setup(hello: Text, fab: Circle) {
 ```
  
 > 你可以从[这里](kotlinx-coroutines-javafx/test/guide/example-ui-blocking-01.kt)获得完整的 JavaFx 代码。
-  You can just copy the `fib` function and the body of the `setup` function to your Android project.
+  你可以只拷贝 `fib` 函数和 `setup` 函数的函数体到你的 Android 工程中。
 
-Try clicking on the circle in this example. After around 30-40th click our naive computation is going to become
-quite slow and you would immediately see how the main UI thread freezes, because the animation stops running 
-during UI freeze.
+尝试在这个例子中点击圆形按钮。在大约30到40次点击后我们的简单计算将会变得<!--
+-->非常缓慢并且你会立即看到 UI 主线程是如何冻结的，因为动画会在 UI 冻结期间<!--
+-->停止运行。
 
 ### 结构化并发，生命周期以及协程父子层级结构
 
-A typical UI application has a number of elements with a lifecycle. Windows, UI controls, activities, views, fragments
-and other visual elements are created and destroyed. A long-running coroutine, performing some IO or a background 
-computation, can retain references to the corresponding UI elements for longer than it is needed, preventing garbage 
+一个典型的 UI 应用程序含有大量的具有生命周期的元素。窗口，UI 控制器，活动（即 Android 四大组件中的 Activity，这里直译了），视图，碎片<!--
+-->以及其它可视的元素都是可被创建和销毁的。一个长时间运行的协程，在进行一些 IO 或后台<!--
+-->计算时， can retain references to the corresponding UI elements for longer than it is needed, preventing garbage 
 collection of the whole trees of UI objects that were already destroyed and will not be displayed anymore.
 
 The natural solution to this problem is to associate a [Job] object with each UI object that has a lifecycle and create
@@ -496,22 +496,22 @@ abstract class ScopedAppActivity: AppCompatActivity(), CoroutineScope {
 }
 ```
 
-Now, an activity that is associated with a job has to extend ScopedAppActivity
+现在，一个继承自 ScopedAppActivity 的 Activity 和 job 发生了关联。
 
 ```kotlin
 class MainActivity : ScopedAppActivity() {
 
-    fun asyncShowData() = launch { // Is invoked in UI context with Activity's job as a parent
-        // actual implementation
+    fun asyncShowData() = launch { // Activity 的 job 作为父结构时，这里将在 UI 上下文中被调用
+        // 实际实现
     }
     
     suspend fun showIOData() {
         val deferred = async(Dispatchers.IO) {
-            // impl      
+            // 实现      
         }
         withContext(Dispatchers.Main) {
           val data = deferred.await()
-          // Show data in UI
+          // 在 UI 中展示数据 
         }
     }
 }
@@ -571,16 +571,16 @@ it is invoked from anymore, but suspends its execution when the computation in t
 <!--- INCLUDE .*/example-ui-blocking-0[23].kt
 
 fun setup(hello: Text, fab: Circle) {
-    var result = "none" // the last result
+    var result = "none" // 最后一个结果
     // counting animation 
     GlobalScope.launch(Dispatchers.Main) {
         var counter = 0
         while (true) {
             hello.text = "${++counter}: $result"
-            delay(100) // update the text every 100ms
+            delay(100) // 每 100 毫秒更新一次文本
         }
     }
-    // compute next fibonacci number of each click
+    // 在每次点击时计算下一个斐波那契数
     var x = 1
     fab.onClick {
         result = "fib($x) = ${fib(x)}"
@@ -595,7 +595,7 @@ suspend fun fib(x: Int): Int = withContext(Dispatchers.Default) {
 }
 ```
 
-> You can get full code [here](kotlinx-coroutines-javafx/test/guide/example-ui-blocking-02.kt).
+> 你可以从[这里](kotlinx-coroutines-javafx/test/guide/example-ui-blocking-02.kt)获得完整代码。
 
 You can run this code and verify that UI is not frozen while large Fibonacci numbers are being computed. 
 However, this code computes `fib` somewhat slower, because every recursive call to `fib` goes via `withContext`. This is 
