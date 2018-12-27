@@ -107,7 +107,7 @@ class ExampleApp : Application() {
 本篇教程中的可运行的示例是通过 JavaFx 来呈现的。其优点是所有的示例可以<!--
 -->直接在任何运行在操作系统中而不需要模拟器或任何类似的东西，并且它们可以完全独立存在
 （每个示例都在同一个文件中）。
-关于在 Android 上重现它们需要进行哪些更改（如果有的话）会有单独的注释。 
+关于在 Android 上重现它们需要进行哪些更改（如果有的话）会有单独的注释。
 
 ### JavaFx
 
@@ -129,7 +129,7 @@ fun setup(hello: Text, fab: Circle) {
 
 你可以在 Github 上 clone [kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines) 这个项目到你的<!--
 -->工作站中并在 IDE 中打开这个项目。所有本教程中的示例都在
-[`ui/kotlinx-coroutines-javafx`](kotlinx-coroutines-javafx) 模块的 test 文件夹中。 
+[`ui/kotlinx-coroutines-javafx`](kotlinx-coroutines-javafx) 模块的 test 文件夹中。
 这样的话你就能够运行并观察每一个示例是如何工作的并<!--
 -->在你对它们修改时进行实验。
 
@@ -165,7 +165,7 @@ fun setup(hello: TextView, fab: FloatingActionButton) {
 部分中添加 `kotlinx-coroutines-android` 模块的依赖：
 
 ```groovy
-implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.0.1"
+implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.0"
 ```
 
 你可以在 Github 上 clone [kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines) 这个项目到你的<!--
@@ -213,8 +213,8 @@ fun setup(hello: Text, fab: Circle) {
 -->自如的更新 UI，并同时调用就像 [delay] 这样的 _挂起函数_ 。当 `delay` 函数的等待期间<!--
 -->UI 并不会冻结，因为它不会阻塞 UI 线程——它只会挂起协程。
 
-> 相应的代码在 Android 应用程序中表现也是类似的。 
-  你只需要在相应的代码中拷贝 `setup` 的函数体到 Android 项目中。 
+> 相应的代码在 Android 应用程序中表现也是类似的。
+  你只需要在相应的代码中拷贝 `setup` 的函数体到 Android 项目中。
 
 ### 取消 UI 协程
 
@@ -236,7 +236,7 @@ fun setup(hello: Text, fab: Circle) {
 
 > 你可以从[这里](kotlinx-coroutines-javafx/test/guide/example-ui-basic-03.kt)获得完整代码
 
-现在，如果当倒计时仍然在运行时点击圆形按钮，倒计时会停止。 
+现在，如果当倒计时仍然在运行时点击圆形按钮，倒计时会停止。
 注意，[Job.cancel] 的调用是是完全线程安全和非阻塞的。它仅仅是示意协程取消<!--
 -->它的任务，而不会去等待任务事实上的终止。它可以在任何地方被调用。
 在已经取消或已完成的协程上调用它不会做任何事情。
@@ -337,9 +337,9 @@ fun Node.onClick(action: suspend (MouseEvent) -> Unit) {
 在这个版本的代码中尝试反复点击圆形按钮。当倒计时动画进行中时，
 点击动作会被忽略。这会发生的原因是 actor 正忙于执行而不会从通道中接收元素。
 默认的，一个 actor 的邮箱由 `RendezvousChannel` 支持，只有当 `receive` 在运行中的时候
-`offer` 操作才会成功。 
+`offer` 操作才会成功。
 
-> 在 Android 中，这里有一个 `View` 在 OnClickListener 中发送事件，所以我们发送一个 `View` 到 actor 来作为信号。 
+> 在 Android 中，这里有一个 `View` 在 OnClickListener 中发送事件，所以我们发送一个 `View` 到 actor 来作为信号。
   相关的 `View` 类的扩展如下所示：
 
 ```kotlin
@@ -384,7 +384,7 @@ fun Node.onClick(action: suspend (MouseEvent) -> Unit) {
 > 你可以从[这里](kotlinx-coroutines-javafx/test/guide/example-ui-actor-03.kt)获得完整代码。
   在 Android 中你需要在前面的示例中更新 `val eventActor = ...` 这一行。
 
-现在，当动画运行中时如果这个圆形按钮被点击，动画将在结束后重新运行。仅仅一次。 
+现在，当动画运行中时如果这个圆形按钮被点击，动画将在结束后重新运行。仅仅一次。
 在倒数进行中时，重复点击将被 _合并_ ，只有最近的事件才会被<!--
 -->处理。
 
@@ -469,9 +469,11 @@ fun setup(hello: Text, fab: Circle) {
 -->回收机制在整个 UI 对象树不再需要被显示时将其销毁。
 
 这个问题的一个自然的解决方式是关联每一个拥有生命周期并在该 job 的上下文中创建协程的
-UI 对象的 job 对象。但是通过关联每一个协程构建器的 job 对象是容易出错的， 
-它是非常容易被忘记的。对于这个目的，UI 的所有者应该实现 [CoroutineScope] 接口，那么每一个<!--
+UI 对象的 job 对象。但是通过关联每一个协程构建器的 job 对象是容易出错的，
+它是非常容易被忘记的。对于这个目的，UI 的所有者可以实现 [CoroutineScope] 接口，那么每一个<!--
 -->协程构建器被定义为了 [CoroutineScope] 上的扩展并承袭了没有显示声明的 UI job。
+For the sake of simplicity, [MainScope()] factory can be used. It automatically provides `Dispatchers.Main` and parent
+job.
 
 举例来说，在 Android 应用程序中一个 `Activity` 最初被 _created_ 以及被当它不再被<!--
 -->需要时 _destroyed_ 并且当内存必须被释放时。一个自然的解决方式是绑定一个
@@ -479,19 +481,10 @@ UI 对象的 job 对象。但是通过关联每一个协程构建器的 job 对�
 <!--- CLEAR -->
 
 ```kotlin
-abstract class ScopedAppActivity: AppCompatActivity(), CoroutineScope {
-    protected lateinit var job: Job
-    override val coroutineContext: CoroutineContext 
-        get() = job + Dispatchers.Main
-    
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        job = Job()
-    }
-        
+abstract class ScopedAppActivity: AppCompatActivity(), CoroutineScope by MainScope() {
     override fun onDestroy() {
         super.onDestroy()
-        job.cancel()
+        cancel() // CoroutineScope.cancel
     } 
 }
 ```
@@ -507,11 +500,11 @@ class MainActivity : ScopedAppActivity() {
     
     suspend fun showIOData() {
         val deferred = async(Dispatchers.IO) {
-            // 实现      
+            // 实现
         }
         withContext(Dispatchers.Main) {
           val data = deferred.await()
-          // 在 UI 中展示数据 
+          // 在 UI 中展示数据
         }
     }
 }
@@ -561,7 +554,7 @@ Job 之间的父子关系形成层次结构。代表执行某些后台工作的�
 
 ### 阻塞操作
 
-使用协程在 UI 主线程上修正阻塞操作是非常直接了当的。我们将<!-- 
+使用协程在 UI 主线程上修正阻塞操作是非常直接了当的。我们将<!--
 -->改造我们的 “阻塞” `fib` 函数为非阻塞的挂起函数来在后台线程<!--
 -->执行计算，并使用 [withContext] 函数来将它的执行上下文改变为 [Dispatchers.Default] ——
 通过后台线程池支持。
@@ -685,7 +678,7 @@ fun setup(hello: Text, fab: Circle) {
         println("Before launch")
         GlobalScope.launch(Dispatchers.Main, CoroutineStart.UNDISPATCHED) { // <--- 通知这次改变
             println("Inside coroutine")
-            delay(100)                            // <--- 这里是协程挂起的地方   
+            delay(100)                            // <--- 这里是协程挂起的地方
             println("After delay")
         }
         println("After launch")
@@ -711,6 +704,7 @@ After delay
 [Job]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-job/index.html
 [Job.cancel]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-job/cancel.html
 [CoroutineScope]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-coroutine-scope/index.html
+[MainScope()]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-main-scope.html
 [coroutineScope]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/coroutine-scope.html
 [withContext]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/with-context.html
 [Dispatchers.Default]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-dispatchers/-default.html

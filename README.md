@@ -2,10 +2,10 @@
 
 [![official JetBrains project](http://jb.gg/badges/official.svg)](https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub)
 [![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
-[![Download](https://api.bintray.com/packages/kotlin/kotlinx/kotlinx.coroutines/images/download.svg?version=1.0.1) ](https://bintray.com/kotlin/kotlinx/kotlinx.coroutines/1.0.1)
+[![Download](https://api.bintray.com/packages/kotlin/kotlinx/kotlinx.coroutines/images/download.svg?version=1.1.0) ](https://bintray.com/kotlin/kotlinx/kotlinx.coroutines/1.1.0)
 
 Library support for Kotlin coroutines with [multiplatform](#multiplatform) support.
-This is a companion version for Kotlin `1.3.0` release.
+This is a companion version for Kotlin `1.3.11` release.
 
 **NOTE**: `0.30.2` was the last release with Kotlin 1.2 and experimental coroutines.
 See [COMPATIBILITY.md](COMPATIBILITY.md) for details of migration onto the stable Kotlin 1.3 coroutines.
@@ -19,9 +19,10 @@ GlobalScope.launch {
 
 ## Modules
 
-* [common](common/README.md) &mdash; common coroutines across all backends:
+* [common](common/README.md) &mdash; common coroutines across all platforms:
   * `launch` and `async` coroutine builders;
   * `Job` and `Deferred` light-weight future with cancellation support;
+  * `MainScope` for Android and UI applications.
   * `Dispatchers` object with `Main` dispatcher for Android/Swing/JavaFx, and `Default` dispatcher for background coroutines;
   * `delay` and `yield` top-level suspending functions;
   * `Channel` and `Mutex` communication and synchronization primitives;
@@ -31,6 +32,10 @@ GlobalScope.launch {
 * [core](core/README.md) &mdash; Kotlin/JVM implementation of common coroutines with additional features:
   * `Dispatchers.IO` dispatcher for blocking coroutines;
   * `Executor.asCoroutineDispatcher()` extension, custom thread pools, and more.
+* [test](core/README.md) &mdash; test utilities for coroutines
+  * `Dispatchers.setMain` to override `Dispatchers.Main` in tests.
+* [debug](core/README.md) &mdash; debug utilities for coroutines.
+  * `DebugProbes` API to probe, keep track of, print and dump active coroutines.
 * [js](js/README.md) &mdash; Kotlin/JS implementation of common coroutines with `Promise` support.
 * [native](native/README.md) &mdash; Kotlin/Native implementation of common coroutines with `runBlocking` single-threaded event loop.
 * [reactive](reactive/README.md) &mdash; modules that provide builders and iteration support for various reactive streams libraries:
@@ -69,7 +74,7 @@ Add dependencies (you can also add other modules that you need):
 <dependency>
     <groupId>org.jetbrains.kotlinx</groupId>
     <artifactId>kotlinx-coroutines-core</artifactId>
-    <version>1.0.1</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 
@@ -77,7 +82,7 @@ And make sure that you use the latest Kotlin version:
 
 ```xml
 <properties>
-    <kotlin.version>1.3.0</kotlin.version>
+    <kotlin.version>1.3.11</kotlin.version>
 </properties>
 ```
 
@@ -87,7 +92,7 @@ Add dependencies (you can also add other modules that you need):
 
 ```groovy
 dependencies {
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.0.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.0'
 }
 ```
 
@@ -95,7 +100,7 @@ And make sure that you use the latest Kotlin version:
 
 ```groovy
 buildscript {
-    ext.kotlin_version = '1.3.0'
+    ext.kotlin_version = '1.3.11'
 }
 ```
 
@@ -113,7 +118,7 @@ Add dependencies (you can also add other modules that you need):
 
 ```groovy
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.0.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.0")
 }
 ```
 
@@ -121,7 +126,7 @@ And make sure that you use the latest Kotlin version:
 
 ```groovy
 plugins {
-    kotlin("jvm") version "1.3.0"
+    kotlin("jvm") version "1.3.11"
 }
 ```
 
@@ -141,7 +146,7 @@ Add [`kotlinx-coroutines-android`](ui/kotlinx-coroutines-android)
 module as dependency when using `kotlinx.coroutines` on Android:
 
 ```groovy
-implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.0.1'
+implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.0'
 ```
 This gives you access to Android [Dispatchers.Main](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-android/kotlinx.coroutines.android/kotlinx.coroutines.-dispatchers/index.html)
 coroutine dispatcher and also makes sure that in case of crashed coroutine with unhandled exception this

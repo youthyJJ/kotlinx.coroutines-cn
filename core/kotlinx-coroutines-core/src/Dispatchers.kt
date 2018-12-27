@@ -25,14 +25,16 @@ public actual object Dispatchers {
      * [launch][CoroutineScope.launch], [async][CoroutineScope.async], etc
      * if no dispatcher nor any other [ContinuationInterceptor] is specified in their context.
      *
-     * It is backed by a shared pool of threads on JVM. By default, the maximal number of threads used
-     * by this dispatcher is equal to the number CPU cores, but is at least two.
+     * It is backed by a shared pool of threads on JVM. By default, the maximal level of parallelism used
+     * by this dispatcher is equal to the number of CPU cores, but is at least two.
+     * Level of parallelism X guarantees that no more than X tasks can be executed in this dispatcher in parallel.
      */
     @JvmStatic
     public actual val Default: CoroutineDispatcher = createDefaultDispatcher()
 
     /**
      * A coroutine dispatcher that is confined to the Main thread operating with UI objects.
+     * This dispatcher can be used either directly or via [MainScope] factory.
      * Usually such dispatcher is single-threaded.
      *
      * Access to this property may throw [IllegalStateException] if no main thread dispatchers are present in the classpath.
@@ -86,48 +88,4 @@ public actual object Dispatchers {
      */
     @JvmStatic
     public val IO: CoroutineDispatcher = DefaultScheduler.IO
-}
-
-// Lazy loader for the main dispatcher
-private object MainDispatcherLoader {
-    @JvmField
-    val dispatcher: MainCoroutineDispatcher =
-        MainDispatcherFactory::class.java.let { clz ->
-            ServiceLoader.load(clz, clz.classLoader).toList()
-        }.maxBy { it.loadPriority }?.tryCreateDispatcher() ?: MissingMainCoroutineDispatcher(null)
-
-    /**
-     * If anything goes wrong while trying to create main dispatcher (class not found,
-     * initialization failed, etc), then replace the main dispatcher with a special
-     * stub that throws an error message on any attempt to actually use it.
-     */
-    private fun MainDispatcherFactory.tryCreateDispatcher(): MainCoroutineDispatcher =
-        try {
-            createDispatcher()
-        } catch (cause: Throwable) {
-            MissingMainCoroutineDispatcher(cause)
-        }
-}
-
-private class MissingMainCoroutineDispatcher(val cause: Throwable?) : MainCoroutineDispatcher(), Delay {
-    override val immediate: MainCoroutineDispatcher get() = this
-
-    override fun dispatch(context: CoroutineContext, block: Runnable) =
-        missing()
-
-    override fun scheduleResumeAfterDelay(timeMillis: Long, continuation: CancellableContinuation<Unit>) =
-        missing()
-
-    private fun missing() {
-        if  (cause == null) {
-            throw IllegalStateException(
-                "Module with the Main dispatcher is missing. " +
-                    "Add dependency providing the Main dispatcher, e.g. 'kotlinx-coroutines-android'"
-            )
-        } else {
-            throw IllegalStateException("Module with the Main dispatcher had failed to initialize", cause)
-        }
-    }
-
-    override fun toString(): String = "Main[missing${if (cause != null) ", cause=$cause" else ""}]"
 }

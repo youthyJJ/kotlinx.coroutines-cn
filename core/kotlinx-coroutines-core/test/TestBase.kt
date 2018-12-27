@@ -35,7 +35,7 @@ private val VERBOSE = systemProp("test.verbose", false)
 @Suppress("DEPRECATION")
 public actual open class TestBase actual constructor() {
     /**
-     * Is `true` when nightly stress test is done.
+     * Is `true` when running in a nightly stress test mode.
      */
     public actual val isStressTest = System.getProperty("stressTest") != null
 
@@ -157,7 +157,7 @@ public actual open class TestBase actual constructor() {
         var exCount = 0
         var ex: Throwable? = null
         try {
-            runBlocking(block = block, context = CoroutineExceptionHandler { context, e ->
+            runBlocking(block = block, context = CoroutineExceptionHandler { _, e ->
                 if (e is CancellationException) return@CoroutineExceptionHandler // are ignored
                 exCount++
                 when {

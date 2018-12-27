@@ -1,5 +1,34 @@
 # Change log for kotlinx.coroutines
 
+## Version 1.1.0
+
+* Kotlin version updated to 1.3.11.
+* Resumes to `CancellableContinuation` in the final state produce `IllegalStateException` (#901). This change does not affect #830, races between resume and cancellation do not lead to an exceptional situation.
+* `runBlocking` is integrated with `Dispatchers.Unconfined` by sharing an internal event loop. This change does not affect the semantics of the previously correct code but allows to mix multiple `runBlocking` and unconfined tasks (#860).
+
+## Version 1.1.0-alpha
+
+### Major improvements in coroutines testing and debugging
+* New module: [`kotlinx-coroutines-debug`](https://github.com/Kotlin/kotlinx.coroutines/blob/master/core/kotlinx-coroutines-debug/README.md). Debug agent that improves coroutines stacktraces, allows to print all active coroutines and its hierarchies and can be installed as Java agent.
+* New module: [`kotlinx-coroutines-test`](https://github.com/Kotlin/kotlinx.coroutines/blob/master/core/kotlinx-coroutines-test/README.md). Allows setting arbitrary `Dispatchers.Main` implementation for tests (#810).
+* Stacktrace recovery mechanism. Exceptions from coroutines are recovered from current coroutine stacktraces to simplify exception diagnostic. Enabled in debug mode, controlled by `kotlinx.coroutines.debug` system property (#493).
+
+### Other improvements
+* `MainScope` factory and `CoroutineScope.cancel` extension (#829). One line `CoroutineScope` integration!
+* `CancellableContinuation` race between `resumeWithException` and `cancel` is addressed, exceptions during cancellation are no longer reported to exception handler (#830, #892).
+* `Dispatchers.Default` now consumes much less CPU on JVM (#840).
+* Better diagnostic and fast failure if an uninitialized dispatcher is used (#880).
+* Conflated channel becomes linearizable.
+* Fixed inconsistent coroutines state when the result of the coroutine had type `DisposableHandle` (#835).
+* Fixed `JavaFx` initialization bug (#816).
+* `TimeoutCancellationException` is thrown by `withTimeout` instead of `CancellationException` if negative timeout is supplied (#870).
+* Kotlin/Native single-threaded workers support: coroutines can be safely used in multiple independent K/N workers.
+* jsdom support in `Dispatchers.Default` on JS.
+* rxFlowable generic parameter is now restricted with Any.
+* Guava 27 support in `kotlinx-coroutines-guava`.
+* Coroutines are now built with progressive mode.
+* Various fixes in the documentation.
+
 ## Version 1.0.1
  
 * Align `publisher` implementation with Reactive TCK.
