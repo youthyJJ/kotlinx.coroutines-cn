@@ -55,9 +55,9 @@ class ExampleApp : Application() {
 
 # 使用协程进行 UI 编程指南
 
-本篇教程假定你已经熟悉了<!--
--->包含[kotlinx.coroutines 指南](../docs/coroutines-guide.md)在内的基础协程概念，并提供了<!--
--->有关如何在 UI 应用程序中使用协同程序的具体示例。
+本篇教程假定你已经熟悉了<!-- 
+-->包含 [kotlinx.coroutines 指南](../docs/coroutines-guide.md) 在内的基础协程概念，并提供了<!--
+-->有关如何在 UI 应用程序中使用协程的具体示例。
 
 所有的 UI 程序库都有一个共同的特征。即所有的 UI 状态都被限制在单个的<!--
 -->主线程中，并且所有更新 UI 的操作都应该发生在该线程中。在使用协程时，
@@ -72,12 +72,12 @@ class ExampleApp : Application() {
 * [kotlinx-coroutines-swing](kotlinx-coroutines-swing) -- `Dispatchers.Swing` 为 Swing UI 应用程序提供的上下文。
 
 当然，UI 调度器被允许通过来自于 `kotlinx-coroutines-core` 的 `Dispatchers.Main` 获得并被
-[`ServiceLoader`](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html) API 发现的相应实现（Android，JavaFx 或 Swing）。
+[`ServiceLoader`](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html) API 发现的相应实现（Android、JavaFx 或 Swing）。
 举例来说，假如你编写了一个 JavaFx 应用程序，你使用 `Dispatchers.Main` 或者 `Dispachers.JavaFx` 扩展都是可以的，它们指向同一个对象。
 
 本教程同时包含了所有的 UI 库，因为每个模块中只包含一个<!--
 -->长度为几页的对象定义。你可以使用它们中的任何一个作为例子来<!--
--->为你最喜爱的 UI 库编写上下文对象，甚至是没有被包含在本文中的。
+-->为你最喜爱的 UI 库编写上下文对象，甚至是没有被包含在本教程中的。
 
 ## 目录
 
@@ -121,7 +121,7 @@ JavaFX 应用程序中的 `start` 函数调用了 `setup` 函数，将它引用�
 
 ```kotlin
 fun setup(hello: Text, fab: Circle) {
-    // placeholder
+    // 占位
 }
 ```
 
@@ -183,7 +183,7 @@ implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.0"
 [Dispatchers.JavaFx][kotlinx.coroutines.Dispatchers.JavaFx] 
 调度器，其包含执行
 JavaFx 应用程序线程。我们通过 `Main` 引入它，使所有呈现的示例都可以<!--
--->容易的移植到 Android：
+-->轻松的移植到 Android：
  
 ```kotlin
 import kotlinx.coroutines.javafx.JavaFx as Main
@@ -404,7 +404,7 @@ fun Node.onClick(action: suspend (MouseEvent) -> Unit) {
 
 如果所有 API 都被编写为永不阻塞执行线程的挂起函数，
 那就太好了。然而，通常情况并非如此。有时你需要做一些消耗 CPU 的运算<!--
--->或者只是需要调用第三部分的 API 来进行网络访问，举例来说，那将阻塞调用它的线程。
+-->或者只是需要调用第三部分的 API 来进行网络访问，比如说，那将阻塞调用它的线程。
 你不能在 UI 主线程中那样做，也不能直接在 UI 限定的协程中直接调用，因为那将<!--
 -->阻塞 UI 主线程并冻结 UI。
 
@@ -465,7 +465,7 @@ fun setup(hello: Text, fab: Circle) {
 
 一个典型的 UI 应用程序含有大量的具有生命周期的元素。窗口，UI 控制器，活动（即 Android 四大组件中的 Activity，这里直译了），视图，碎片<!--
 -->以及其它可视的元素都是可被创建和销毁的。一个长时间运行的协程，在进行一些 IO 或后台<!--
--->计算时，会保留持有相关 UI 元素的引用超过需要的时间，并阻止垃圾<!--
+-->计算时，会保留持有相关 UI 元素的引用超过所需要的时间，并阻止垃圾<!--
 -->回收机制在整个 UI 对象树不再需要被显示时将其销毁。
 
 这个问题的一个自然的解决方式是关联每一个拥有生命周期并在该 job 的上下文中创建协程的
@@ -598,7 +598,7 @@ suspend fun fib(x: Int): Int = withContext(Dispatchers.Default) {
 -->调用 `withContext` 时添加整数。对于一些更实质的代码，额外的 `withContext` 调用开销<!--
 -->不会很重要。
 
-但，这部分的 `fib` 实现可以像之前一样快速运行，但是在后台线程中，通过重命名<!--
+但这部分的 `fib` 实现可以像之前一样快速运行，但是在后台线程中，通过重命名<!--
 -->原始的 `fib` 函数为 `fibBlocking` 并在上层的 `fib` 函数的 `withContext` 包装中调用 `fibBlocking`：
 
 ```kotlin
@@ -655,22 +655,22 @@ Inside coroutine
 After delay
 ```
 
-As you can see, execution immediately continues after [launch], while the coroutine gets posted onto the main UI thread
-for execution later. All UI dispatchers in `kotlinx.coroutines` are implemented this way. Why so? 
+你可以看到，当协程被发送到 UI 主线程上会稍后执行，
+在 [launch] 后立即继续执行。所有 `kotlinx.coroutines` 中的 UI 调度器都会实现这个方法。为什么呢？ 
 
-Basically, the choice here is between "JS-style" asynchronous approach (async actions
-are always postponed to be executed later in the even dispatch thread) and "C#-style" approach
-(async actions are executed in the invoker thread until the first suspension point).
-While, C# approach seems to be more efficient, it ends up with recommendations like
-"use `yield` if you need to ....". This is error-prone. JS-style approach is more consistent
-and does not require programmers to think about whether they need to yield or not.
+基本上，这里选择介于 “JS 风格” 的异步方法（异步操作<!--
+-->总是推迟在偶数调度线程中执行）与 “C# 风格” 的方法
+（异步操作总是在调用它的线程上执行并直到第一个挂起点）之间的风格。
+然而，C# 方法看起来更高效，它在建议下结束就像
+“使用 `yield` 如果你需要去....”。 这是易错的。JS 风格的方法是更加连贯的
+并且不需要程序员去思考他们是否需要让步。
 
-However, in this particular case when coroutine is started from an event handler and there is no other code around it,
-this extra dispatch does indeed add an extra overhead without bringing any additional value. 
-In this case an optional [CoroutineStart] parameter to [launch], [async] and [actor] coroutine builders 
-can be used for performance optimization. 
-Setting it to the value of [CoroutineStart.UNDISPATCHED] has the effect of starting to execute
-coroutine immediately until its first suspension point as the following example shows:
+然而，在当协程从事件处理程序启动时周围没有其它代码这种特殊案例中，
+这个额外的调度确实增加了额外的开销，而没有带来任何额外的价值。
+在这个案例中一个可选的 [CoroutineStart] 参数可赋值给 [launch]、[async] 以及 [actor] 协程构建器
+来进行性能优化。
+将它的值设置为 [CoroutineStart.UNDISPATCHED] 可以更有效率的开始立即<!--
+-->执行协程并直到第一个挂起点，如同下面的例子所示：
 
 ```kotlin
 fun setup(hello: Text, fab: Circle) {
