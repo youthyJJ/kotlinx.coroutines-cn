@@ -34,7 +34,7 @@ public final class kotlinx/coroutines/BuildersKt {
 public abstract interface class kotlinx/coroutines/CancellableContinuation : kotlin/coroutines/Continuation {
 	public abstract fun cancel (Ljava/lang/Throwable;)Z
 	public abstract fun completeResume (Ljava/lang/Object;)V
-	public abstract fun initCancellability ()V
+	public abstract synthetic fun initCancellability ()V
 	public abstract fun invokeOnCancellation (Lkotlin/jvm/functions/Function1;)V
 	public abstract fun isActive ()Z
 	public abstract fun isCancelled ()Z
@@ -50,15 +50,28 @@ public final class kotlinx/coroutines/CancellableContinuation$DefaultImpls {
 	public static synthetic fun tryResume$default (Lkotlinx/coroutines/CancellableContinuation;Ljava/lang/Object;Ljava/lang/Object;ILjava/lang/Object;)Ljava/lang/Object;
 }
 
-public class kotlinx/coroutines/CancellableContinuationImpl : java/lang/Runnable, kotlinx/coroutines/CancellableContinuation {
+public class kotlinx/coroutines/CancellableContinuationImpl : kotlin/coroutines/jvm/internal/CoroutineStackFrame, kotlinx/coroutines/CancellableContinuation {
 	public fun <init> (Lkotlin/coroutines/Continuation;I)V
+	public fun cancel (Ljava/lang/Throwable;)Z
 	public fun completeResume (Ljava/lang/Object;)V
+	public fun getCallerFrame ()Lkotlin/coroutines/jvm/internal/CoroutineStackFrame;
 	public fun getContext ()Lkotlin/coroutines/CoroutineContext;
+	public fun getContinuationCancellationCause (Lkotlinx/coroutines/Job;)Ljava/lang/Throwable;
+	public final fun getDelegate ()Lkotlin/coroutines/Continuation;
+	public final fun getResult ()Ljava/lang/Object;
+	public fun getStackTraceElement ()Ljava/lang/StackTraceElement;
 	public fun getSuccessfulResult (Ljava/lang/Object;)Ljava/lang/Object;
-	public fun initCancellability ()V
+	public synthetic fun initCancellability ()V
+	public fun invokeOnCancellation (Lkotlin/jvm/functions/Function1;)V
+	public fun isActive ()Z
+	public fun isCancelled ()Z
+	public fun isCompleted ()Z
 	protected fun nameString ()Ljava/lang/String;
 	public fun resumeUndispatched (Lkotlinx/coroutines/CoroutineDispatcher;Ljava/lang/Object;)V
 	public fun resumeUndispatchedWithException (Lkotlinx/coroutines/CoroutineDispatcher;Ljava/lang/Throwable;)V
+	public fun resumeWith (Ljava/lang/Object;)V
+	public fun takeState ()Ljava/lang/Object;
+	public fun toString ()Ljava/lang/String;
 	public fun tryResume (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
 	public fun tryResumeWithException (Ljava/lang/Throwable;)Ljava/lang/Object;
 }
@@ -168,6 +181,8 @@ public abstract interface class kotlinx/coroutines/CoroutineScope {
 
 public final class kotlinx/coroutines/CoroutineScopeKt {
 	public static final fun CoroutineScope (Lkotlin/coroutines/CoroutineContext;)Lkotlinx/coroutines/CoroutineScope;
+	public static final fun MainScope ()Lkotlinx/coroutines/CoroutineScope;
+	public static final fun cancel (Lkotlinx/coroutines/CoroutineScope;)V
 	public static final fun coroutineScope (Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static final fun isActive (Lkotlinx/coroutines/CoroutineScope;)Z
 	public static final fun plus (Lkotlinx/coroutines/CoroutineScope;Lkotlin/coroutines/CoroutineContext;)Lkotlinx/coroutines/CoroutineScope;
@@ -237,6 +252,10 @@ public final class kotlinx/coroutines/DispatchersKt {
 
 public abstract interface class kotlinx/coroutines/DisposableHandle {
 	public abstract fun dispose ()V
+}
+
+public final class kotlinx/coroutines/EventLoopKt {
+	public static final fun processNextEventInCurrentThread ()J
 }
 
 public abstract class kotlinx/coroutines/ExecutorCoroutineDispatcher : kotlinx/coroutines/CoroutineDispatcher, java/io/Closeable {
@@ -347,6 +366,7 @@ public class kotlinx/coroutines/JobSupport : kotlinx/coroutines/ChildJob, kotlin
 	public fun plus (Lkotlinx/coroutines/Job;)Lkotlinx/coroutines/Job;
 	public final fun registerSelectClause0 (Lkotlinx/coroutines/selects/SelectInstance;Lkotlin/jvm/functions/Function1;)V
 	public final fun start ()Z
+	public final fun toDebugString ()Ljava/lang/String;
 	public fun toString ()Ljava/lang/String;
 }
 
@@ -628,7 +648,6 @@ public final class kotlinx/coroutines/channels/ClosedSendChannelException : java
 }
 
 public final class kotlinx/coroutines/channels/ConflatedBroadcastChannel : kotlinx/coroutines/channels/BroadcastChannel {
-	public static final field Companion Lkotlinx/coroutines/channels/ConflatedBroadcastChannel$Companion;
 	public fun <init> ()V
 	public fun <init> (Ljava/lang/Object;)V
 	public fun cancel (Ljava/lang/Throwable;)Z

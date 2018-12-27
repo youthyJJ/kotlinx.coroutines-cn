@@ -56,8 +56,8 @@ class ExampleApp : Application() {
 # 使用协程进行 UI 编程指南
 
 本篇教程假定你已经熟悉了<!-- 
--->包含[kotlinx.coroutines 指南](../docs/coroutines-guide.md)在内的基础协程概念，并提供了<!--
--->有关如何在 UI 应用程序中使用协同程序的具体示例。
+-->包含 [kotlinx.coroutines 指南](../docs/coroutines-guide.md) 在内的基础协程概念，并提供了<!--
+-->有关如何在 UI 应用程序中使用协程的具体示例。
 
 所有的 UI 程序库都有一个共同的特征。即所有的 UI 状态都被限制在单个的<!--
 -->主线程中，并且所有更新 UI 的操作都应该发生在该线程中。在使用协程时，
@@ -72,12 +72,12 @@ class ExampleApp : Application() {
 * [kotlinx-coroutines-swing](kotlinx-coroutines-swing) -- `Dispatchers.Swing` 为 Swing UI 应用程序提供的上下文。
 
 当然，UI 调度器被允许通过来自于 `kotlinx-coroutines-core` 的 `Dispatchers.Main` 获得并被
-[`ServiceLoader`](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html) API 发现的相应实现（Android，JavaFx 或 Swing）。
+[`ServiceLoader`](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html) API 发现的相应实现（Android、JavaFx 或 Swing）。
 举例来说，假如你编写了一个 JavaFx 应用程序，你使用 `Dispatchers.Main` 或者 `Dispachers.JavaFx` 扩展都是可以的，它们指向同一个对象。
 
 本教程同时包含了所有的 UI 库，因为每个模块中只包含一个<!--
 -->长度为几页的对象定义。你可以使用它们中的任何一个作为例子来<!--
--->为你最喜爱的 UI 库编写上下文对象，甚至是没有被包含在本文中的。
+-->为你最喜爱的 UI 库编写上下文对象，甚至是没有被包含在本教程中的。
 
 ## 目录
 
@@ -95,7 +95,7 @@ class ExampleApp : Application() {
   * [事件归并](#event-conflation)
 * [阻塞操作](#blocking-operations)
   * [UI 冻结的问题](#the-problem-of-ui-freezes)
-  * [结构性并发，生命周期以及协程父子层级结构](#structured-concurrency-lifecycle-and-coroutine-parent-child-hierarchy)
+  * [结构化并发，生命周期以及协程父子层级结构](#structured-concurrency-lifecycle-and-coroutine-parent-child-hierarchy)
   * [阻塞操作](#blocking-operations)
 * [高级主题](#advanced-topics)
   * [没有调度器时在 UI 事件处理器中启动协程](#starting-coroutine-in-ui-event-handlers-without-dispatch)
@@ -107,7 +107,7 @@ class ExampleApp : Application() {
 本篇教程中的可运行的示例是通过 JavaFx 来呈现的。其优点是所有的示例可以<!--
 -->直接在任何运行在操作系统中而不需要模拟器或任何类似的东西，并且它们可以完全独立存在
 （每个示例都在同一个文件中）。
-关于在 Android 上重现它们需要进行哪些更改（如果有的话）会有单独的注释。 
+关于在 Android 上重现它们需要进行哪些更改（如果有的话）会有单独的注释。
 
 ### JavaFx
 
@@ -121,23 +121,23 @@ JavaFX 应用程序中的 `start` 函数调用了 `setup` 函数，将它引用�
 
 ```kotlin
 fun setup(hello: Text, fab: Circle) {
-    // placeholder
+    // 占位
 }
 ```
 
-> 你可以点击[这里](kotlinx-coroutines-javafx/test/guide/example-ui-basic-01.kt)获得完整代码
+> 你可以从[这里](kotlinx-coroutines-javafx/test/guide/example-ui-basic-01.kt)获得完整代码
 
 你可以在 Github 上 clone [kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines) 这个项目到你的<!--
 -->工作站中并在 IDE 中打开这个项目。所有本教程中的示例都在
-[`ui/kotlinx-coroutines-javafx`](kotlinx-coroutines-javafx) 模块的 test 文件夹中。 
+[`ui/kotlinx-coroutines-javafx`](kotlinx-coroutines-javafx) 模块的 test 文件夹中。
 这样的话你就能够运行并观察每一个示例是如何工作的并<!--
 -->在你对它们修改时进行实验。
 
 ### Android
 
 请跟随这篇教程——[在 Android 中开始使用 Kotlin](https://kotlinlang.org/docs/tutorials/kotlin-android.html)，
-来在 Android Studio 中创建一个 Kotlin 项目。我们也鼓励你添加<!--
--->[Android 的 Kotlin 扩展](https://kotlinlang.org/docs/tutorials/android-plugin.html)
+来在 Android Studio 中创建一个 Kotlin 项目。我们也鼓励你添加
+[Android 的 Kotlin 扩展](https://kotlinlang.org/docs/tutorials/android-plugin.html)
 到你的应用程序中。
 
 在 Android Studio 2.3 中，您将获得一个类似于下图所示的应用程序：
@@ -165,7 +165,7 @@ fun setup(hello: TextView, fab: FloatingActionButton) {
 部分中添加 `kotlinx-coroutines-android` 模块的依赖：
 
 ```groovy
-implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.0.1"
+implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.0"
 ```
 
 你可以在 Github 上 clone [kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines) 这个项目到你的<!--
@@ -183,7 +183,7 @@ implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.0.1"
 [Dispatchers.JavaFx][kotlinx.coroutines.Dispatchers.JavaFx] 
 调度器，其包含执行
 JavaFx 应用程序线程。我们通过 `Main` 引入它，使所有呈现的示例都可以<!--
--->容易的移植到 Android：
+-->轻松的移植到 Android：
  
 ```kotlin
 import kotlinx.coroutines.javafx.JavaFx as Main
@@ -207,14 +207,14 @@ fun setup(hello: Text, fab: Circle) {
 }
 ```
 
-> 你可以点击[这里](kotlinx-coroutines-javafx/test/guide/example-ui-basic-02.kt)获得完整代码
+> 你可以从[这里](kotlinx-coroutines-javafx/test/guide/example-ui-basic-02.kt)获得完整代码
 
 所以，这里将发生什么？由于我们在主 UI 上下文中启动协程，我们可以在该协程内部<!--
 -->自如的更新 UI，并同时调用就像 [delay] 这样的 _挂起函数_ 。当 `delay` 函数的等待期间<!--
 -->UI 并不会冻结，因为它不会阻塞 UI 线程——它只会挂起协程。
 
-> 相应的代码在 Android 应用程序中表现也是类似的。 
-  你只需要在相应的代码中拷贝 `setup` 的函数体到 Android 项目中。 
+> 相应的代码在 Android 应用程序中表现也是类似的。
+  你只需要在相应的代码中拷贝 `setup` 的函数体到 Android 项目中。
 
 ### 取消 UI 协程
 
@@ -234,9 +234,9 @@ fun setup(hello: Text, fab: Circle) {
 }
 ```
 
-> 你可以点击[这里](kotlinx-coroutines-javafx/test/guide/example-ui-basic-03.kt)获得完整代码
+> 你可以从[这里](kotlinx-coroutines-javafx/test/guide/example-ui-basic-03.kt)获得完整代码
 
-现在，如果当倒计时仍然在运行时点击圆形按钮，倒计时会停止。 
+现在，如果当倒计时仍然在运行时点击圆形按钮，倒计时会停止。
 注意，[Job.cancel] 的调用是是完全线程安全和非阻塞的。它仅仅是示意协程取消<!--
 -->它的任务，而不会去等待任务事实上的终止。它可以在任何地方被调用。
 在已经取消或已完成的协程上调用它不会做任何事情。
@@ -328,7 +328,7 @@ fun Node.onClick(action: suspend (MouseEvent) -> Unit) {
 }
 ```  
 
-> 你可以点击[这里](kotlinx-coroutines-javafx/test/guide/example-ui-actor-02.kt)获得完整代码
+> 你可以从[这里](kotlinx-coroutines-javafx/test/guide/example-ui-actor-02.kt)获得完整代码
   
 构成协程和常规事件处理程序的集成基础的关键思想是
 [SendChannel] 上的 [offer][SendChannel.offer] 函数不会等待。它会立即将一个元素发送到 actor，
@@ -337,9 +337,9 @@ fun Node.onClick(action: suspend (MouseEvent) -> Unit) {
 在这个版本的代码中尝试反复点击圆形按钮。当倒计时动画进行中时，
 点击动作会被忽略。这会发生的原因是 actor 正忙于执行而不会从通道中接收元素。
 默认的，一个 actor 的邮箱由 `RendezvousChannel` 支持，只有当 `receive` 在运行中的时候
-`offer` 操作才会成功。 
+`offer` 操作才会成功。
 
-> 在 Android 中，这里有一个 `View` 在 OnClickListener 中发送事件，所以我们发送一个 `View` 到 actor 来作为信号。 
+> 在 Android 中，这里有一个 `View` 在 OnClickListener 中发送事件，所以我们发送一个 `View` 到 actor 来作为信号。
   相关的 `View` 类的扩展如下所示：
 
 ```kotlin
@@ -381,10 +381,10 @@ fun Node.onClick(action: suspend (MouseEvent) -> Unit) {
 }
 ```  
 
-> 你可以点击[这里](kotlinx-coroutines-javafx/test/guide/example-ui-actor-03.kt)获得完整代码。
+> 你可以从[这里](kotlinx-coroutines-javafx/test/guide/example-ui-actor-03.kt)获得完整代码。
   在 Android 中你需要在前面的示例中更新 `val eventActor = ...` 这一行。
 
-现在，当动画运行中时如果这个圆形按钮被点击，动画将在结束后重新运行。仅仅一次。 
+现在，当动画运行中时如果这个圆形按钮被点击，动画将在结束后重新运行。仅仅一次。
 在倒数进行中时，重复点击将被 _合并_ ，只有最近的事件才会被<!--
 -->处理。
 
@@ -396,23 +396,23 @@ fun Node.onClick(action: suspend (MouseEvent) -> Unit) {
 设置 `capacity = Channel.UNLIMITED` 参数来创建协程以及 `LinkedListChannel` 邮箱来缓冲所有的<!--
 -->事件。在这个案例中，动画会在单击圆形按钮时运行多次。
 
-## Blocking operations
+## 阻塞操作
 
-This section explains how to use UI coroutines with thread-blocking operations.
+本节说明了如何使用 UI 协程来进行线程阻塞操作。
 
-### The problem of UI freezes 
+### UI 冻结的问题
 
-It would have been great if all APIs out there were written as suspending functions that never blocks an 
-execution thread. However, it is quite often not the case. Sometimes you need to do a CPU-consuming computation
-or just need to invoke some 3rd party APIs for network access, for example, that blocks the invoker thread. 
-You cannot do that from the main UI thread nor from the UI-confined coroutine directly, because that would
-block the main UI thread and cause the freeze up of the UI.
+如果所有 API 都被编写为永不阻塞执行线程的挂起函数，
+那就太好了。然而，通常情况并非如此。有时你需要做一些消耗 CPU 的运算<!--
+-->或者只是需要调用第三部分的 API 来进行网络访问，比如说，那将阻塞调用它的线程。
+你不能在 UI 主线程中那样做，也不能直接在 UI 限定的协程中直接调用，因为那将<!--
+-->阻塞 UI 主线程并冻结 UI。
 
 <!--- INCLUDE .*/example-ui-blocking-([0-9]+).kt
 
 fun Node.onClick(action: suspend (MouseEvent) -> Unit) {
     val eventActor = GlobalScope.actor<MouseEvent>(Dispatchers.Main, capacity = Channel.CONFLATED) {
-        for (event in channel) action(event) // pass event to action
+        for (event in channel) action(event) // 将事件传递给 action
     }
     onMouseClicked = EventHandler { event ->
         eventActor.offer(event)
@@ -420,32 +420,32 @@ fun Node.onClick(action: suspend (MouseEvent) -> Unit) {
 }
 -->
 
-The following example illustrates the problem. We are going to use `onClick` extension with UI-confined
-event-conflating actor from the last section to process the last click in the main UI thread. 
-For this example, we are going to 
-perform naive computation of [Fibonacci numbers](https://en.wikipedia.org/wiki/Fibonacci_number):
+下面的示例将说明这个问题。我们将使用最后一节中的 UI 限定的
+`onClick` 事件合并 actor 在 UI 主线程中处理最后一次点击。
+在这个例子中，我们将<!--
+-->展示[斐波那契数列](https://en.wikipedia.org/wiki/Fibonacci_number)的简单计算：
  
 ```kotlin
 fun fib(x: Int): Int =
     if (x <= 1) x else fib(x - 1) + fib(x - 2)
 ``` 
  
-We'll be computing larger and larger Fibonacci number each time the circle is clicked. 
-To make the UI freeze more obvious, there is also a fast counting animation that is always running 
-and is constantly updating the text in the main UI dispatcher:
+我们将在每次点击圆圈时计算越来越大的斐波纳契数。
+为了让 UI 冻结更明显，还有一个始终在运行的快速计数动画<!--
+-->并时刻在 UI 主线程调度器中更新文本：
 
 ```kotlin
 fun setup(hello: Text, fab: Circle) {
-    var result = "none" // the last result
+    var result = "none" // 最后一个结果
     // counting animation 
     GlobalScope.launch(Dispatchers.Main) {
         var counter = 0
         while (true) {
             hello.text = "${++counter}: $result"
-            delay(100) // update the text every 100ms
+            delay(100) // 每 100 毫秒更新一次文本
         }
     }
-    // compute the next fibonacci number of each click
+    // 在每次点击时计算下一个斐波那契数
     var x = 1
     fab.onClick {
         result = "fib($x) = ${fib(x)}"
@@ -454,76 +454,69 @@ fun setup(hello: Text, fab: Circle) {
 }
 ```
  
-> You can get full JavaFx code [here](kotlinx-coroutines-javafx/test/guide/example-ui-blocking-01.kt).
-  You can just copy the `fib` function and the body of the `setup` function to your Android project.
+> 你可以从[这里](kotlinx-coroutines-javafx/test/guide/example-ui-blocking-01.kt)获得完整的 JavaFx 代码。
+  你可以只拷贝 `fib` 函数和 `setup` 函数的函数体到你的 Android 工程中。
 
-Try clicking on the circle in this example. After around 30-40th click our naive computation is going to become
-quite slow and you would immediately see how the main UI thread freezes, because the animation stops running 
-during UI freeze.
+尝试在这个例子中点击圆形按钮。在大约 30 到 40 次点击后我们的简单计算将会变得<!--
+-->非常缓慢并且你会立即看到 UI 主线程是如何冻结的，因为动画会在 UI 冻结期间<!--
+-->停止运行。
 
-### Structured concurrency, lifecycle and coroutine parent-child hierarchy
+### 结构化并发，生命周期以及协程父子层级结构
 
-A typical UI application has a number of elements with a lifecycle. Windows, UI controls, activities, views, fragments
-and other visual elements are created and destroyed. A long-running coroutine, performing some IO or a background 
-computation, can retain references to the corresponding UI elements for longer than it is needed, preventing garbage 
-collection of the whole trees of UI objects that were already destroyed and will not be displayed anymore.
+一个典型的 UI 应用程序含有大量的具有生命周期的元素。窗口，UI 控制器，活动（即 Android 四大组件中的 Activity，这里直译了），视图，碎片<!--
+-->以及其它可视的元素都是可被创建和销毁的。一个长时间运行的协程，在进行一些 IO 或后台<!--
+-->计算时，会保留持有相关 UI 元素的引用超过所需要的时间，并阻止垃圾<!--
+-->回收机制在整个 UI 对象树不再需要被显示时将其销毁。
 
-The natural solution to this problem is to associate a [Job] object with each UI object that has a lifecycle and create
-all the coroutines in the context of this job. But passing associated job object to every coroutine builder is error-prone, 
-it is easy to forget it. For this purpose, [CoroutineScope] interface should be implemented by UI owner, and then every
-coroutine builder defined as an extension on [CoroutineScope] inherits UI job without explicitly mentioning it.
+这个问题的一个自然的解决方式是关联每一个拥有生命周期并在该 job 的上下文中创建协程的
+UI 对象的 job 对象。但是通过关联每一个协程构建器的 job 对象是容易出错的，
+它是非常容易被忘记的。对于这个目的，UI 的所有者可以实现 [CoroutineScope] 接口，那么每一个<!--
+-->协程构建器被定义为了 [CoroutineScope] 上的扩展并承袭了没有显示声明的 UI job。
+For the sake of simplicity, [MainScope()] factory can be used. It automatically provides `Dispatchers.Main` and parent
+job.
 
-For example, in Android application an `Activity` is initially _created_ and is _destroyed_ when it is no longer 
-needed and when its memory must be released. A natural solution is to attach an 
-instance of a `Job` to an instance of an `Activity`:
+举例来说，在 Android 应用程序中一个 `Activity` 最初被 _created_ 以及被当它不再被<!--
+-->需要时 _destroyed_ 并且当内存必须被释放时。一个自然的解决方式是绑定一个
+`Job` 作为 `Activity` 的单例：
 <!--- CLEAR -->
 
 ```kotlin
-abstract class ScopedAppActivity: AppCompatActivity(), CoroutineScope {
-    protected lateinit var job: Job
-    override val coroutineContext: CoroutineContext 
-        get() = job + Dispatchers.Main
-    
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        job = Job()
-    }
-        
+abstract class ScopedAppActivity: AppCompatActivity(), CoroutineScope by MainScope() {
     override fun onDestroy() {
         super.onDestroy()
-        job.cancel()
+        cancel() // CoroutineScope.cancel
     } 
 }
 ```
 
-Now, an activity that is associated with a job has to extend ScopedAppActivity
+现在，一个继承自 ScopedAppActivity 的 Activity 和 job 发生了关联。
 
 ```kotlin
 class MainActivity : ScopedAppActivity() {
 
-    fun asyncShowData() = launch { // Is invoked in UI context with Activity's job as a parent
-        // actual implementation
+    fun asyncShowData() = launch { // Activity 的 job 作为父结构时，这里将在 UI 上下文中被调用
+        // 实际实现
     }
     
     suspend fun showIOData() {
         val deferred = async(Dispatchers.IO) {
-            // impl      
+            // 实现
         }
         withContext(Dispatchers.Main) {
           val data = deferred.await()
-          // Show data in UI
+          // 在 UI 中展示数据
         }
     }
 }
 ```
 
-Every coroutine launched from within a `MainActivity` has its job as a parent and is immediately cancelled when
-activity is destroyed.
+每一个在 `MainActivity` 中启动的协程都以该 Activity 的 job 作为父级结构并会在 activity
+被销毁的时候立即取消。
 
-To propagate activity scope to its views and presenters, multiple techniques can be used:
-- [coroutineScope] builder to provide a nested scope
-- Receive [CoroutineScope] in presenter method parameters
-- Make method extension on [CoroutineScope] (applicable only for top-level methods)
+将 activity 作用域传播给它的视图与 presenters，很多技术可以被使用：
+- [coroutineScope] 构建起提供了一个嵌套 scope
+- 在 presenter 方法参数中接收 [CoroutineScope]
+- 使方法在 [CoroutineScope] 上实现扩展（仅适用于顶级方法）
 
 ```kotlin
 class ActivityWithPresenters: ScopedAppActivity() {
@@ -535,52 +528,52 @@ class ActivityWithPresenters: ScopedAppActivity() {
 
 class Presenter {
     suspend fun loadData() = coroutineScope {
-        // Nested scope of outer activity
+        // 外部 activity 的嵌套作用域
     }
     
     suspend fun loadData(uiScope: CoroutineScope) = uiScope.launch {
-      // Invoked in the uiScope
+      // 在 UI 作用域中调用
     }
 }
 
 class ScopedPresenter(scope: CoroutineScope): CoroutineScope by scope {
-    fun loadData() = launch { // Extension on ActivityWithPresenters's scope
+    fun loadData() = launch { // 作为 ActivityWithPresenters 的作用域的扩展
     }
 }
 
 suspend fun CoroutineScope.launchInIO() = launch(Dispatchers.IO) {
-   // Launched in the scope of the caller, but with IO dispatcher
+   // 在调用者的作用域中启动，但使用 IO 调度器
 }
 ``` 
 
-Parent-child relation between jobs forms a hierarchy. A coroutine that performs some background job on behalf of
-the view and in its context can create further children coroutines. The whole tree of coroutines gets cancelled
-when the parent job is cancelled. An example of that is shown in the
-["Children of a coroutine"](../docs/coroutine-context-and-dispatchers.md#children-of-a-coroutine) section of the guide to coroutines.
+Job 之间的父子关系形成层次结构。代表执行某些后台工作的协程<!--
+-->视图及其上下文可以创建更多的子协程。当父任务被取消时，
+整个协程树都会被取消。请参见协程指南中
+[“子协程”](../docs/coroutine-context-and-dispatchers.md#children-of-a-coroutine)这一小节的示例。
 <!--- CLEAR -->
 
 ### 阻塞操作
 
-The fix for the blocking operations on the main UI thread is quite straightforward with coroutines. We'll 
-convert our "blocking" `fib` function to a non-blocking suspending function that runs the computation in 
-the background thread by using [withContext] function to change its execution context to [Dispatchers.Default] that is 
-backed by the background pool of threads. 
-Notice, that `fib` function is now marked with `suspend` modifier. It does not block the coroutine that
-it is invoked from anymore, but suspends its execution when the computation in the background thread is working:
+使用协程在 UI 主线程上修正阻塞操作是非常直接了当的。我们将<!--
+-->改造我们的 “阻塞” `fib` 函数为非阻塞的挂起函数来在后台线程<!--
+-->执行计算，并使用 [withContext] 函数来将它的执行上下文改变为 [Dispatchers.Default] ——
+通过后台线程池支持。
+注意，这个 `fib` 函数现在被标记了 `suspend` 修饰符。它在任何地方被调用的时候都不会<!--
+-->阻塞该协程，但是它将会在后台线程执行计算工作时被挂起：
 
 <!--- INCLUDE .*/example-ui-blocking-0[23].kt
 
 fun setup(hello: Text, fab: Circle) {
-    var result = "none" // the last result
+    var result = "none" // 最后一个结果
     // counting animation 
     GlobalScope.launch(Dispatchers.Main) {
         var counter = 0
         while (true) {
             hello.text = "${++counter}: $result"
-            delay(100) // update the text every 100ms
+            delay(100) // 每 100 毫秒更新一次文本
         }
     }
-    // compute next fibonacci number of each click
+    // 在每次点击时计算下一个斐波那契数
     var x = 1
     fab.onClick {
         result = "fib($x) = ${fib(x)}"
@@ -595,18 +588,18 @@ suspend fun fib(x: Int): Int = withContext(Dispatchers.Default) {
 }
 ```
 
-> You can get full code [here](kotlinx-coroutines-javafx/test/guide/example-ui-blocking-02.kt).
+> 你可以从[这里](kotlinx-coroutines-javafx/test/guide/example-ui-blocking-02.kt)获得完整代码。
 
-You can run this code and verify that UI is not frozen while large Fibonacci numbers are being computed. 
-However, this code computes `fib` somewhat slower, because every recursive call to `fib` goes via `withContext`. This is 
-not a big problem in practice, because `withContext` is smart enough to check that the coroutine is already running
-in the required context and avoids overhead of dispatching coroutine to a different thread again. It is an 
-overhead nonetheless, which is visible on this primitive code that does nothing else, but only adds integers 
-in between invocations to `withContext`. For some more substantial code, the overhead of an extra `withContext` invocation is 
-not going to be significant.
+你可以运行这段代码并验证当大量的计算斐波那契数时 UI 并不会被冻结。
+然而，这段代码计算 `fib` 有些慢，因为每次递归都会调用 `fib` 去调用 `withContext`。这在<!--
+-->实践中并不是一个大问题，因为 `withContext` 会足够智能的去检查协程已经准备好运行<!--
+-->在需要的上下文中并避免再次将协程发送到另一个线程的开销。
+尽管如此，这在原始代码上可以看见，它并不执行任何其他操作，但只在<!--
+-->调用 `withContext` 时添加整数。对于一些更实质的代码，额外的 `withContext` 调用开销<!--
+-->不会很重要。
 
-Still, this particular `fib` implementation can be made to run as fast as before, but in the background thread, by renaming
-the original `fib` function to `fibBlocking` and defining `fib` with `withContext` wrapper on top of `fibBlocking`:
+但这部分的 `fib` 实现可以像之前一样快速运行，但是在后台线程中，通过重命名<!--
+-->原始的 `fib` 函数为 `fibBlocking` 并在上层的 `fib` 函数的 `withContext` 包装中调用 `fibBlocking`：
 
 ```kotlin
 suspend fun fib(x: Int): Int = withContext(Dispatchers.Default) {
@@ -617,23 +610,23 @@ fun fibBlocking(x: Int): Int =
     if (x <= 1) x else fibBlocking(x - 1) + fibBlocking(x - 2)
 ```
 
-> You can get full code [here](kotlinx-coroutines-javafx/test/guide/example-ui-blocking-03.kt).
+> 你可以从[这里](kotlinx-coroutines-javafx/test/guide/example-ui-blocking-03.kt)获得完整代码。
 
-You can now enjoy full-speed naive Fibonacci computation without blocking the main UI thread. 
-All we need is `withContext(Dispatchers.Default)`.
+现在你可以享受全速的，不阻塞 UI 主线程的简单斐波那契计算。
+我们需要的都在 `withContext(Dispatchers.Default)` 中。
 
-Note, that because the `fib` function is invoked from the single actor in our code, there is at most one concurrent 
-computation of it at any given time, so this code has a natural limit on the resource utilization. 
-It can saturate at most one CPU core.
+注意，由于在我们的代码中 `fib` 函数是被单 actor 调用的，这里在任何给定时间<!--
+-->最多只会进行一个计算，所以这段代码具有天然的资源利用率限制。
+它会饱和占用最多一个 CPU 核心。
   
-## Advanced topics
+## 高级主题
 
-This section covers various advanced topics. 
+本节包含了各种高级主题。
 
-### Starting coroutine in UI event handlers without dispatch
+### 没有调度器时在 UI 事件处理器中启动协程
 
-Let us write the following code in `setup` to visualize the order of execution when coroutine is launched
-from the UI thread:
+让我们在 `setup` 中编写以下代码，以便在 UI 线程中启动协程时可以以可视化的方式<!--
+-->观察执行顺序：
 
 <!--- CLEAR -->
 
@@ -651,9 +644,9 @@ fun setup(hello: Text, fab: Circle) {
 }
 ```
  
-> You can get full JavaFx code [here](kotlinx-coroutines-javafx/test/guide/example-ui-advanced-01.kt).
+> 你可以从[这里](kotlinx-coroutines-javafx/test/guide/example-ui-advanced-01.kt)获得完整的 JavaFX 代码。
 
-When we start this code and click on a pinkish circle, the following messages are printed to the console:
+当我们运行这段代码并点击粉色圆形按钮，下面的信息将会在控制台中打印：
  
 ```text
 Before launch
@@ -662,30 +655,30 @@ Inside coroutine
 After delay
 ```
 
-As you can see, execution immediately continues after [launch], while the coroutine gets posted onto the main UI thread
-for execution later. All UI dispatchers in `kotlinx.coroutines` are implemented this way. Why so? 
+你可以看到，当协程被发送到 UI 主线程上会稍后执行，
+在 [launch] 后立即继续执行。所有 `kotlinx.coroutines` 中的 UI 调度器都会实现这个方法。为什么呢？ 
 
-Basically, the choice here is between "JS-style" asynchronous approach (async actions
-are always postponed to be executed later in the even dispatch thread) and "C#-style" approach
-(async actions are executed in the invoker thread until the first suspension point).
-While, C# approach seems to be more efficient, it ends up with recommendations like
-"use `yield` if you need to ....". This is error-prone. JS-style approach is more consistent
-and does not require programmers to think about whether they need to yield or not.
+基本上，这里选择介于 “JS 风格” 的异步方法（异步操作<!--
+-->总是推迟在偶数调度线程中执行）与 “C# 风格” 的方法
+（异步操作总是在调用它的线程上执行并直到第一个挂起点）之间的风格。
+然而，C# 方法看起来更高效，它在建议下结束就像
+“使用 `yield` 如果你需要去....”。 这是易错的。JS 风格的方法是更加连贯的
+并且不需要程序员去思考他们是否需要让步。
 
-However, in this particular case when coroutine is started from an event handler and there is no other code around it,
-this extra dispatch does indeed add an extra overhead without bringing any additional value. 
-In this case an optional [CoroutineStart] parameter to [launch], [async] and [actor] coroutine builders 
-can be used for performance optimization. 
-Setting it to the value of [CoroutineStart.UNDISPATCHED] has the effect of starting to execute
-coroutine immediately until its first suspension point as the following example shows:
+然而，在当协程从事件处理程序启动时周围没有其它代码这种特殊案例中，
+这个额外的调度确实增加了额外的开销，而没有带来任何额外的价值。
+在这个案例中一个可选的 [CoroutineStart] 参数可赋值给 [launch]、[async] 以及 [actor] 协程构建器
+来进行性能优化。
+将它的值设置为 [CoroutineStart.UNDISPATCHED] 可以更有效率的开始立即<!--
+-->执行协程并直到第一个挂起点，如同下面的例子所示：
 
 ```kotlin
 fun setup(hello: Text, fab: Circle) {
     fab.onMouseClicked = EventHandler {
         println("Before launch")
-        GlobalScope.launch(Dispatchers.Main, CoroutineStart.UNDISPATCHED) { // <--- Notice this change
+        GlobalScope.launch(Dispatchers.Main, CoroutineStart.UNDISPATCHED) { // <--- 通知这次改变
             println("Inside coroutine")
-            delay(100)                            // <--- And this is where coroutine suspends      
+            delay(100)                            // <--- 这里是协程挂起的地方
             println("After delay")
         }
         println("After launch")
@@ -693,9 +686,9 @@ fun setup(hello: Text, fab: Circle) {
 }
 ```
  
-> You can get full JavaFx code [here](kotlinx-coroutines-javafx/test/guide/example-ui-advanced-02.kt).
+> 你可以从[这里](kotlinx-coroutines-javafx/test/guide/example-ui-advanced-02.kt)获得完整的 JavaFx 代码。
 
-It prints the following messages on click, confirming that code in the coroutine starts to execute immediately:
+它在点击后将会打印如下信息，确认这段代码在协程启动后会立即执行：
 
 ```text
 Before launch
@@ -711,6 +704,7 @@ After delay
 [Job]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-job/index.html
 [Job.cancel]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-job/cancel.html
 [CoroutineScope]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-coroutine-scope/index.html
+[MainScope()]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-main-scope.html
 [coroutineScope]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/coroutine-scope.html
 [withContext]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/with-context.html
 [Dispatchers.Default]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-dispatchers/-default.html

@@ -5,16 +5,13 @@
 package kotlinx.coroutines.exceptions
 
 import kotlinx.coroutines.*
-import kotlinx.coroutines.exceptions.*
-import kotlinx.coroutines.selects.*
+import kotlinx.coroutines.channels.*
 import java.io.*
 import kotlin.coroutines.*
 import kotlin.test.*
 
-/*
- * Set of counterparts to common tests which check suppressed exceptions
- */
-class SuppresionTests : TestBase() {
+@Suppress("DEPRECATION")
+class SuppressionTests : TestBase() {
 
     @Test
     fun testCancellationTransparency() = runTest {
@@ -24,11 +21,11 @@ class SuppresionTests : TestBase() {
         }
 
         expect(1)
-        deferred.cancel(IOException())
+        deferred.cancel(TestException("Message"))
 
         try {
             deferred.await()
-        } catch (e: IOException) {
+        } catch (e: TestException) {
             checkException<ArithmeticException>(e.suppressed[0])
             finish(3)
         }
@@ -45,7 +42,7 @@ class SuppresionTests : TestBase() {
 
             override fun onCancellation(cause: Throwable?) {
                 assertTrue(cause is ArithmeticException)
-                assertTrue(cause!!.suppressed.isEmpty())
+                assertTrue(cause.suppressed.isEmpty())
                 expect(5)
             }
 
@@ -62,13 +59,13 @@ class SuppresionTests : TestBase() {
 
         coroutine.invokeOnCompletion(onCancelling = true) {
             assertTrue(it is ArithmeticException)
-            assertTrue(it!!.suppressed.isEmpty())
+            assertTrue(it.suppressed.isEmpty())
             expect(6)
         }
 
         coroutine.invokeOnCompletion {
             assertTrue(it is ArithmeticException)
-            checkException<IOException>(it!!.suppressed[0])
+            checkException<IOException>(it.suppressed[0])
             expect(8)
         }
 
@@ -79,5 +76,29 @@ class SuppresionTests : TestBase() {
         expect(7)
         coroutine.resumeWithException(IOException())
         finish(10)
+    }
+
+    @Test
+    fun testExceptionUnwrapping() = runTest {
+        val channel = Channel<Int>()
+
+        val deferred = async(NonCancellable) {
+            launch {
+                while (true) channel.send(1)
+            }
+
+            launch {
+                val exception = RecoverableTestException()
+                channel.cancel(exception)
+                throw exception
+            }
+        }
+
+        try {
+            deferred.await()
+        } catch (e: RecoverableTestException) {
+            assertTrue(e.suppressed.isEmpty())
+            assertTrue(e.cause!!.suppressed.isEmpty())
+        }
     }
 }

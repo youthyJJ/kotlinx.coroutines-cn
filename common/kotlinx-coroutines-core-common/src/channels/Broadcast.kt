@@ -13,7 +13,12 @@ import kotlin.coroutines.*
 /**
  * Broadcasts all elements of the channel.
  *
- * @param capacity capacity of the channel's buffer (1 by default).
+ * The kind of the resulting channel depends on the specified [capacity] parameter:
+ * when `capacity` is positive (1 by default), but less than [UNLIMITED] -- uses `ArrayBroadcastChannel` with a buffer of given capacity,
+ * when `capacity` is [CONFLATED] -- uses [ConflatedBroadcastChannel] that conflates back-to-back sends;
+ *   Note that resulting channel behaves like [ConflatedBroadcastChannel] but is not an instance of [ConflatedBroadcastChannel].
+ *   otherwise -- throws [IllegalArgumentException].
+ *
  * @param start coroutine start option. The default value is [CoroutineStart.LAZY].
  */
 fun <E> ReceiveChannel<E>.broadcast(
@@ -45,8 +50,9 @@ fun <E> ReceiveChannel<E>.broadcast(
  * the resulting channel becomes _failed_, so that any attempt to receive from such a channel throws exception.
  *
  * The kind of the resulting channel depends on the specified [capacity] parameter:
- * * when `capacity` positive (1 by default), but less than [UNLIMITED] -- uses `ArrayBroadcastChannel` with a buffer of given capacity,
+ * * when `capacity` is positive (1 by default), but less than [UNLIMITED] -- uses `ArrayBroadcastChannel` with a buffer of given capacity,
  * * when `capacity` is [CONFLATED] -- uses [ConflatedBroadcastChannel] that conflates back-to-back sends;
+ *   Note that resulting channel behaves like [ConflatedBroadcastChannel] but is not an instance of [ConflatedBroadcastChannel].
  * * otherwise -- throws [IllegalArgumentException].
  *
  * **Note:** By default, the coroutine does not start until the first subscriber appears via [BroadcastChannel.openSubscription]
@@ -92,6 +98,7 @@ private open class BroadcastCoroutine<E>(
 
     override fun cancel(cause: Throwable?): Boolean {
         val wasCancelled = _channel.cancel(cause)
+        @Suppress("DEPRECATION")
         if (wasCancelled) super.cancel(cause) // cancel the job
         return wasCancelled
     }
@@ -106,8 +113,10 @@ private open class BroadcastCoroutine<E>(
 private class LazyBroadcastCoroutine<E>(
     parentContext: CoroutineContext,
     channel: BroadcastChannel<E>,
-    private val block: suspend ProducerScope<E>.() -> Unit
+    block: suspend ProducerScope<E>.() -> Unit
 ) : BroadcastCoroutine<E>(parentContext, channel, active = false) {
+    private var block: (suspend ProducerScope<E>.() -> Unit)? = block
+
     override fun openSubscription(): ReceiveChannel<E> {
         // open subscription _first_
         val subscription = _channel.openSubscription()
@@ -117,6 +126,8 @@ private class LazyBroadcastCoroutine<E>(
     }
 
     override fun onStart() {
+        val block = checkNotNull(this.block) { "Already started" }
+        this.block = null
         block.startCoroutineCancellable(this, this)
     }
 }

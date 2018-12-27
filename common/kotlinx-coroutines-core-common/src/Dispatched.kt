@@ -9,82 +9,79 @@ import kotlin.coroutines.*
 import kotlin.jvm.*
 
 @Suppress("PrivatePropertyName")
+@SharedImmutable
 private val UNDEFINED = Symbol("UNDEFINED")
 
-@NativeThreadLocal
-internal object UndispatchedEventLoop {
-    data class EventLoop(
-        @JvmField var isActive: Boolean = false,
-        @JvmField val queue: ArrayQueue<Runnable> = ArrayQueue()
-    )
-
-    @JvmField
-    internal val threadLocalEventLoop = CommonThreadLocal { EventLoop() }
-
-    /**
-     * Executes given [block] as part of current event loop, updating related to block [continuation]
-     * mode and state if continuation is not resumed immediately.
-     * [doYield] indicates whether current continuation is yielding (to provide fast-path if event-loop is empty).
-     * Returns `true` if execution of continuation was queued (trampolined) or `false` otherwise.
-     */
-    inline fun execute(continuation: DispatchedContinuation<*>, contState: Any?, mode: Int,
-                       doYield: Boolean = false, block: () -> Unit) : Boolean {
-        val eventLoop = threadLocalEventLoop.get()
-        if (eventLoop.isActive) {
-            // If we are yielding and queue is empty, we can bail out as part of fast path
-            if (doYield && eventLoop.queue.isEmpty) {
-                return false
-            }
-
-            continuation._state = contState
-            continuation.resumeMode = mode
-            eventLoop.queue.addLast(continuation)
-            return true
-        }
-
-        runEventLoop(eventLoop, block)
-        return false
+/**
+ * Executes given [block] as part of current event loop, updating current continuation
+ * mode and state if continuation is not resumed immediately.
+ * [doYield] indicates whether current continuation is yielding (to provide fast-path if event-loop is empty).
+ * Returns `true` if execution of continuation was queued (trampolined) or `false` otherwise.
+ */
+private inline fun DispatchedContinuation<*>.executeUnconfined(
+    contState: Any?, mode: Int, doYield: Boolean = false,
+    block: () -> Unit
+) : Boolean {
+    val eventLoop = ThreadLocalEventLoop.eventLoop
+    // If we are yielding and unconfined queue is empty, we can bail out as part of fast path
+    if (doYield && eventLoop.isUnconfinedQueueEmpty) return false
+    return if (eventLoop.isUnconfinedLoopActive) {
+        // When unconfined loop is active -- dispatch continuation for execution to avoid stack overflow
+        _state = contState
+        resumeMode = mode
+        eventLoop.dispatchUnconfined(this)
+        true // queued into the active loop
+    } else {
+        // Was not active -- run event loop until all unconfined tasks are executed
+        runUnconfinedEventLoop(eventLoop, block = block)
+        false
     }
+}
 
-    fun resumeUndispatched(task: DispatchedTask<*>): Boolean {
-        val eventLoop = threadLocalEventLoop.get()
-        if (eventLoop.isActive) {
-            eventLoop.queue.addLast(task)
-            return true
+private fun DispatchedTask<*>.resumeUnconfined() {
+    val eventLoop = ThreadLocalEventLoop.eventLoop
+    if (eventLoop.isUnconfinedLoopActive) {
+        // When unconfined loop is active -- dispatch continuation for execution to avoid stack overflow
+        eventLoop.dispatchUnconfined(this)
+    } else {
+        // Was not active -- run event loop until all unconfined tasks are executed
+        runUnconfinedEventLoop(eventLoop) {
+            resume(delegate, MODE_UNDISPATCHED)
         }
-
-        runEventLoop(eventLoop, { task.resume(task.delegate, MODE_UNDISPATCHED) })
-        return false
     }
+}
 
-    inline fun runEventLoop(eventLoop: EventLoop, block: () -> Unit) {
-        try {
-            eventLoop.isActive = true
-            block()
-            while (true) {
-                val nextEvent = eventLoop.queue.removeFirstOrNull() ?: return
-                nextEvent.run()
-            }
-        } catch (e: Throwable) {
-            /*
-             * This exception doesn't happen normally, only if user either submitted throwing runnable
-             * or if we have a bug in implementation. Anyway, reset state of the dispatcher to the initial.
-             */
-            eventLoop.queue.clear()
-            throw DispatchException("Unexpected exception in undispatched event loop, clearing pending tasks", e)
-        } finally {
-            eventLoop.isActive = false
+private inline fun runUnconfinedEventLoop(
+    eventLoop: EventLoop,
+    block: () -> Unit
+) {
+    eventLoop.incrementUseCount(unconfined = true)
+    try {
+        block()
+        while (true) {
+            // break when all unconfined continuations where executed
+            if (!eventLoop.processUnconfinedEvent()) break
         }
+    } catch (e: Throwable) {
+        /*
+         * This exception doesn't happen normally, only if user either submitted throwing runnable
+         * or if we have a bug in implementation. Throw an exception that better explains the problem.
+         */
+        throw DispatchException("Unexpected exception in unconfined event loop", e)
+    } finally {
+        eventLoop.decrementUseCount(unconfined = true)
     }
 }
 
 internal class DispatchedContinuation<in T>(
     @JvmField val dispatcher: CoroutineDispatcher,
     @JvmField val continuation: Continuation<T>
-) : DispatchedTask<T>(MODE_ATOMIC_DEFAULT), Continuation<T> by continuation {
+) : DispatchedTask<T>(MODE_ATOMIC_DEFAULT), CoroutineStackFrame, Continuation<T> by continuation {
     @JvmField
     @Suppress("PropertyName")
     internal var _state: Any? = UNDEFINED
+    override val callerFrame: CoroutineStackFrame? = continuation as? CoroutineStackFrame
+    override fun getStackTraceElement(): StackTraceElement? = null
     @JvmField // pre-cached value to avoid ctx.fold on every resumption
     internal val countOrElement = threadContextElements(context)
 
@@ -106,7 +103,7 @@ internal class DispatchedContinuation<in T>(
             resumeMode = MODE_ATOMIC_DEFAULT
             dispatcher.dispatch(context, this)
         } else {
-            UndispatchedEventLoop.execute(this, state, MODE_ATOMIC_DEFAULT) {
+            executeUnconfined(state, MODE_ATOMIC_DEFAULT) {
                 withCoroutineContext(this.context, countOrElement) {
                     continuation.resumeWith(result)
                 }
@@ -121,7 +118,7 @@ internal class DispatchedContinuation<in T>(
             resumeMode = MODE_CANCELLABLE
             dispatcher.dispatch(context, this)
         } else {
-            UndispatchedEventLoop.execute(this, value, MODE_CANCELLABLE) {
+            executeUnconfined(value, MODE_CANCELLABLE) {
                 if (!resumeCancelled()) {
                     resumeUndispatched(value)
                 }
@@ -138,7 +135,7 @@ internal class DispatchedContinuation<in T>(
             resumeMode = MODE_CANCELLABLE
             dispatcher.dispatch(context, this)
         } else {
-            UndispatchedEventLoop.execute(this, state, MODE_CANCELLABLE) {
+            executeUnconfined(state, MODE_CANCELLABLE) {
                 if (!resumeCancelled()) {
                     resumeUndispatchedWithException(exception)
                 }
@@ -167,7 +164,7 @@ internal class DispatchedContinuation<in T>(
     @Suppress("NOTHING_TO_INLINE") // we need it inline to save us an entry on the stack
     inline fun resumeUndispatchedWithException(exception: Throwable) {
         withCoroutineContext(context, countOrElement) {
-            continuation.resumeWithException(exception)
+            continuation.resumeWithStackTrace(exception)
         }
     }
 
@@ -190,7 +187,7 @@ internal fun <T> Continuation<T>.resumeCancellable(value: T) = when (this) {
 
 internal fun <T> Continuation<T>.resumeCancellableWithException(exception: Throwable) = when (this) {
     is DispatchedContinuation -> resumeCancellableWithException(exception)
-    else -> resumeWithException(exception)
+    else -> resumeWithStackTrace(exception)
 }
 
 internal fun <T> Continuation<T>.resumeDirect(value: T) = when (this) {
@@ -199,12 +196,12 @@ internal fun <T> Continuation<T>.resumeDirect(value: T) = when (this) {
 }
 
 internal fun <T> Continuation<T>.resumeDirectWithException(exception: Throwable) = when (this) {
-    is DispatchedContinuation -> continuation.resumeWithException(exception)
-    else -> resumeWithException(exception)
+    is DispatchedContinuation -> continuation.resumeWithStackTrace(exception)
+    else -> resumeWithStackTrace(exception)
 }
 
 internal abstract class DispatchedTask<in T>(
-    @JvmField var resumeMode: Int
+    @JvmField public var resumeMode: Int
 ) : SchedulerTask() {
     public abstract val delegate: Continuation<T>
 
@@ -231,7 +228,7 @@ internal abstract class DispatchedTask<in T>(
                 else {
                     val exception = getExceptionalResult(state)
                     if (exception != null)
-                        continuation.resumeWithException(exception)
+                        continuation.resumeWithStackTrace(exception)
                     else
                         continuation.resume(getSuccessfulResult(state))
                 }
@@ -245,7 +242,7 @@ internal abstract class DispatchedTask<in T>(
 }
 
 internal fun DispatchedContinuation<Unit>.yieldUndispatched(): Boolean =
-    UndispatchedEventLoop.execute(this, Unit, MODE_CANCELLABLE, doYield = true) {
+    executeUnconfined(Unit, MODE_CANCELLABLE, doYield = true) {
         run()
     }
 
@@ -258,7 +255,7 @@ internal fun <T> DispatchedTask<T>.dispatch(mode: Int = MODE_CANCELLABLE) {
         if (dispatcher.isDispatchNeeded(context)) {
             dispatcher.dispatch(context, this)
         } else {
-            UndispatchedEventLoop.resumeUndispatched(this)
+            resumeUnconfined()
         }
     } else {
         resume(delegate, mode)
@@ -274,4 +271,10 @@ internal fun <T> DispatchedTask<T>.resume(delegate: Continuation<T>, useMode: In
     } else {
         delegate.resumeMode(getSuccessfulResult(state), useMode)
     }
+}
+
+
+@Suppress("NOTHING_TO_INLINE")
+internal inline fun Continuation<*>.resumeWithStackTrace(exception: Throwable) {
+    resumeWith(Result.failure(recoverStackTrace(exception, this)))
 }

@@ -68,7 +68,7 @@ public fun CoroutineScope.launch(
  *
  * By default, the coroutine is immediately scheduled for execution.
  * Other options can be specified via `start` parameter. See [CoroutineStart] for details.
- * An optional [start] parameter can be set to [CoroutineStart.LAZY] to start coroutine _lazily_. In this case,,
+ * An optional [start] parameter can be set to [CoroutineStart.LAZY] to start coroutine _lazily_. In this case,
  * the resulting [Deferred] is created in _new_ state. It can be explicitly started with [start][Job.start]
  * function and will be started implicitly on the first invocation of [join][Job.join], [await][Deferred.await] or [awaitAll].
  *
@@ -104,9 +104,13 @@ private open class DeferredCoroutine<T>(
 
 private class LazyDeferredCoroutine<T>(
     parentContext: CoroutineContext,
-    private val block: suspend CoroutineScope.() -> T
+    block: suspend CoroutineScope.() -> T
 ) : DeferredCoroutine<T>(parentContext, active = false) {
+    private var block: (suspend CoroutineScope.() -> T)? = block
+
     override fun onStart() {
+        val block = checkNotNull(this.block) { "Already started" }
+        this.block = null
         block.startCoroutineCancellable(this, this)
     }
 }
@@ -161,9 +165,13 @@ private open class StandaloneCoroutine(
 
 private class LazyStandaloneCoroutine(
     parentContext: CoroutineContext,
-    private val block: suspend CoroutineScope.() -> Unit
+    block: suspend CoroutineScope.() -> Unit
 ) : StandaloneCoroutine(parentContext, active = false) {
+    private var block: (suspend CoroutineScope.() -> Unit)? = block
+
     override fun onStart() {
+        val block = checkNotNull(this.block) { "Already started" }
+        this.block = null
         block.startCoroutineCancellable(this, this)
     }
 }
@@ -220,7 +228,7 @@ private class DispatchedCoroutine<in T>(
     fun getResult(): Any? {
         if (trySuspend()) return COROUTINE_SUSPENDED
         // otherwise, onCompletionInternal was already invoked & invoked tryResume, and the result is in the state
-        val state = this.state
+        val state = this.state.unboxState()
         if (state is CompletedExceptionally) throw state.cause
         @Suppress("UNCHECKED_CAST")
         return state as T
