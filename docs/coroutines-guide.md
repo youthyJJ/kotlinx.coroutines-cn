@@ -28,5 +28,5 @@ future 与 promise 更安全、更不易出错的抽象。
 
 * [使用协程进行 UI 编程指南](../ui/coroutines-guide-ui.md)
 * [响应式流与协程指南](../reactive/coroutines-guide-reactive.md)
-* [协程设计文档（KEEP）](https://github.com/Kotlin/kotlin-coroutines/blob/master/kotlin-coroutines-informal.md)
+* [协程设计文档（KEEP）](https://github.com/Kotlin-zh/KEEP/blob/master/proposals/coroutines.md)
 * [完整的 kotlinx.coroutines API 参考文档](http://kotlin.github.io/kotlinx.coroutines)
