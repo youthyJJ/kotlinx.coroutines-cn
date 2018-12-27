@@ -662,22 +662,22 @@ Inside coroutine
 After delay
 ```
 
-As you can see, execution immediately continues after [launch], while the coroutine gets posted onto the main UI thread
-for execution later. All UI dispatchers in `kotlinx.coroutines` are implemented this way. Why so? 
+你可以看到，当协程被发送到 UI 主线程上会稍后执行，
+在 [launch] 后立即继续执行。所有 `kotlinx.coroutines` 中的 UI 调度器都会实现这个方法。为什么呢？ 
 
-Basically, the choice here is between "JS-style" asynchronous approach (async actions
-are always postponed to be executed later in the even dispatch thread) and "C#-style" approach
-(async actions are executed in the invoker thread until the first suspension point).
-While, C# approach seems to be more efficient, it ends up with recommendations like
-"use `yield` if you need to ....". This is error-prone. JS-style approach is more consistent
-and does not require programmers to think about whether they need to yield or not.
+基本上，这里选择介于 “JS 风格” 的异步方法（异步操作<!--
+-->总是推迟在偶数调度线程中执行）与 “C# 风格” 的方法
+（异步操作总是在调用它的线程上执行并直到第一个挂起点）之间的风格。
+然而，C# 方法看起来更高效，它在建议下结束就像
+“使用 `yield` 如果你需要去....”。 这是易错的。JS 风格的方法是更加连贯的
+并且不需要程序员去思考他们是否需要延迟。
 
-However, in this particular case when coroutine is started from an event handler and there is no other code around it,
-this extra dispatch does indeed add an extra overhead without bringing any additional value. 
-In this case an optional [CoroutineStart] parameter to [launch], [async] and [actor] coroutine builders 
-can be used for performance optimization. 
-Setting it to the value of [CoroutineStart.UNDISPATCHED] has the effect of starting to execute
-coroutine immediately until its first suspension point as the following example shows:
+然而，在当协程从事件处理程序启动时，它周围没有其它代码这种特殊案例中，
+这个额外的调度确实增加了额外的开销，而没有带来任何额外的价值。
+在这个案例中一个可选的 [CoroutineStart] 参数可赋值给 [launch]、[async] 以及 [actor] 协程构建器
+来进行性能优化。
+将它的值设置为 [CoroutineStart.UNDISPATCHED] 可以更有效率的开始立即
+执行协程并直到第一个挂起点，如同下面的例子所示：
 
 ```kotlin
 fun setup(hello: Text, fab: Circle) {
