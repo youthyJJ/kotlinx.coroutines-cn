@@ -31,6 +31,7 @@ buildscript {
         }
     }
     dependencies {
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:$artifactory_plugin_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-native-gradle-plugin:$kotlin_native_version"
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokka_version"
@@ -39,7 +40,7 @@ buildscript {
         classpath "com.moowork.gradle:gradle-node-plugin:$gradle_node_version"
 
         // JMH plugins
-        classpath "com.github.jengelman.gradle.plugins:shadow:2.0.2"
+        classpath "com.github.jengelman.gradle.plugins:shadow:4.0.2"
         classpath "me.champeau.gradle:jmh-gradle-plugin:0.4.7"
         classpath "net.ltgt.gradle:gradle-apt-plugin:0.10"
     }
@@ -154,8 +155,7 @@ configure(subprojects.findAll { !internal.contains(it.name) && it.name != 'kotli
 
 // --------------- Configure sub-projects that are published ---------------
 
-// todo: native is not published yet
-def unpublished = internal + ['kotlinx-coroutines-rx-example', 'example-frontend-js']
+def unpublished = internal + ['kotlinx-coroutines-rx-example', 'example-frontend-js', 'android-unit-tests']
 
 def core_docs_url = "https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/"
 def core_docs_file = "$projectDir/core/kotlinx-coroutines-core/build/dokka/kotlinx-coroutines-core/package-list"
@@ -192,10 +192,11 @@ configure(subprojects.findAll { !unpublished.contains(it.name) }) {
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.AbstractKotlinCompile).all {
         kotlinOptions.freeCompilerArgs += ["-Xuse-experimental=kotlin.Experimental",
                                            "-Xuse-experimental=kotlin.experimental.ExperimentalTypeInference",
+                                           "-Xuse-experimental=kotlin.ExperimentalMultiplatform",
                                            "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi",
                                            "-Xuse-experimental=kotlinx.coroutines.ObsoleteCoroutinesApi",
-                                           "-Xuse-experimental=kotlinx.coroutines.InternalCoroutinesApi"]
-
+                                           "-Xuse-experimental=kotlinx.coroutines.InternalCoroutinesApi",
+                                           "-progressive"]
     }
 }
 
