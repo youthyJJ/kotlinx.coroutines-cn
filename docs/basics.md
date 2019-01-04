@@ -23,7 +23,7 @@ class BasicsGuideTest {
 * [协程基础](#协程基础)
   * [你的第一个协程程序](#你的第一个协程程序)
   * [桥接阻塞与非阻塞的世界](#桥接阻塞与非阻塞的世界)
-  * [等待一个任务](#等待一个任务)
+  * [等待一个作业](#等待一个作业)
   * [结构化的并发](#结构化的并发)
   * [作用域构建器](#作用域构建器)
   * [提取函数重构](#提取函数重构)
@@ -249,10 +249,10 @@ World!
 -->
 
 ### 作用域构建器
-除了由上面多种构建器提供的协程作用域，也是可以使用 [coroutineScope] 构建器来声明你自己<!--
--->的作用域的。它启动了一个新的协程作用域并且在所有子协程执行结束后并没有执行<!--
--->完毕。[runBlocking] 和 [coroutineScope] 主要的不同之处在于后者在等待所有的子协程<!--
--->执行完毕时并没有使当前线程阻塞。
+除了由不同的构建器提供协程作用域之外，还可以使用
+[coroutineScope] 构建器声明自己的作用域。它会创建新的协程作用域并且在所有已启动子协程执行完毕之前不会<!--
+-->结束。[runBlocking] 与 [coroutineScope] 的主要区别在于后者<!--
+-->在等待所有子协程执行完毕时不会阻塞当前线程。
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -272,10 +272,10 @@ fun main() = runBlocking { // this: CoroutineScope
         }
     
         delay(100L)
-        println("Task from coroutine scope") // 该行将在嵌套启动之前执行打印
+        println("Task from coroutine scope") // 这一行会在内嵌 launch 之前输出
     }
     
-    println("Coroutine scope is over") // 该行将在嵌套结束之后才会被打印
+    println("Coroutine scope is over") // 这一行在内嵌 launch 执行完毕后才输出
 }
 ```
 
