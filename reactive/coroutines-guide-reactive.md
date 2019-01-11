@@ -18,73 +18,73 @@ import org.junit.Test
 class GuideReactiveTest : ReactiveTestBase() {
 -->
 
-# Guide to reactive streams with coroutines
+# 响应式流与协程指南
 
-This guide explains key differences between Kotlin coroutines and reactive streams and shows 
-how they can be used together for greater good. Prior familiarity with basic coroutine concepts
-that are covered in [Guide to kotlinx.coroutines](../docs/coroutines-guide.md) is not required, 
-but is a big plus. If you are familiar with reactive streams, you may find this guide
-a better introduction into the world of coroutines.
+这篇教程介绍了 Kotlin 协程与响应式流的不同点并展示了<!--
+-->如何将它们更好的一起使用。在此之前熟悉包含在
+[Guide to kotlinx.coroutines](../docs/coroutines-guide.md) 中的基础协程概念不是必须的， 
+但如果熟悉它将会是个很大的加分。如果你熟悉响应式流，你可能发现本指南会<!--
+-->更好地介绍协程的世界。
 
-There are several modules in `kotlinx.coroutines` project that are related to reactive streams:
+在 `kotlinx.coroutines` 项目中有一系列和响应式流相关的模块：
 
-* [kotlinx-coroutines-reactive](kotlinx-coroutines-reactive) -- utilities for [Reactive Streams](http://www.reactive-streams.org)
-* [kotlinx-coroutines-reactor](kotlinx-coroutines-reactor) -- utilities for [Reactor](https://projectreactor.io)
-* [kotlinx-coroutines-rx2](kotlinx-coroutines-rx2) -- utilities for [RxJava 2.x](https://github.com/ReactiveX/RxJava)
+* [kotlinx-coroutines-reactive](kotlinx-coroutines-reactive) ——为 [Reactive Streams](http://www.reactive-streams.org) 提供的适配
+* [kotlinx-coroutines-reactor](kotlinx-coroutines-reactor) ——为 [Reactor](https://projectreactor.io) 提供的适配
+* [kotlinx-coroutines-rx2](kotlinx-coroutines-rx2) ——为 [RxJava 2.x](https://github.com/ReactiveX/RxJava) 提供的适配
 
-This guide is mostly based on [Reactive Streams](http://www.reactive-streams.org) specification and uses
-its `Publisher` interface with some examples based on [RxJava 2.x](https://github.com/ReactiveX/RxJava),
-which implements reactive streams specification.
+本指南主要基于 [Reactive Streams](http://www.reactive-streams.org) 的规范并使用
+`Publisher` 接口和一些基于 [RxJava 2.x](https://github.com/ReactiveX/RxJava)的示例，
+该示例实现了响应式流的规范。
 
-You are welcome to clone 
-[`kotlinx.coroutines` project](https://github.com/Kotlin/kotlinx.coroutines)
-from GitHub to your workstation in order to
-run all the presented examples. They are contained in 
+欢迎你在 Github 上 clone 
+[`kotlinx.coroutines` 项目](https://github.com/Kotlin/kotlinx.coroutines)
+到你的工作站中，这是为了
+可以运行所有在本指南中展示的示例。它们被包含在项目的
 [reactive/kotlinx-coroutines-rx2/test/guide](kotlinx-coroutines-rx2/test/guide)
-directory of the project.
+路径中。
  
-## Table of contents
+## 目录
 
 <!--- TOC -->
 
-* [Differences between reactive streams and channels](#differences-between-reactive-streams-and-channels)
-  * [Basics of iteration](#basics-of-iteration)
-  * [Subscription and cancellation](#subscription-and-cancellation)
-  * [Backpressure](#backpressure)
-  * [Rx Subject vs BroadcastChannel](#rx-subject-vs-broadcastchannel)
-* [Operators](#operators)
+* [响应式流与通道的区别](#differences-between-reactive-streams-and-channels)
+  * [迭代的基础](#basics-of-iteration)
+  * [订阅与取消](#subscription-and-cancellation)
+  * [背压](#backpressure)
+  * [Rx 主题 vs 广播通道](#rx-subject-vs-broadcastchannel)
+* [操作符](#operators)
   * [Range](#range)
   * [Fused filter-map hybrid](#fused-filter-map-hybrid)
   * [Take until](#take-until)
   * [Merge](#merge)
-* [Coroutine context](#coroutine-context)
-  * [Threads with Rx](#threads-with-rx)
-  * [Threads with coroutines](#threads-with-coroutines)
+* [协程上下文](#coroutine-context)
+  * [线程与 Rx](#threads-with-rx)
+  * [线程与协程](#threads-with-coroutines)
   * [Rx observeOn](#rx-observeon)
-  * [Coroutine context to rule them all](#coroutine-context-to-rule-them-all)
-  * [Unconfined context](#unconfined-context)
+  * [使用协程上下文来管理它们](#coroutine-context-to-rule-them-all)
+  * [不受限的上下文](#unconfined-context)
 
 <!--- END_TOC -->
 
-## Differences between reactive streams and channels
+## 响应式流与通道的区别
 
-This section outlines key differences between reactive streams and coroutine-based channels. 
+本节主要包括响应式流与以协程为基础的通道的不同之处。
 
-### Basics of iteration
+### 迭代的基础
 
-The [Channel] is somewhat similar concept to the following reactive stream classes:
+[通道]与如下所示的响应式流类有类似的概念：
 
-* Reactive stream [Publisher](https://github.com/reactive-streams/reactive-streams-jvm/blob/master/api/src/main/java/org/reactivestreams/Publisher.java);
-* Rx Java 1.x [Observable](http://reactivex.io/RxJava/javadoc/rx/Observable.html);
-* Rx Java 2.x [Flowable](http://reactivex.io/RxJava/2.x/javadoc/), which implements `Publisher`.
+* Reactive stream [Publisher](https://github.com/reactive-streams/reactive-streams-jvm/blob/master/api/src/main/java/org/reactivestreams/Publisher.java)；
+* Rx Java 1.x [Observable](http://reactivex.io/RxJava/javadoc/rx/Observable.html)；
+* Rx Java 2.x [Flowable](http://reactivex.io/RxJava/2.x/javadoc/)，`Publisher` 的实现者。
 
-They all describe an asynchronous stream of elements (aka items in Rx), either infinite or finite, 
-and all of them support backpressure.
+它们都描述了一个异步的有限或无限的元素流（在 Rx 中又名条目），
+并且都支持背压。
   
-However, the `Channel` always represents a _hot_ stream of items, using Rx terminology. Elements are being sent
-into the channel by producer coroutines and are received from it by consumer coroutines. 
-Every [receive][ReceiveChannel.receive] invocation consumes an element from the channel. 
-Let us illustrate it with the following example:
+然而，使用 Rx 的术语的话，`Channel` 总是表示了一个条目的 _热_ 流。元素被生产者<!--
+-->协程发送到通道并被消费者协程所接收。
+在通道中每调用一次 [receive][ReceiveChannel.receive] 就消费一个元素。
+让我们用以下的例子来说明：
 
 <!--- INCLUDE
 import kotlinx.coroutines.*
@@ -94,30 +94,30 @@ import kotlin.coroutines.*
 
 ```kotlin
 fun main() = runBlocking<Unit> {
-    // create a channel that produces numbers from 1 to 3 with 200ms delays between them
+    // 创建一个通道，该通道每200毫秒生产一个数字，从 1 到 3
     val source = produce<Int> {
-        println("Begin") // mark the beginning of this coroutine in output
+        println("Begin") // 在输出中标记协程开始运行
         for (x in 1..3) {
-            delay(200) // wait for 200ms
-            send(x) // send number x to the channel
+            delay(200) // 等待 200 毫秒
+            send(x) // 将数字 x 发送到通道中
         }
     }
-    // print elements from the source
+    // 从 source 中打印元素
     println("Elements:")
-    source.consumeEach { // consume elements from it
+    source.consumeEach { // 在 source 中消费元素
         println(it)
     }
-    // print elements from the source AGAIN
+    // 再次从 source 中打印元素
     println("Again:")
-    source.consumeEach { // consume elements from it
+    source.consumeEach { // 从 source 中消费元素
         println(it)
     }
 }
 ```
 
-> You can get full code [here](kotlinx-coroutines-rx2/test/guide/example-reactive-basic-01.kt)
+> 你可以从[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-basic-01.kt)获得完整代码
 
-This code produces the following output: 
+这段代码产生了如下输出：
 
 ```text
 Elements:
@@ -130,18 +130,18 @@ Again:
 
 <!--- TEST -->
 
-Notice, how "Begin" line was printed just once, because [produce] _coroutine builder_, when it is executed,
-launches one coroutine to produce a stream of elements. All the produced elements are consumed 
-with [ReceiveChannel.consumeEach][consumeEach] 
-extension function. There is no way to receive the elements from this
-channel again. The channel is closed when the producer coroutine is over and the attempt to receive 
-from it again cannot receive anything.
+注意，“Begin” 只被打印了一次，因为 [produce] _协程构建器_ 被执行的时候，
+只创建了一个协程来生产元素流。所有被生产的元素都被 
+[ReceiveChannel.consumeEach][consumeEach] 
+扩展函数消费。没有办法从这个通道重复<!--
+-->接收元素。当生产者协程结束时该通道被关闭，
+再次尝试接收元素将不会接收到任何东西。
 
-Let us rewrite this code using [publish] coroutine builder from `kotlinx-coroutines-reactive` module
-instead of [produce] from `kotlinx-coroutines-core` module. The code stays the same, 
-but where `source` used to have [ReceiveChannel] type, it now has reactive streams 
+让我们使用 `kotlinx-coroutines-reactive` 模块中的 [publish] 协程构建器 代替 `kotlinx-coroutines-core` 模块中的 [produce]
+来重写这段代码。代码保持相似， 
+但是 `source` 使用 [ReceiveChannel] 类型的地方，现在它接收响应式流
 [Publisher](http://www.reactive-streams.org/reactive-streams-1.0.0-javadoc/org/reactivestreams/Publisher.html) 
-type.
+类型。
 
 <!--- INCLUDE
 import kotlinx.coroutines.*
@@ -151,31 +151,31 @@ import kotlin.coroutines.*
 
 ```kotlin
 fun main() = runBlocking<Unit> {
-    // create a publisher that produces numbers from 1 to 3 with 200ms delays between them
+    // 创建一个 publisher，每200毫秒生产一个数字，从 1 到 3
     val source = publish<Int> {
-    //           ^^^^^^^  <---  Difference from the previous examples is here
-        println("Begin") // mark the beginning of this coroutine in output
+    //           ^^^^^^^  <--- 这里与先前的示例不同
+        println("Begin") // 在输出中标记协程开始运行
         for (x in 1..3) {
-            delay(200) // wait for 200ms
-            send(x) // send number x to the channel
+            delay(200) // 等待 200 毫秒
+            send(x) // 将数字 x 发送到通道中
         }
     }
-    // print elements from the source
+    // 从 source 中打印元素
     println("Elements:")
-    source.consumeEach { // consume elements from it
+    source.consumeEach { // 在 source 中消费元素
         println(it)
     }
-    // print elements from the source AGAIN
+    // 再次从 source 中打印元素
     println("Again:")
-    source.consumeEach { // consume elements from it
+    source.consumeEach { // 在 source 中消费元素
         println(it)
     }
 }
 ```
 
-> You can get full code [here](kotlinx-coroutines-rx2/test/guide/example-reactive-basic-02.kt)
+> 你可以从[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-basic-02.kt)获得完整代码
 
-Now the output of this code changes to:
+现在这段代码的输出变为：
 
 ```text
 Elements:
@@ -215,7 +215,7 @@ for details.
 operator and [connect](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/flowables/ConnectableFlowable.html#connect())
 method with it.
 
-### Subscription and cancellation
+### 订阅与取消
 
 An example in the previous section uses `source.consumeEach { ... }` snippet to open a subscription 
 and receive all the elements from it. If we need more control on how what to do with 
@@ -246,9 +246,9 @@ fun main() = runBlocking<Unit> {
 }
 ```
 
-> You can get full code [here](kotlinx-coroutines-rx2/test/guide/example-reactive-basic-03.kt)
+> 你可以从[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-basic-03.kt)获得完整代码
 
-It produces the following output:
+它将产生如下输出：
  
 ```text
 OnSubscribe
@@ -260,16 +260,16 @@ Finally
 
 <!--- TEST -->
  
-With an explicit `openSubscription` we should [cancel][ReceiveChannel.cancel] the corresponding 
-subscription to unsubscribe from the source. There is no need to invoke `cancel` explicitly -- under the hood
-`consume` does that for us.
-The installed 
+使用显示的 `openSubscription` 时我们应该使用 [cancel][ReceiveChannel.cancel]
+来取消订阅响应的订阅源。这里不需要显示的调用 `cancel`——因为
+`consume` 为我们做了这些事。
+添加
 [doFinally](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#doFinally(io.reactivex.functions.Action))
-listener prints "Finally" to confirm that the subscription is actually being closed. Note that "OnComplete"
-is never printed because we did not consume all of the elements.
+监听器并打印“Finally”来确认订阅确实被取消了。注意“OnComplete”
+永远不会被打印因为我们没有消费所有的元素。
 
-We do not need to use an explicit `cancel` either if iteration is performed over all the items that are emitted 
-by the publisher, because it is being cancelled automatically by `consumeEach`:
+如果迭代完所有的元素并被 publisher 发送后<!--
+-->我们不需要显示的 `cancel`，因为它被 `consumeEach` 自动取消了：
 
 <!--- INCLUDE
 import io.reactivex.*
@@ -289,9 +289,9 @@ fun main() = runBlocking<Unit> {
 }
 ```
 
-> You can get full code [here](kotlinx-coroutines-rx2/test/guide/example-reactive-basic-04.kt)
+> 你可以从[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-basic-04.kt)获得完整代码
 
-We get the following output:
+我们得到如下输出：
 
 ```text
 OnSubscribe
@@ -306,15 +306,15 @@ Finally
 
 <!--- TEST -->
 
-Notice, how "OnComplete" and "Finally" are printed before the last element "5". It happens because our `main` function in this
-example is a coroutine that we start with [runBlocking] coroutine builder.
-Our main coroutine receives on the channel using `source.consumeEach { ... }` expression.
-The main coroutine is _suspended_ while it waits for the source to emit an item.
-When the last item is emitted by `Flowable.range(1, 5)` it
-_resumes_ the main coroutine, which gets dispatched onto the main thread to print this
- last element at a later point in time, while the source completes and prints "Finally".
+注意，如何使“OnComplete”与“Finally”在最后一个元素“5”之前被打印。在这个示例中它将发生的我们的 `main`
+函数在协程中执行时，使用 [runBlocking] 协程构建器来启动它。
+我们的主协程在通道中使用 `source.consumeEach { ... }` 扩展函数来接收通道。
+当它等待源发射元素的时候该主协程是 _挂起的_ ，
+当最后一个元素被 `Flowable.range(1, 5)` 发射时它
+_恢复_ 了主协程，它被分派到主线程上打印出来
+最后一个元素在稍后的时间点打印，而源执行完成并打印“Finally”。
 
-### Backpressure
+### 背压
 
 Backpressure is one of the most interesting and complex aspects of reactive streams. Coroutines can 
 _suspend_ and they provide a natural answer to handling backpressure. 
@@ -360,7 +360,7 @@ fun main() = runBlocking<Unit> {
 }
 ```
 
-> You can get full code [here](kotlinx-coroutines-rx2/test/guide/example-reactive-basic-05.kt)
+> 你可以从[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-basic-05.kt)获得完整代码
 
 The output of this code nicely illustrates how backpressure works with coroutines:
 
@@ -380,7 +380,7 @@ We see here how producer coroutine puts the first element in the buffer and is s
 one. Only after consumer processes the first item, producer sends the second one and resumes, etc.
 
 
-### Rx Subject vs BroadcastChannel
+### Rx 主题 vs 广播通道
  
 RxJava has a concept of [Subject](https://github.com/ReactiveX/RxJava/wiki/Subject) which is an object that
 effectively broadcasts elements to all its subscribers. The matching concept in coroutines world is called a 
