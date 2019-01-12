@@ -33,13 +33,13 @@ class GuideReactiveTest : ReactiveTestBase() {
 * [kotlinx-coroutines-rx2](kotlinx-coroutines-rx2) ——为 [RxJava 2.x](https://github.com/ReactiveX/RxJava) 提供的适配
 
 本指南主要基于 [Reactive Streams](http://www.reactive-streams.org) 的规范并使用
-`Publisher` 接口和一些基于 [RxJava 2.x](https://github.com/ReactiveX/RxJava)的示例，
+`Publisher` 接口和一些基于 [RxJava 2.x](https://github.com/ReactiveX/RxJava) 的示例，
 该示例实现了响应式流的规范。
 
 欢迎你在 Github 上 clone 
 [`kotlinx.coroutines` 项目](https://github.com/Kotlin/kotlinx.coroutines)
-到你的工作站中，这是为了
-可以运行所有在本指南中展示的示例。它们被包含在项目的
+到你的工作站中，这是为了<!--
+-->可以运行所有在本指南中展示的示例。它们被包含在项目的
 [reactive/kotlinx-coroutines-rx2/test/guide](kotlinx-coroutines-rx2/test/guide)
 路径中。
  
@@ -68,7 +68,7 @@ class GuideReactiveTest : ReactiveTestBase() {
 
 ## 响应式流与通道的区别
 
-本节主要包括响应式流与以协程为基础的通道的不同之处。
+本节主要包含响应式流与以协程为基础的通道的不同点。
 
 ### 迭代的基础
 
@@ -78,7 +78,7 @@ class GuideReactiveTest : ReactiveTestBase() {
 * Rx Java 1.x [Observable](http://reactivex.io/RxJava/javadoc/rx/Observable.html)；
 * Rx Java 2.x [Flowable](http://reactivex.io/RxJava/2.x/javadoc/)，`Publisher` 的实现者。
 
-它们都描述了一个异步的有限或无限的元素流（在 Rx 中又名条目），
+它们都描述了一个异步的有限或无限的元素流（在 Rx 中又名 items），
 并且都支持背压。
   
 然而，使用 Rx 的术语的话，`Channel` 总是表示了一个条目的 _热_ 流。元素被生产者<!--
@@ -139,7 +139,7 @@ Again:
 
 让我们使用 `kotlinx-coroutines-reactive` 模块中的 [publish] 协程构建器 代替 `kotlinx-coroutines-core` 模块中的 [produce]
 来重写这段代码。代码保持相似， 
-但是 `source` 使用 [ReceiveChannel] 类型的地方，现在它接收响应式流
+但是在 `source` 接收 [ReceiveChannel] 类型的地方，现在它接收响应式流的
 [Publisher](http://www.reactive-streams.org/reactive-streams-1.0.0-javadoc/org/reactivestreams/Publisher.html) 
 类型。
 
@@ -192,35 +192,35 @@ Begin
 
 <!--- TEST -->
 
-This example highlights the key difference between a reactive stream and a channel. A reactive stream is a higher-order
-functional concept. While the channel _is_ a stream of elements, the reactive stream defines a recipe on how the stream of 
-elements is produced. It becomes the actual stream of elements on _subscription_. Each subscriber may receive the same or
-a different stream of elements, depending on how the corresponding implementation of `Publisher` works.
+这个例子使用高亮标记了响应式流与通道的不同点。响应式流是一种<!--
+-->高阶的概念。当通道 _是_ 一个元素的流时，该响应式流定义了一个“食谱”来规定元素<!--
+-->在流中如何被生产。它成为了 _订阅_ 上真实的元素流。每一个订阅者也许会接收相同或不同的<!--
+-->元素流，这取决于 `Publisher` 的相应实现如何工作。
 
-The [publish] coroutine builder, that is used in the above example, launches a fresh coroutine on each subscription.
-Every [Publisher.consumeEach][org.reactivestreams.Publisher.consumeEach] invocation creates a fresh subscription.
-We have two of them in this code and that is why we see "Begin" printed twice. 
+[publish] 协程构建器已经被用于先前的示例，每次订阅都会启动一个新的协程。
+每一次 [Publisher.consumeEach][org.reactivestreams.Publisher.consumeEach] 被调用都创建了一个新的订阅者。
+在这段代码中我们有两处调用，所以我们能看到“Begin”被打印了两次。
 
-In Rx lingo this is called a _cold_ publisher. Many standard Rx operators produce cold streams, too. We can iterate
-over them from a coroutine, and every subscription produces the same stream of elements.
+在 Rx 的术语中这是调用了一个 _冷_ 发布者。大量的标准 Rx 操作符也会生产冷流。我们可以在<!--
+-->协程中迭代它们，并且每个订阅者都会生产相同的元素流。
 
-**WARNING**: It is planned that in the future a second invocation of `consumeEach` method
-on an channel that is already being consumed is going to fail fast, that is
-immediately throw an `IllegalStateException`.
-See [this issue](https://github.com/Kotlin/kotlinx.coroutines/issues/167)
-for details.
+**警告**：它计划在未来的一秒钟内在通道上调用 `consumeEach` 方法<!--
+-->来准备好消费元素可以快速的失败，这会<!--
+-->立即抛出一个 `IllegalStateException`。
+查看 [this issue](https://github.com/Kotlin/kotlinx.coroutines/issues/167)
+的细节。
 
-> Note, that we can replicate the same behaviour that we saw with channels by using Rx 
+> 注意，我们可以使用 Rx 中的
 [publish](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#publish()) 
-operator and [connect](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/flowables/ConnectableFlowable.html#connect())
-method with it.
+操作符与 [connect](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/flowables/ConnectableFlowable.html#connect())
+方法来替换我们在通道中所看到的类似的行为。
 
 ### 订阅与取消
 
-An example in the previous section uses `source.consumeEach { ... }` snippet to open a subscription 
-and receive all the elements from it. If we need more control on how what to do with 
-the elements that are being received from the channel, we can use [Publisher.openSubscription][org.reactivestreams.Publisher.openSubscription]
-as shown in the following example:
+在先前小节的例子中使用 `source.consumeEach { ... }` 代码片段来打开一个订阅<!--
+-->并从它接受所有元素。如果我们需要在如何处理<!--
+-->从通道中接收到的元素施加更多控制，我们可以使用 [Publisher.openSubscription][org.reactivestreams.Publisher.openSubscription]，
+这将在下面的示例中展示：
 
 <!--- INCLUDE
 import io.reactivex.*
@@ -231,17 +231,17 @@ import kotlinx.coroutines.reactive.*
 
 ```kotlin
 fun main() = runBlocking<Unit> {
-    val source = Flowable.range(1, 5) // a range of five numbers
-        .doOnSubscribe { println("OnSubscribe") } // provide some insight
+    val source = Flowable.range(1, 5) // 五个数字的区间
+        .doOnSubscribe { println("OnSubscribe") } // 提供了一些可被观察的点
         .doOnComplete { println("OnComplete") }   // ...
-        .doFinally { println("Finally") }         // ... into what's going on
+        .doFinally { println("Finally") }         // ... 在正在执行的代码中
     var cnt = 0 
-    source.openSubscription().consume { // open channel to the source
-        for (x in this) { // iterate over the channel to receive elements from it
+    source.openSubscription().consume { // 在源中打开通道
+        for (x in this) { // 迭代通道以从中接收元素
             println(x)
-            if (++cnt >= 3) break // break when 3 elements are printed
+            if (++cnt >= 3) break // 当三个元素被打印出来的时候，执行 break
         }
-        // Note: `consume` cancels the channel when this block of code is complete
+        // 注意：当这段代码执行完成并阻塞的时候 `consume` 取消了该通道
     }
 }
 ```
@@ -268,8 +268,8 @@ Finally
 监听器并打印“Finally”来确认订阅确实被取消了。注意“OnComplete”
 永远不会被打印因为我们没有消费所有的元素。
 
-如果迭代完所有的元素并被 publisher 发送后<!--
--->我们不需要显示的 `cancel`，因为它被 `consumeEach` 自动取消了：
+如果对发布者发送出的所有元素执行迭代，
+则我们不需要显示的 `cancel`，因为它被 `consumeEach` 自动取消了：
 
 <!--- INCLUDE
 import io.reactivex.*
@@ -280,10 +280,10 @@ import kotlin.coroutines.*
 
 ```kotlin
 fun main() = runBlocking<Unit> {
-    val source = Flowable.range(1, 5) // a range of five numbers
-        .doOnSubscribe { println("OnSubscribe") } // provide some insight
+    val source = Flowable.range(1, 5) // 五个数字的区间
+        .doOnSubscribe { println("OnSubscribe") } // 提供了一些可被观察的点
         .doOnComplete { println("OnComplete") }   // ...
-        .doFinally { println("Finally") }         // ... into what's going on
+        .doFinally { println("Finally") }         // ... 在正在执行的代码中
     // iterate over the source fully
     source.consumeEach { println(it) }
 }
@@ -306,13 +306,13 @@ Finally
 
 <!--- TEST -->
 
-注意，如何使“OnComplete”与“Finally”在最后一个元素“5”之前被打印。在这个示例中它将发生的我们的 `main`
+注意，如何使“OnComplete”与“Finally”在最后一个元素“5”之前被打印。在这个示例中它将发生在我们的 `main`
 函数在协程中执行时，使用 [runBlocking] 协程构建器来启动它。
 我们的主协程在通道中使用 `source.consumeEach { ... }` 扩展函数来接收通道。
 当它等待源发射元素的时候该主协程是 _挂起的_ ，
 当最后一个元素被 `Flowable.range(1, 5)` 发射时它
 _恢复_ 了主协程，它被分派到主线程上打印出来
-最后一个元素在稍后的时间点打印，而源执行完成并打印“Finally”。
+最后一个元素在稍后的时间点打印，而 source 执行完成并打印“Finally”。
 
 ### 背压
 
