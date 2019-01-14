@@ -449,7 +449,7 @@ Kotlin 的[密封类](https://kotlinlang.org/docs/reference/sealed-classes.html)
 我们使用 `IncCounter` 消息（用来递增计数器）和 `GetCounter` 消息（用来获取值）来定义 `CounterMsg` 密封类。
 后者需要发送回复。[CompletableDeferred] 通信<!--
 -->原语表示未来可知（可传达）的单个值，
-因该特征它被用于此处。
+这里被用于此目的。
 
 
 
