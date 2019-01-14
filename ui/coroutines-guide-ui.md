@@ -370,7 +370,7 @@ fun View.onClick(action: suspend (View) -> Unit) {
 
 ```kotlin
 fun Node.onClick(action: suspend (MouseEvent) -> Unit) {
-    // launch one actor to handle all events on this node
+    // 在这个 node 上启动一个 actor 来处理所有的事件
     val eventActor = GlobalScope.actor<MouseEvent>(Dispatchers.Main, capacity = Channel.CONFLATED) { // <--- 修改这里
         for (event in channel) action(event) // 将事件传递给 action
     }
@@ -404,7 +404,7 @@ fun Node.onClick(action: suspend (MouseEvent) -> Unit) {
 
 如果所有 API 都被编写为永不阻塞执行线程的挂起函数，
 那就太好了。然而，通常情况并非如此。有时你需要做一些消耗 CPU 的运算<!--
--->或者只是需要调用第三部分的 API 来进行网络访问，比如说，那将阻塞调用它的线程。
+-->或者只是需要调用第三方的 API 来进行网络访问，比如说，那将阻塞调用它的线程。
 你不能在 UI 主线程中那样做，也不能直接在 UI 限定的协程中直接调用，因为那将<!--
 -->阻塞 UI 主线程并冻结 UI。
 
@@ -437,7 +437,7 @@ fun fib(x: Int): Int =
 ```kotlin
 fun setup(hello: Text, fab: Circle) {
     var result = "none" // 最后一个结果
-    // counting animation 
+    // 计数动画
     GlobalScope.launch(Dispatchers.Main) {
         var counter = 0
         while (true) {
@@ -472,8 +472,8 @@ fun setup(hello: Text, fab: Circle) {
 UI 对象的 job 对象。但是通过关联每一个协程构建器的 job 对象是容易出错的，
 它是非常容易被忘记的。对于这个目的，UI 的所有者可以实现 [CoroutineScope] 接口，那么每一个<!--
 -->协程构建器被定义为了 [CoroutineScope] 上的扩展并承袭了没有显示声明的 UI job。
-For the sake of simplicity, [MainScope()] factory can be used. It automatically provides `Dispatchers.Main` and parent
-job.
+为了简单起见，可以使用 [MainScope()] 工厂函数。它将会自动提供 `Dispatchers.Main` 以及父级
+任务。
 
 举例来说，在 Android 应用程序中一个 `Activity` 最初被 _created_ 以及被当它不再被<!--
 -->需要时 _destroyed_ 并且当内存必须被释放时。一个自然的解决方式是绑定一个
@@ -548,8 +548,8 @@ suspend fun CoroutineScope.launchInIO() = launch(Dispatchers.IO) {
 
 Job 之间的父子关系形成层次结构。代表执行某些后台工作的协程<!--
 -->视图及其上下文可以创建更多的子协程。当父任务被取消时，
-整个协程树都会被取消。请参见协程指南中
-[“子协程”](../docs/coroutine-context-and-dispatchers.md#children-of-a-coroutine)这一小节的示例。
+整个协程树都会被取消。请参见协程指南中<!--
+-->[“子协程”](../docs/coroutine-context-and-dispatchers.md#children-of-a-coroutine)这一小节的示例。
 <!--- CLEAR -->
 
 ### 阻塞操作

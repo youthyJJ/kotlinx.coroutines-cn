@@ -151,7 +151,7 @@ import kotlin.coroutines.*
 
 ```kotlin
 fun main() = runBlocking<Unit> {
-    // 创建一个 publisher，每200毫秒生产一个数字，从 1 到 3
+    // 创建一个 publisher，每 200 毫秒生产一个数字，从 1 到 3
     val source = publish<Int> {
     //           ^^^^^^^  <--- 这里与先前的示例不同
         println("Begin") // 在输出中标记协程开始运行
