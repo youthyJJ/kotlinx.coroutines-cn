@@ -21,8 +21,8 @@ class GuideReactiveTest : ReactiveTestBase() {
 # 响应式流与协程指南
 
 这篇教程介绍了 Kotlin 协程与响应式流的不同点并展示了<!--
--->如何将它们更好的一起使用。在此之前熟悉包含在
-[Guide to kotlinx.coroutines](../docs/coroutines-guide.md) 中的基础协程概念不是必须的， 
+-->如何将它们更好的一起使用。在此之前熟悉包含在<!--
+-->[协程指南](../docs/coroutines-guide.md)中的基础协程概念不是必须的， 
 但如果熟悉它将会是个很大的加分。如果你熟悉响应式流，你可能发现本指南会<!--
 -->更好地介绍协程的世界。
 
@@ -54,7 +54,7 @@ class GuideReactiveTest : ReactiveTestBase() {
   * [Rx 主题 vs 广播通道](#rx-subject-vs-broadcastchannel)
 * [操作符](#operators)
   * [Range](#range)
-  * [Fused filter-map hybrid](#fused-filter-map-hybrid)
+  * [熔合 filter 与 map 操作符](#fused-filter-map-hybrid)
   * [Take until](#take-until)
   * [Merge](#merge)
 * [协程上下文](#coroutine-context)
@@ -72,7 +72,7 @@ class GuideReactiveTest : ReactiveTestBase() {
 
 ### 迭代的基础
 
-[通道]与如下所示的响应式流类有类似的概念：
+[Channel] 与如下所示的响应式流类有类似的概念：
 
 * Reactive stream [Publisher](https://github.com/reactive-streams/reactive-streams-jvm/blob/master/api/src/main/java/org/reactivestreams/Publisher.java)；
 * Rx Java 1.x [Observable](http://reactivex.io/RxJava/javadoc/rx/Observable.html)；
@@ -207,8 +207,8 @@ Begin
 **警告**：它计划在未来的一秒钟内在通道上调用 `consumeEach` 方法<!--
 -->来准备好消费元素可以快速的失败，这会<!--
 -->立即抛出一个 `IllegalStateException`。
-查看 [this issue](https://github.com/Kotlin/kotlinx.coroutines/issues/167)
-的细节。
+查看[这个提案](https://github.com/Kotlin/kotlinx.coroutines/issues/167)<!--
+-->的细节。
 
 > 注意，我们可以使用 Rx 中的
 [publish](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#publish()) 
@@ -430,7 +430,7 @@ fun main() = runBlocking<Unit> {
     val subject = BehaviorSubject.create<String>()
     subject.onNext("one")
     subject.onNext("two")
-    // now launch a coroutine to print everything
+    // 现在启动一个协程来打印所有东西
     GlobalScope.launch(Dispatchers.Unconfined) { // 在不受限的上下文中启动协程
         subject.consumeEach { println(it) }
     }
@@ -539,29 +539,29 @@ four
 `ArrayBroadcastChannel` 构造函数中的缓冲区的 capacity 参数控制<!--
 -->发送者在挂起等待接收者接收这些元素之前的元素的数量。
 
-## Operators
+## 操作符
 
-Full-featured reactive stream libraries, like Rx, come with 
-[a very large set of operators](http://reactivex.io/documentation/operators.html) to create, transform, combine
-and otherwise process the corresponding streams. Creating your own operators with support for
-back-pressure is [notoriously](http://akarnokd.blogspot.ru/2015/05/pitfalls-of-operator-implementations.html)
-[difficult](https://github.com/ReactiveX/RxJava/wiki/Writing-operators-for-2.0).
+全功能的响应式流库，比如 Rx，都伴随着<!-- 
+-->[非常大量的操作符](http://reactivex.io/documentation/operators.html)用于创建、变换、合并<!--
+-->以及反转来处理相关的流。创建你自己的并且支持背压的<!--
+-->操作符是非常[臭名昭著](http://akarnokd.blogspot.ru/2015/05/pitfalls-of-operator-implementations.html)以及<!--
+-->[困难](https://github.com/ReactiveX/RxJava/wiki/Writing-operators-for-2.0)的。
 
-Coroutines and channels are designed to provide an opposite experience. There are no built-in operators, 
-but processing streams of elements is extremely simple and back-pressure is supported automatically 
-without you having to explicitly think about it.
+协程与通道则被设计为提供完全相反的体验。这里没有内建的操作符， 
+但是处理元素流是非常简单并且自动支持背压的，
+即使是在你没有明确思考这一点的情况下。
 
-This section shows coroutine-based implementation of several reactive stream operators.  
+本节将展示以协程为基础而实现的一系列响应式流操作符。 
 
 ### Range
 
-Let's roll out own implementation of 
+让我们推出自己的为响应式流 `Publisher` 接口实现的
 [range](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#range(int,%20int))
-operator for reactive streams `Publisher` interface. The asynchronous clean-slate implementation of this operator for
-reactive streams is explained in 
-[this blog post](http://akarnokd.blogspot.ru/2017/03/java-9-flow-api-asynchronous-integer.html).
-It takes a lot of code.
-Here is the corresponding code with coroutines:
+操作符。为响应式流提供的本操作符从零开始的异步实现<!--
+-->被包含在<!--
+-->[这篇博客](http://akarnokd.blogspot.ru/2017/03/java-9-flow-api-asynchronous-integer.html)中。
+它需要很多代码。
+以下是与协同程序相对应的代码：
 
 <!--- INCLUDE
 import kotlinx.coroutines.*
@@ -575,22 +575,22 @@ fun CoroutineScope.range(context: CoroutineContext, start: Int, count: Int) = pu
 }
 ```
 
-In this code `CoroutineScope` and `context` are used instead of an `Executor` and all the backpressure aspects are taken care
-of by the coroutines machinery. Note, that this implementation depends only on the small reactive streams library
-that defines `Publisher` interface and its friends.
+在这段代码中 `CoroutineScope` 与 `context` 被用来替代一个 `Executor` 并且所有的背压方面都被小心的<!--
+-->用于协程机制。注意，此实现仅依赖于那些定义了 `Publisher` 接口和它的朋友们<!--
+-->的小型响应式流库。
 
-It is straightforward to use from a coroutine:
+它可以直接在协程中被使用：
 
 ```kotlin
 fun main() = runBlocking<Unit> {
-    // Range inherits parent job from runBlocking, but overrides dispatcher with Dispatchers.Default
+    // Range 从 runBlocking 中承袭了父 job，但是使用 Dispatchers.Default 来覆盖调度器
     range(Dispatchers.Default, 1, 5).consumeEach { println(it) }
 }
 ```
 
-> You can get full code [here](kotlinx-coroutines-rx2/test/guide/example-reactive-operators-01.kt)
+> 你可以从[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-operators-01.kt)获得完整代码
 
-The result of this code is quite expected:
+这段代码的结果非常值得我们期待：
    
 ```text
 1
@@ -602,13 +602,13 @@ The result of this code is quite expected:
 
 <!--- TEST -->
 
-### Fused filter-map hybrid
+### 熔合 filter 与 map 操作符
 
-Reactive operators like 
-[filter](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#filter(io.reactivex.functions.Predicate)) and 
+响应式操作符比如：
+[filter](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#filter(io.reactivex.functions.Predicate)) 以及
 [map](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#map(io.reactivex.functions.Function))
-are trivial to implement with coroutines. For a bit of challenge and showcase, let us combine them
-into the single `fusedFilterMap` operator: 
+使用协程实现是非常琐碎的。对于一些挑战和展示，让我们将它们合并<!--
+-->到单个的 `fusedFilterMap` 操作符中：
 
 <!--- INCLUDE
 import kotlinx.coroutines.*
@@ -619,19 +619,19 @@ import kotlin.coroutines.*
 
 ```kotlin
 fun <T, R> Publisher<T>.fusedFilterMap(
-    context: CoroutineContext,   // the context to execute this coroutine in
-    predicate: (T) -> Boolean,   // the filter predicate
-    mapper: (T) -> R             // the mapper function
+    context: CoroutineContext,   // 协程执行的上下文
+    predicate: (T) -> Boolean,   // 过滤器 predicate
+    mapper: (T) -> R             // mapper 函数
 ) = GlobalScope.publish<R>(context) {
-    consumeEach {                // consume the source stream 
-        if (predicate(it))       // filter part
-            send(mapper(it))     // map part
+    consumeEach {                // 消费源流
+        if (predicate(it))       // 过滤的部分
+            send(mapper(it))     // 变换的部分
     }        
 }
 ```
 
-Using `range` from the previous example we can test our `fusedFilterMap` 
-by filtering for even numbers and mapping them to strings:
+使用先前 `range` 中的示例我们可以测试我们的 `fusedFilterMap` 
+来过滤偶数以及将它们映射到字符串：
 
 <!--- INCLUDE
 
@@ -644,13 +644,13 @@ fun CoroutineScope.range(start: Int, count: Int) = publish<Int> {
 fun main() = runBlocking<Unit> {
    range(1, 5)
        .fusedFilterMap(coroutineContext, { it % 2 == 0}, { "$it is even" })
-       .consumeEach { println(it) } // print all the resulting strings
+       .consumeEach { println(it) } // 打印所有的字符串结果
 }
 ```
 
-> You can get full code [here](kotlinx-coroutines-rx2/test/guide/example-reactive-operators-02.kt)
+> 你可以从[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-operators-02.kt)获得完整代码
 
-It is not hard to see, that the result is going to be:
+不难看出，结果将是：
 
 ```text
 2 is even
@@ -661,12 +661,12 @@ It is not hard to see, that the result is going to be:
 
 ### Take until
 
-Let's implement our own version of
+让我们为
 [takeUntil](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#takeUntil(org.reactivestreams.Publisher))
-operator. It is quite a [tricky one](http://akarnokd.blogspot.ru/2015/05/pitfalls-of-operator-implementations.html) 
-to implement, because of the need to track and manage subscription to two streams. 
-We need to relay all the elements from the source stream until the other stream either completes or 
-emits anything. However, we have [select] expression to rescue us in coroutines implementation:
+操作符实现自己的版本。它是非常[难于](http://akarnokd.blogspot.ru/2015/05/pitfalls-of-operator-implementations.html)<!--
+-->去实现的，因为需要跟踪和管理两个流的订阅。
+我们需要以来源流中的所有元素直到另一个流也执行完成或<!--
+-->发射了任何东西。然而，我们有 [select] 表达式可以在协程的实现中拯救我们：
 
 <!--- INCLUDE
 import kotlinx.coroutines.channels.*
@@ -679,51 +679,51 @@ import kotlin.coroutines.*
 
 ```kotlin
 fun <T, U> Publisher<T>.takeUntil(context: CoroutineContext, other: Publisher<U>) = GlobalScope.publish<T>(context) {
-    this@takeUntil.openSubscription().consume { // explicitly open channel to Publisher<T>
+    this@takeUntil.openSubscription().consume { // 显式地打开 Publisher<T> 的通道
         val current = this
-        other.openSubscription().consume { // explicitly open channel to Publisher<U>
+        other.openSubscription().consume { // 显式地打开 Publisher<U> 的通道
             val other = this
             whileSelect {
-                other.onReceive { false }          // bail out on any received element from `other`
-                current.onReceive { send(it); true }  // resend element from this channel and continue
+                other.onReceive { false }          // 释放任何从 `other` 接收到的元素
+                current.onReceive { send(it); true }  // 在这个通道上重新发送元素并继续
             }
         }
     }
 }
 ```
 
-This code is using [whileSelect] as a nicer shortcut to `while(select{...}) {}` loop and Kotlin's
+这段代码使用 [whileSelect] 作为比 `while(select{...}) {}` 循环更好的快捷方式，并且 Kotlin 的
 [use](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.io/use.html) 
-expression to close the channels on exit, which unsubscribes from the corresponding publishers. 
+表达式会在退出时关闭通道，并取消订阅相应的发布者。
 
-The following hand-written combination of 
-[range](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#range(int,%20int)) with 
+在下面手写的
+[range](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#range(int,%20int)) 与
 [interval](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#interval(long,%20java.util.concurrent.TimeUnit,%20io.reactivex.Scheduler))
-is used for testing. It is coded using a `publish` coroutine builder 
-(its pure-Rx implementation is shown in later sections):
+的组合被用来测试。它在编码中使用 `publish` 协程构建器 
+（在下一小节中它将是纯 Rx 实现的）：
 
 ```kotlin
 fun CoroutineScope.rangeWithInterval(time: Long, start: Int, count: Int) = publish<Int> {
     for (x in start until start + count) { 
-        delay(time) // wait before sending each number
+        delay(time) // 在每次发送数字之前等待
         send(x)
     }
 }
 ```
 
-The following code shows how `takeUntil` works: 
+下面的代码展示了 `takeUntil` 是如何工作的： 
 
 ```kotlin
 fun main() = runBlocking<Unit> {
-    val slowNums = rangeWithInterval(200, 1, 10)         // numbers with 200ms interval
-    val stop = rangeWithInterval(500, 1, 10)             // the first one after 500ms
-    slowNums.takeUntil(coroutineContext, stop).consumeEach { println(it) } // let's test it
+    val slowNums = rangeWithInterval(200, 1, 10)         // 数字之间有 200 毫秒的间隔
+    val stop = rangeWithInterval(500, 1, 10)             // 第一个在 500 毫秒之后
+    slowNums.takeUntil(coroutineContext, stop).consumeEach { println(it) } // 让我们测试它
 }
 ```
 
-> You can get full code [here](kotlinx-coroutines-rx2/test/guide/example-reactive-operators-03.kt)
+> 你可以从[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-operators-03.kt)获得完整代码
 
-Producing 
+执行
 
 ```text
 1
@@ -734,11 +734,11 @@ Producing
 
 ### Merge
 
-There are always at least two ways for processing multiple streams of data with coroutines. One way involving
-[select] was shown in the previous example. The other way is just to launch multiple coroutines. Let
-us implement 
+使用协程处理多个数据流总是至少有两种方法。一种方法是调用
+[select]，这被展示在先前的示例中。另一种方法是只是启动过个协程。让<!--
+-->我们使用 
 [merge](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#merge(org.reactivestreams.Publisher))
-operator using the later approach:
+操作符来使用第二种的方法：
 
 <!--- INCLUDE
 import kotlinx.coroutines.*
@@ -749,31 +749,31 @@ import kotlin.coroutines.*
 
 ```kotlin
 fun <T> Publisher<Publisher<T>>.merge(context: CoroutineContext) = GlobalScope.publish<T>(context) {
-  consumeEach { pub ->                 // for each publisher received on the source channel
-      launch {  // launch a child coroutine
-          pub.consumeEach { send(it) } // resend all element from this publisher
+  consumeEach { pub ->                 // 为每一个 publisher 在源通道上接收元素
+      launch {  // 启动一个子协程
+          pub.consumeEach { send(it) } // 从这个 publisher 上重新发送所有元素
       }
   }
 }
 ```
 
-Notice, the use of 
+注意，
 [coroutineContext](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/coroutine-context.html)
-in the invocation of [launch] coroutine builder. It is used to refer
-to the context of the enclosing `publish` coroutine. This way, all the coroutines that are
-being launched here are [children](../docs/coroutines-guide.md#children-of-a-coroutine) of the `publish`
-coroutine and will get cancelled when the `publish` coroutine is cancelled or is otherwise completed. 
-Moreover, since parent coroutine waits until all children are complete, this implementation fully
-merges all the received streams.
+在调用 [launch] 协程构建器中的用途。它被用来指定
+`publish` 协程的上下文。这种方法，所有被启动的协程<!--
+-->在这里都是 `publish` 协程的[子协程](../docs/coroutines-guide.md#children-of-a-coroutine)<!--
+-->并且当 `publish` 协程被取消或以其它的方式执行完毕时将会被取消。
+此外，父协程会等待至所有子协程执行完毕没，这个实现会完全<!--
+-->合并所有的响应式流。
 
-For a test, let us start with `rangeWithInterval` function from the previous example and write a 
-producer that sends its results twice with some delay:
+对于测试，让我们在先前的示例中使用 `rangeWithInterval` 函数来启动并编写一个<!--
+-->生产者在一段时间的延时后发送结果两次：
 
 <!--- INCLUDE
 
 fun CoroutineScope.rangeWithInterval(time: Long, start: Int, count: Int) = publish<Int> {
     for (x in start until start + count) { 
-        delay(time) // wait before sending each number
+        delay(time) // 在每次发送数字之前等待
         send(x)
     }
 }
@@ -781,24 +781,24 @@ fun CoroutineScope.rangeWithInterval(time: Long, start: Int, count: Int) = publi
 
 ```kotlin
 fun CoroutineScope.testPub() = publish<Publisher<Int>> {
-    send(rangeWithInterval(250, 1, 4)) // number 1 at 250ms, 2 at 500ms, 3 at 750ms, 4 at 1000ms 
-    delay(100) // wait for 100 ms
-    send(rangeWithInterval(500, 11, 3)) // number 11 at 600ms, 12 at 1100ms, 13 at 1600ms
-    delay(1100) // wait for 1.1s - done in 1.2 sec after start
+    send(rangeWithInterval(250, 1, 4)) // 数字 1 在 250 毫秒发射，2 在 500 毫秒，3 在 750 毫秒，4 在 1000 毫秒 
+    delay(100) // 等待 100 毫秒
+    send(rangeWithInterval(500, 11, 3)) // 数字 11 在 600 毫秒，12 在 1100 毫秒，13 在 1600 毫秒
+    delay(1100) // 在启动完成后的 1.2 秒之后等待 1.1 秒
 }
 ```
 
-The test code is to use `merge` on `testPub` and to display the results:
+这段测试代码在 `testPub` 上使用了 `merge` 并且展示结果：
 
 ```kotlin
 fun main() = runBlocking<Unit> {
-    testPub().merge(coroutineContext).consumeEach { println(it) } // print the whole stream
+    testPub().merge(coroutineContext).consumeEach { println(it) } // 打印整个流
 }
 ```
 
-> You can get full code [here](kotlinx-coroutines-rx2/test/guide/example-reactive-operators-04.kt)
+> 你可以从[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-operators-04.kt)获得完整代码
 
-And the results should be: 
+并且结果应该是：
 
 ```text
 1

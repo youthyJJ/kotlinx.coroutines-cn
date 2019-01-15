@@ -237,7 +237,7 @@ fun setup(hello: Text, fab: Circle) {
 > 你可以从[这里](kotlinx-coroutines-javafx/test/guide/example-ui-basic-03.kt)获得完整代码
 
 现在，如果当倒计时仍然在运行时点击圆形按钮，倒计时会停止。
-注意，[Job.cancel] 的调用是是完全线程安全和非阻塞的。它仅仅是示意协程取消<!--
+注意，[Job.cancel] 的调用是完全线程安全和非阻塞的。它仅仅是示意协程取消<!--
 -->它的任务，而不会去等待任务事实上的终止。它可以在任何地方被调用。
 在已经取消或已完成的协程上调用它不会做任何事情。
 
