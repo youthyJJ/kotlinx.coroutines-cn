@@ -21,8 +21,8 @@ class GuideReactiveTest : ReactiveTestBase() {
 # 响应式流与协程指南
 
 这篇教程介绍了 Kotlin 协程与响应式流的不同点并展示了<!--
--->如何将它们更好的一起使用。在此之前熟悉包含在
-[Guide to kotlinx.coroutines](../docs/coroutines-guide.md) 中的基础协程概念不是必须的， 
+-->如何将它们更好的一起使用。在此之前熟悉包含在<!--
+-->[协程指南](../docs/coroutines-guide.md)中的基础协程概念不是必须的， 
 但如果熟悉它将会是个很大的加分。如果你熟悉响应式流，你可能发现本指南会<!--
 -->更好地介绍协程的世界。
 
@@ -54,7 +54,7 @@ class GuideReactiveTest : ReactiveTestBase() {
   * [Rx 主题 vs 广播通道](#rx-subject-vs-broadcastchannel)
 * [操作符](#operators)
   * [Range](#range)
-  * [熔合 filter-map 操作符](#fused-filter-map-hybrid)
+  * [熔合 filter 与 map 操作符](#fused-filter-map-hybrid)
   * [Take until](#take-until)
   * [Merge](#merge)
 * [协程上下文](#coroutine-context)
@@ -72,7 +72,7 @@ class GuideReactiveTest : ReactiveTestBase() {
 
 ### 迭代的基础
 
-[通道]与如下所示的响应式流类有类似的概念：
+[Channel] 与如下所示的响应式流类有类似的概念：
 
 * Reactive stream [Publisher](https://github.com/reactive-streams/reactive-streams-jvm/blob/master/api/src/main/java/org/reactivestreams/Publisher.java)；
 * Rx Java 1.x [Observable](http://reactivex.io/RxJava/javadoc/rx/Observable.html)；
@@ -207,8 +207,8 @@ Begin
 **警告**：它计划在未来的一秒钟内在通道上调用 `consumeEach` 方法<!--
 -->来准备好消费元素可以快速的失败，这会<!--
 -->立即抛出一个 `IllegalStateException`。
-查看 [this issue](https://github.com/Kotlin/kotlinx.coroutines/issues/167)
-的细节。
+查看[这个提案](https://github.com/Kotlin/kotlinx.coroutines/issues/167)<!--
+-->的细节。
 
 > 注意，我们可以使用 Rx 中的
 [publish](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#publish()) 
@@ -583,7 +583,7 @@ fun CoroutineScope.range(context: CoroutineContext, start: Int, count: Int) = pu
 
 ```kotlin
 fun main() = runBlocking<Unit> {
-    // Range inherits parent job from runBlocking, but overrides dispatcher with Dispatchers.Default
+    // Range 从 runBlocking 中承袭了父 job，但是使用 Dispatchers.Default 来覆盖调度器
     range(Dispatchers.Default, 1, 5).consumeEach { println(it) }
 }
 ```
@@ -602,7 +602,7 @@ fun main() = runBlocking<Unit> {
 
 <!--- TEST -->
 
-### 熔合 filter-map 操作符
+### 熔合 filter 与 map 操作符
 
 响应式操作符比如：
 [filter](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#filter(io.reactivex.functions.Predicate)) 以及
