@@ -542,8 +542,8 @@ four
 ## 操作符
 
 全功能的响应式流库，比如 Rx，都伴随着<!-- 
--->[非常大量的操作符](http://reactivex.io/documentation/operators.html)用于创建、变换、合并
-以及反转来处理相关的流。创建你自己的并且支持背压的<!--
+-->[非常大量的操作符](http://reactivex.io/documentation/operators.html)用于创建、变换、合并<!--
+-->以及反转来处理相关的流。创建你自己的并且支持背压的<!--
 -->操作符是非常[臭名昭著](http://akarnokd.blogspot.ru/2015/05/pitfalls-of-operator-implementations.html)以及<!--
 -->[困难](https://github.com/ReactiveX/RxJava/wiki/Writing-operators-for-2.0)的。
 
@@ -558,8 +558,8 @@ four
 让我们推出自己的为响应式流 `Publisher` 接口实现的
 [range](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#range(int,%20int))
 操作符。为响应式流提供的本操作符从零开始的异步实现<!--
--->被包含在
-[这篇博客](http://akarnokd.blogspot.ru/2017/03/java-9-flow-api-asynchronous-integer.html)中。
+-->被包含在<!--
+-->[这篇博客](http://akarnokd.blogspot.ru/2017/03/java-9-flow-api-asynchronous-integer.html)中。
 它需要很多代码。
 以下是与协同程序相对应的代码：
 
@@ -579,7 +579,7 @@ fun CoroutineScope.range(context: CoroutineContext, start: Int, count: Int) = pu
 -->用于协程机制。注意，此实现仅依赖于那些定义了 `Publisher` 接口和它的朋友们<!--
 -->的小型响应式流库。
 
-它可以直接在协程中被使用：`
+它可以直接在协程中被使用：
 
 ```kotlin
 fun main() = runBlocking<Unit> {
