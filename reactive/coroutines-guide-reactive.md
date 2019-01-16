@@ -812,18 +812,18 @@ fun main() = runBlocking<Unit> {
 
 <!--- TEST -->
 
-## Coroutine context
+## 协程上下文
 
-All the example operators that are shown in the previous section have an explicit
+所有的示例操作符都在先前的示例中显式地设置了
 [CoroutineContext](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/-coroutine-context/) 
-parameter. In Rx world it roughly corresponds to 
-a [Scheduler](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Scheduler.html).
+参数。在 Rx 的世界中它大概对应于<!--
+-->一个 [Scheduler](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Scheduler.html)。
 
-### Threads with Rx
+### 线程与 Rx
 
-The following example shows the basics of threading context management with Rx.
-Here `rangeWithIntervalRx` is an implementation of `rangeWithInterval` function using Rx 
-`zip`, `range`, and `interval` operators.
+下面的示例中展示了基本的在 Rx 中管理线程上下文。
+这里的 `rangeWithIntervalRx` 是`rangeWithInterval` 函数使用 Rx 的 
+`zip`、`range` 以及 `interval` 操作符的一个实现。
 
 <!--- INCLUDE
 import io.reactivex.*
@@ -846,12 +846,12 @@ fun main() {
 }
 ```
 
-> You can get full code [here](kotlinx-coroutines-rx2/test/guide/example-reactive-context-01.kt)
+> 你可以从[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-context-01.kt)获得完整代码
 
-We are explicitly passing the 
+我们显式地通过
 [Schedulers.computation()](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/schedulers/Schedulers.html#computation()) 
-scheduler to our `rangeWithIntervalRx` operator and
-it is going to be executed in Rx computation thread pool. The output is going to be similar to the following one:
+调度器，并将它用于 `rangeWithIntervalRx` 操作符，所以<!--
+-->它将执行在 Rx 的计算线程池。输出将类似于以下内容：
 
 ```text
 1 on thread RxComputationThreadPool-1
@@ -861,10 +861,10 @@ it is going to be executed in Rx computation thread pool. The output is going to
 
 <!--- TEST FLEXIBLE_THREAD -->
 
-### Threads with coroutines
+### 线程与协程
 
-In the world of coroutines `Schedulers.computation()` roughly corresponds to [Dispatchers.Default], 
-so the previous example is similar to the following one:
+在协程的世界中 `Schedulers.computation()` 大致对应于 [Dispatchers.Default]，
+所以先前的示例将变成下面这样：
 
 <!--- INCLUDE
 import io.reactivex.*
@@ -876,7 +876,7 @@ import kotlin.coroutines.CoroutineContext
 ```kotlin
 fun rangeWithInterval(context: CoroutineContext, time: Long, start: Int, count: Int) = GlobalScope.publish<Int>(context) {
     for (x in start until start + count) { 
-        delay(time) // wait before sending each number
+        delay(time) // 在每次数字发射前等待
         send(x)
     }
 }
@@ -888,9 +888,9 @@ fun main() {
 }
 ```
 
-> You can get full code [here](kotlinx-coroutines-rx2/test/guide/example-reactive-context-02.kt)
+> 你可以从[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-context-02.kt)获得完整代码
 
-The produced output is going to be similar to:
+产生的输出将类似于：
 
 ```text
 1 on thread ForkJoinPool.commonPool-worker-1
@@ -900,20 +900,20 @@ The produced output is going to be similar to:
 
 <!--- TEST LINES_START -->
 
-Here we've used Rx 
+这里我们使用了 Rx 的
 [subscribe](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#subscribe(io.reactivex.functions.Consumer))
-operator that does not have its own scheduler and operates on the same thread that the publisher -- on a default
-shared pool of threads in this example.
+操作符，没有自己的调度器和操作符并且运行在同一个线程上，而发布者在本示例中<!--
+-->运行在共享的线程池上。
 
 ### Rx observeOn 
 
-In Rx you use special operators to modify the threading context for operations in the chain. You
-can find some [good guides](http://tomstechnicalblog.blogspot.ru/2016/02/rxjava-understanding-observeon-and.html)
-about them, if you are not familiar. 
+在 Rx 中你操作使用了特别的操作符来为调用链修改线程上下文。
+如果你不熟悉它的话，
+你可以从这篇[很棒的教程](http://tomstechnicalblog.blogspot.ru/2016/02/rxjava-understanding-observeon-and.html)中获得指导。
 
-For example, there is
+举例来说，这里使用了
 [observeOn](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#observeOn(io.reactivex.Scheduler)) 
-operator. Let us modify the previous example to observe using `Schedulers.computation()`:   
+操作符。让我们修改先前的示例并观察使用 `Schedulers.computation()` 的效果：  
 
 <!--- INCLUDE
 import io.reactivex.*
@@ -926,22 +926,22 @@ import kotlin.coroutines.CoroutineContext
 ```kotlin
 fun rangeWithInterval(context: CoroutineContext, time: Long, start: Int, count: Int) = GlobalScope.publish<Int>(context) {
     for (x in start until start + count) { 
-        delay(time) // wait before sending each number
+        delay(time) // 在每次数字发射前等待
         send(x)
     }
 }
 
 fun main() {
     Flowable.fromPublisher(rangeWithInterval(Dispatchers.Default, 100, 1, 3))
-        .observeOn(Schedulers.computation())                           // <-- THIS LINE IS ADDED
+        .observeOn(Schedulers.computation())                           // <-- 添加了这一行
         .subscribe { println("$it on thread ${Thread.currentThread().name}") }
     Thread.sleep(1000)
 }
 ```
 
-> You can get full code [here](kotlinx-coroutines-rx2/test/guide/example-reactive-context-03.kt)
+> 你可以从[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-context-03.kt)获得完整代码
 
-Here is the difference in output, notice "RxComputationThreadPool":
+这里的输出有所不同了，提示了“RxComputationThreadPool”：
 
 ```text
 1 on thread RxComputationThreadPool-1
@@ -951,11 +951,11 @@ Here is the difference in output, notice "RxComputationThreadPool":
 
 <!--- TEST FLEXIBLE_THREAD -->
 
-### Coroutine context to rule them all
+### 使用协程上下文来管理它们
 
-A coroutine is always working in some context. For example, let us start a coroutine
-in the main thread with [runBlocking] and iterate over the result of the Rx version of `rangeWithIntervalRx` operator, 
-instead of using Rx `subscribe` operator:
+一个协程总是运行在一些上下文中。举例来说，让我们<!--
+-->使用 [runBlocking] 在主线程中启动一个协程，并且使用 Rx 版本的 `rangeWithIntervalRx` 操作符，
+替代使用 Rx 的 `subscribe` 操作符遍历结果：
 
 <!--- INCLUDE
 import io.reactivex.*
@@ -979,9 +979,9 @@ fun main() = runBlocking<Unit> {
 }
 ```
 
-> You can get full code [here](kotlinx-coroutines-rx2/test/guide/example-reactive-context-04.kt)
+> 你可以从[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-context-04.kt)获得完整代码
 
-The resulting messages are going to be printed in the main thread:
+结果信息将会被打印在主线程中：
 
 ```text
 1 on thread main
@@ -991,16 +991,16 @@ The resulting messages are going to be printed in the main thread:
 
 <!--- TEST LINES_START -->
 
-### Unconfined context
+### 不受限的上下文
 
-Most Rx operators do not have any specific thread (scheduler) associated with them and are working 
-in whatever thread that they happen to be invoked in. We've seen it on the example of `subscribe` operator 
-in the [threads with Rx](#threads-with-rx) section.
+大多数 Rx 操作符都没有特别地指定相关线程（调度器）并且正在运行<!--
+-->在它们恰好被调用的任何线程中。我们在[线程与 Rx](#threads-with-rx) 这一小节中<!--
+-->看到了 `subscribe` 运算符的示例。
  
-In the world of coroutines, [Dispatchers.Unconfined] context serves a similar role. Let us modify our previous example,
-but instead of iterating over the source `Flowable` from the `runBlocking` coroutine that is confined 
-to the main thread, we launch a new coroutine in `Dispatchers.Unconfined` context, while the main coroutine
-simply waits its completion using [Job.join]:
+在协程的世界中，[Dispatchers.Unconfined] 则承担了类似的任务。让我们修改先前的示例，
+但是将源 `Flowable` 的遍历替换到 `runBlocking` 协程中后，它被限制<!--
+-->在了主线程中，我们在 `Dispatchers.Unconfined` 上下文中启动了一个新协程，当主协程<!--
+-->只是等待的时候使用 [Job.join]：
 
 <!--- INCLUDE
 import io.reactivex.*
@@ -1019,18 +1019,18 @@ fun rangeWithIntervalRx(scheduler: Scheduler, time: Long, start: Int, count: Int
         BiFunction { x, _ -> x })
 
 fun main() = runBlocking<Unit> {
-    val job = launch(Dispatchers.Unconfined) { // launch new coroutine in Unconfined context (without its own thread pool)
+    val job = launch(Dispatchers.Unconfined) { // 在不受限的山下文中启动一个新协程（没有它自己的线程池）
         rangeWithIntervalRx(Schedulers.computation(), 100, 1, 3)
             .consumeEach { println("$it on thread ${Thread.currentThread().name}") }
     }
-    job.join() // wait for our coroutine to complete
+    job.join() // 等待我们的协程结束
 }
 ```
 
-> You can get full code [here](kotlinx-coroutines-rx2/test/guide/example-reactive-context-05.kt)
+> 你可以从[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-context-05.kt)获得完整代码
 
-Now, the output shows that the code of the coroutine is executing in the Rx computation thread pool, just
-like our initial example using Rx `subscribe` operator.
+现在，这段代码中协程执行在了 Rx 的计算线程池并输出，只是<!--
+-->就像我们初始的示例中使用了 Rx 的 `subscribe` 操作符。
 
 ```text
 1 on thread RxComputationThreadPool-1
@@ -1040,18 +1040,18 @@ like our initial example using Rx `subscribe` operator.
 
 <!--- TEST LINES_START -->
 
-Note, that [Dispatchers.Unconfined] context shall be used with care. It may improve the overall performance on certain tests,
-due to the increased stack-locality of operations and less scheduling overhead, but it also produces deeper stacks 
-and makes it harder to reason about asynchronicity of the code that is using it. 
+注意，该 [Dispatchers.Unconfined] 上下文应该被谨慎使用。由于降低了局部的堆栈操作以及开销调度的减少，
+它也许会在某些测试中提高总体性能，但它也会产生更深的堆栈<!--
+-->并且更难以推断使用它的代码的异步性。
 
-If a coroutine sends an element to a channel, then the thread that invoked the 
-[send][SendChannel.send] may start executing the code of a coroutine with [Dispatchers.Unconfined] dispatcher.
-The original producer coroutine that invoked `send`  is paused until the unconfined consumer coroutine hits its next
-suspension point. This is very similar to a lock-step single-threaded `onNext` execution in Rx world in the absense
-of thread-shifting operators. It is a normal default for Rx, because operators are usually doing very small chunks
-of work and you have to combine many operators for a complex processing. However, this is unusual with coroutines, 
-where you can have an arbitrary complex processing in a coroutine. Usually, you only need to chain stream-processing
-coroutines for complex pipelines with fan-in and fan-out between multiple worker coroutines.
+如果一个协程将一个元素发送到一个通道，那么调用的线程
+[send][SendChannel.send] 可能会开始使用 [Dispatchers.Unconfined] 调度程序执行协程的代码。
+原本的生产者协程调用 `send` 后会暂停直至不受限的消费者协程运行至下一个<!--
+-->挂起点。这与缺乏 Rx 世界中的锁步单线程 `onNext` 执行<!--
+-->线程切换操作符是非常类似的。这在 Rx 中是默认正常的，因为操作符经常做一些非常小块的<!--
+-->工作并且你必须做一些复杂处理来合并大量的操作符。然而，这对于协程来说是不常见的， 
+你可以在一个协程中进行任意复杂的处理。通常，你只需要在多个工作协程之间使用扇入和扇出<!--
+-->来为复杂的流水线链接流处理协程。
 
 <!--- MODULE kotlinx-coroutines-core -->
 <!--- INDEX kotlinx.coroutines -->
