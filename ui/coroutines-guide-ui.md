@@ -155,7 +155,7 @@ fun setup(hello: Text, fab: Circle) {
 
 ```kotlin
 fun setup(hello: TextView, fab: FloatingActionButton) {
-    // placeholder
+    // 占位
 }
 ```
 
