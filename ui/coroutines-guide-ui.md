@@ -193,7 +193,7 @@ import kotlinx.coroutines.javafx.JavaFx as Main
 
 协程被限制在 UI 主线程就可以自如的做任何更新 UI 的操作，并且可以在主线程中进行无阻塞的挂起。
 举例来说，我们可以通过命令式编码来执行动画。下面的代码使用
-[launch] 协程构建器，将文本每秒两次倒序的 从10更新到1：
+[launch] 协程构建器，将文本每秒两次倒序的 从 10 更新到 1：
 
 ```kotlin
 fun setup(hello: Text, fab: Circle) {
@@ -251,7 +251,7 @@ fab.setOnClickListener { job.cancel() }  // 在点击时取消协程
 
 ## 在 UI 上下文中使用 actors
 
-在本节中，我们将展示 UI 应用程序如何在其UI上下文中使用 actor 以确保<!--
+在本节中，我们将展示 UI 应用程序如何在其 UI 上下文中使用 actor 以确保<!--
 -->被启动的协程的数量没有无限制的增长。
 
 ### 协程扩展
