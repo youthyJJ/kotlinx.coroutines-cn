@@ -224,7 +224,7 @@ fun setup(hello: Text, fab: Circle) {
 ```kotlin
 fun setup(hello: Text, fab: Circle) {
     val job = GlobalScope.launch(Dispatchers.Main) { // 在主线程中启动协程
-        for (i in 10 downTo 1) { // 从10到1的倒数
+        for (i in 10 downTo 1) { // 从 10 到 1 的倒计时
             hello.text = "Countdown $i ..." // 更新文本
             delay(500) // 等待半秒钟
         }

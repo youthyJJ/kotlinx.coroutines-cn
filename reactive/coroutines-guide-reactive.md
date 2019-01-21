@@ -151,7 +151,7 @@ import kotlin.coroutines.*
 
 ```kotlin
 fun main() = runBlocking<Unit> {
-    // 创建一个 publisher，每200毫秒生产一个数字，从 1 到 3
+    // 创建一个 publisher，每 200 毫秒生产一个数字，从 1 到 3
     val source = publish<Int> {
     //           ^^^^^^^  <--- 这里与先前的示例不同
         println("Begin") // 在输出中标记协程开始运行
@@ -353,7 +353,7 @@ fun main() = runBlocking<Unit> {
         .observeOn(Schedulers.io(), false, 1) // 指定缓冲区大小为 1 个元素
         .doOnComplete { println("Complete") }
         .subscribe { x ->
-            Thread.sleep(500) // 处理每个元素消耗500毫秒
+            Thread.sleep(500) // 处理每个元素消耗 500 毫秒
             println("Processed $x")
         }
     delay(2000) // 挂起主线程几秒钟
@@ -782,7 +782,7 @@ fun CoroutineScope.rangeWithInterval(time: Long, start: Int, count: Int) = publi
 ```kotlin
 fun CoroutineScope.testPub() = publish<Publisher<Int>> {
     send(rangeWithInterval(250, 1, 4)) // 数字 1 在 250 毫秒发射，2 在 500 毫秒，3 在 750 毫秒，4 在 1000 毫秒 
-    delay(100) // 等待100毫秒
+    delay(100) // 等待 100 毫秒
     send(rangeWithInterval(500, 11, 3)) // 数字 11 在 600 毫秒，12 在 1100 毫秒，13 在 1600 毫秒
     delay(1100) // 在启动完成后的 1.2 秒之后等待 1.1 秒
 }
