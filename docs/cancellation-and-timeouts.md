@@ -101,7 +101,7 @@ fun main() = runBlocking {
     val job = launch(Dispatchers.Default) {
         var nextPrintTime = startTime
         var i = 0
-        while (i < 5) { // 一个执行计算的循环，只是为了占用CPU
+        while (i < 5) { // 一个执行计算的循环，只是为了占用 CPU
             // 每秒打印消息两次
             if (System.currentTimeMillis() >= nextPrintTime) {
                 println("I'm sleeping ${i++} ...")

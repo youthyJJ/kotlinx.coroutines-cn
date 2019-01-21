@@ -155,7 +155,7 @@ fun setup(hello: Text, fab: Circle) {
 
 ```kotlin
 fun setup(hello: TextView, fab: FloatingActionButton) {
-    // placeholder
+    // 占位
 }
 ```
 
@@ -224,7 +224,7 @@ fun setup(hello: Text, fab: Circle) {
 ```kotlin
 fun setup(hello: Text, fab: Circle) {
     val job = GlobalScope.launch(Dispatchers.Main) { // 在主线程中启动协程
-        for (i in 10 downTo 1) { // 从 10 到 1 的倒数
+        for (i in 10 downTo 1) { // 从 10 到 1 的倒计时
             hello.text = "Countdown $i ..." // 更新文本
             delay(500) // 等待半秒钟
         }
@@ -251,7 +251,7 @@ fab.setOnClickListener { job.cancel() }  // 在点击时取消协程
 
 ## 在 UI 上下文中使用 actors
 
-在本节中，我们将展示 UI 应用程序如何在其UI上下文中使用 actor 以确保<!--
+在本节中，我们将展示 UI 应用程序如何在其 UI 上下文中使用 actor 以确保<!--
 -->被启动的协程的数量没有无限制的增长。
 
 ### 协程扩展
