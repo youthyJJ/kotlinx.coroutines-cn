@@ -396,7 +396,7 @@ import io.reactivex.subjects.BehaviorSubject
 fun main() {
     val subject = BehaviorSubject.create<String>()
     subject.onNext("one")
-    subject.onNext("two") // 更新 BehaviorSubject 的状态，“one"” 变量被丢弃
+    subject.onNext("two") // 更新 BehaviorSubject 的状态，“one”变量被丢弃
     // 现在订阅这个主题并打印所有信息
     subject.subscribe(System.out::println)
     subject.onNext("three")
