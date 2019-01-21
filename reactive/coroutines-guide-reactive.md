@@ -94,11 +94,11 @@ import kotlin.coroutines.*
 
 ```kotlin
 fun main() = runBlocking<Unit> {
-    // 创建一个通道，该通道每200毫秒生产一个数字，从1到3
+    // 创建一个通道，该通道每200毫秒生产一个数字，从 1 到 3
     val source = produce<Int> {
         println("Begin") // 在输出中标记协程开始运行
         for (x in 1..3) {
-            delay(200) // 等待200毫秒
+            delay(200) // 等待 200 毫秒
             send(x) // 将数字 x 发送到通道中
         }
     }
@@ -151,12 +151,12 @@ import kotlin.coroutines.*
 
 ```kotlin
 fun main() = runBlocking<Unit> {
-    // 创建一个 publisher，每200毫秒生产一个数字，从1到3
+    // 创建一个 publisher，每200毫秒生产一个数字，从 1 到 3
     val source = publish<Int> {
     //           ^^^^^^^  <--- 这里与先前的示例不同
         println("Begin") // 在输出中标记协程开始运行
         for (x in 1..3) {
-            delay(200) // 等待200毫秒
+            delay(200) // 等待 200 毫秒
             send(x) // 将数字 x 发送到通道中
         }
     }
@@ -322,15 +322,15 @@ _恢复_ 了主协程，它被分派到主线程上打印出来
 在 Rx Java 2.x 中一个支持背压的类被称为
 [Flowable](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html)。
 在下面的示例中我们可以使用 `kotlinx-coroutines-rx2` 模块中的协程构建器 [rxFlowable] 来定义一个
-发送从1到3三个整数的 flowable。 
+发送从 1 到 3 三个整数的 flowable。 
 在调用挂起的 [send][SendChannel.send] 函数之前，
 它在输出中打印了一条消息，所以我们可以来研究它是如何操作的。
 
 这些整数在主线程的上下文中被产生，
 但是在使用 Rx 的
 [observeOn](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#observeOn(io.reactivex.Scheduler,%20boolean,%20int))
-操作符后缓冲区大小为1的订阅被转移到了另一个线程。
-为了模拟订阅者很慢，它使用了 `Thread.sleep` 来模拟消耗500毫秒来处理每个元素。
+操作符后缓冲区大小为 1 的订阅被转移到了另一个线程。
+为了模拟订阅者很慢，它使用了 `Thread.sleep` 来模拟消耗 500 毫秒来处理每个元素。
 
 <!--- INCLUDE
 import io.reactivex.schedulers.*
@@ -350,7 +350,7 @@ fun main() = runBlocking<Unit> {
     }
     // 使用 Rx 让一个处理速度很慢的订阅者在另一个线程订阅
     source
-        .observeOn(Schedulers.io(), false, 1) // 指定缓冲区大小为1个元素
+        .observeOn(Schedulers.io(), false, 1) // 指定缓冲区大小为 1 个元素
         .doOnComplete { println("Complete") }
         .subscribe { x ->
             Thread.sleep(500) // 处理每个元素消耗500毫秒
@@ -715,8 +715,8 @@ fun CoroutineScope.rangeWithInterval(time: Long, start: Int, count: Int) = publi
 
 ```kotlin
 fun main() = runBlocking<Unit> {
-    val slowNums = rangeWithInterval(200, 1, 10)         // 数字之间有200毫秒的间隔
-    val stop = rangeWithInterval(500, 1, 10)             // 第一个在500毫秒之后
+    val slowNums = rangeWithInterval(200, 1, 10)         // 数字之间有 200 毫秒的间隔
+    val stop = rangeWithInterval(500, 1, 10)             // 第一个在 500 毫秒之后
     slowNums.takeUntil(coroutineContext, stop).consumeEach { println(it) } // 让我们测试它
 }
 ```
@@ -781,10 +781,10 @@ fun CoroutineScope.rangeWithInterval(time: Long, start: Int, count: Int) = publi
 
 ```kotlin
 fun CoroutineScope.testPub() = publish<Publisher<Int>> {
-    send(rangeWithInterval(250, 1, 4)) // 数字1在250毫秒发射，2在500毫秒，3在750毫秒，4在1000毫秒 
+    send(rangeWithInterval(250, 1, 4)) // 数字 1 在 250 毫秒发射，2 在 500 毫秒，3 在 750 毫秒，4 在 1000 毫秒 
     delay(100) // 等待100毫秒
-    send(rangeWithInterval(500, 11, 3)) // 数字11在600毫秒，12在1100毫秒，13在1600毫秒
-    delay(1100) // 在启动完成后的1.2秒之后等待1.1秒
+    send(rangeWithInterval(500, 11, 3)) // 数字 11 在 600 毫秒，12 在 1100 毫秒，13 在 1600 毫秒
+    delay(1100) // 在启动完成后的 1.2 秒之后等待 1.1 秒
 }
 ```
 

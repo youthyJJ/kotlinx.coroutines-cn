@@ -198,7 +198,7 @@ import kotlinx.coroutines.javafx.JavaFx as Main
 ```kotlin
 fun setup(hello: Text, fab: Circle) {
     GlobalScope.launch(Dispatchers.Main) { // 在主线程中启动协程
-        for (i in 10 downTo 1) { // 从10到1的倒计时
+        for (i in 10 downTo 1) { // 从 10 到 1 的倒计时
             hello.text = "Countdown $i ..." // 更新文本
             delay(500) // 等待半秒钟
         }
@@ -262,7 +262,7 @@ fab.setOnClickListener { job.cancel() }  // 在点击时取消协程
 ```kotlin
 fun setup(hello: Text, fab: Circle) {
     fab.onClick { // 当圆形按钮被点击的时候启动协程
-        for (i in 10 downTo 1) { // 从10到1的倒记时
+        for (i in 10 downTo 1) { // 从 10 到 1 的倒记时
             hello.text = "Countdown $i ..." // 更新文本
             delay(500) // 等待半秒钟
         }
@@ -442,7 +442,7 @@ fun setup(hello: Text, fab: Circle) {
         var counter = 0
         while (true) {
             hello.text = "${++counter}: $result"
-            delay(100) // 每100毫秒更新一次文本
+            delay(100) // 每 100 毫秒更新一次文本
         }
     }
     // 在每次点击时计算下一个斐波那契数
@@ -457,7 +457,7 @@ fun setup(hello: Text, fab: Circle) {
 > 你可以从[这里](kotlinx-coroutines-javafx/test/guide/example-ui-blocking-01.kt)获得完整的 JavaFx 代码。
   你可以只拷贝 `fib` 函数和 `setup` 函数的函数体到你的 Android 工程中。
 
-尝试在这个例子中点击圆形按钮。在大约30到40次点击后我们的简单计算将会变得<!--
+尝试在这个例子中点击圆形按钮。在大约 30 到 40 次点击后我们的简单计算将会变得<!--
 -->非常缓慢并且你会立即看到 UI 主线程是如何冻结的，因为动画会在 UI 冻结期间<!--
 -->停止运行。
 
@@ -570,7 +570,7 @@ fun setup(hello: Text, fab: Circle) {
         var counter = 0
         while (true) {
             hello.text = "${++counter}: $result"
-            delay(100) // 每100毫秒更新一次文本
+            delay(100) // 每 100 毫秒更新一次文本
         }
     }
     // 在每次点击时计算下一个斐波那契数
