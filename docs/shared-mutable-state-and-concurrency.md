@@ -377,7 +377,7 @@ Counter = 100000
 
 该问题的互斥解决方案：使用永远不会同时执行的 _关键代码块_
 来保护共享状态的所有修改。在阻塞的世界中，你通常会为此目的使用 `synchronized` 或者 `ReentrantLock`。
-在协程中的替代品叫做 [Mutex] 。它具有 [lock][Mutex.lock]  和 [unlock][Mutex.unlock] 方法，
+在协程中的替代品叫做 [Mutex] 。它具有 [lock][Mutex.lock] 和 [unlock][Mutex.unlock] 方法，
 可以隔离关键的部分。关键的区别在于 `Mutex.lock()` 是一个挂起函数，它不会阻塞线程。
 
 还有 [withLock] 扩展函数，可以方便的替代常用的
