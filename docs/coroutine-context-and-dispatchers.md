@@ -376,7 +376,7 @@ fun main() = runBlocking<Unit> {
     val request = launch {
         repeat(3) { i -> // 启动少量的子任务
             launch  {
-                delay((i + 1) * 200L) // 延迟200毫秒、400毫秒、600毫秒的时间
+                delay((i + 1) * 200L) // 延迟 200 毫秒、400 毫秒、600 毫秒的时间
                 println("Coroutine $i is done")
             }
         }
@@ -541,10 +541,10 @@ class Activity : CoroutineScope {
 ```kotlin
     // 在 Activity 类中
     fun doSomething() {
-        // 在示例中启动了10个协程，且每个都工作了不同的时长
+        // 在示例中启动了 10 个协程，且每个都工作了不同的时长
         repeat(10) { i ->
             launch {
-                delay((i + 1) * 200L) // 延迟200毫秒、400毫秒、600毫秒等等不同的时间
+                delay((i + 1) * 200L) // 延迟 200 毫秒、400 毫秒、600 毫秒等等不同的时间
                 println("Coroutine $i is done")
             }
         }
@@ -554,7 +554,7 @@ class Activity : CoroutineScope {
 
 
 
-在我们的 main 函数中我们创建了 activity，调用我们的 `doSomething` 测试函数，并在500毫秒后销毁 activity，
+在我们的 main 函数中我们创建了 activity，调用我们的 `doSomething` 测试函数，并在 500 毫秒后销毁 activity，
 所有已经启动了的协程都被取消了，如果我们等待的话可以确认没有任何东西被打印<!--
 -->在屏幕上：
 
@@ -585,10 +585,10 @@ class Activity : CoroutineScope {
 
     // Activity 类继续
     fun doSomething() {
-        // 在示例中启动了10个协程，且每个都工作了不同的时长
+        // 在示例中启动了 10 个协程，且每个都工作了不同的时长
         repeat(10) { i ->
             launch {
-                delay((i + 1) * 200L) // 延迟200毫秒、400毫秒、600毫秒等等不同的时间
+                delay((i + 1) * 200L) // 延迟 200 毫秒、400 毫秒、600 毫秒等等不同的时间
                 println("Coroutine $i is done")
             }
         }

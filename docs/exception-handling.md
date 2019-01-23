@@ -250,7 +250,7 @@ Caught java.lang.ArithmeticException
 ### 异常聚合
 
 如果一个协程的多个子协程抛出异常将会发生什么？
-通常的规则是 “第一个异常赢得了胜利”，所以第一个被抛出的异常将会暴露给处理者。
+通常的规则是“第一个异常赢得了胜利”，所以第一个被抛出的异常将会暴露给处理者。
 但也许这会是异常丢失的原因，比如说一个协程在 `finally` 块中抛出了一个异常。
 这时，多余的异常将会被压制。
 
@@ -380,7 +380,7 @@ import kotlinx.coroutines.*
 fun main() = runBlocking {
     val supervisor = SupervisorJob()
     with(CoroutineScope(coroutineContext + supervisor)) {
-        // 启动第一个子任务--这个示例将会忽略它的异常（不要在实践中这么做！）
+        // 启动第一个子任务——这个示例将会忽略它的异常（不要在实践中这么做！）
         val firstChild = launch(CoroutineExceptionHandler { _, _ ->  }) {
             println("First child is failing")
             throw AssertionError("First child is cancelled")

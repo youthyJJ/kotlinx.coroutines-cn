@@ -60,10 +60,10 @@ fun main() = runBlocking {
 //sampleStart
     val channel = Channel<Int>()
     launch {
-        // 这里可能是消耗大量CPU运算的异步逻辑，我们将仅仅做5次整数的平方并发送
+        // 这里可能是消耗大量 CPU 运算的异步逻辑，我们将仅仅做 5 次整数的平方并发送
         for (x in 1..5) channel.send(x * x)
     }
-    // 这里我们打印了5次被接收的整数：
+    // 这里我们打印了 5 次被接收的整数：
     repeat(5) { println(channel.receive()) }
     println("Done!")
 //sampleEnd
@@ -181,7 +181,7 @@ Done!
 ```kotlin
 fun CoroutineScope.produceNumbers() = produce<Int> {
     var x = 1
-    while (true) send(x++) // 在流中开始从1生产无穷多个整数
+    while (true) send(x++) // 在流中开始从 1 生产无穷多个整数
 }
 ```
 
@@ -212,9 +212,9 @@ import kotlinx.coroutines.channels.*
 
 fun main() = runBlocking {
 //sampleStart
-    val numbers = produceNumbers() // 从1开始生产整数
+    val numbers = produceNumbers() // 从 1 开始生产整数
     val squares = square(numbers) // 对整数做平方
-    for (i in 1..5) println(squares.receive()) // 打印前5个数字
+    for (i in 1..5) println(squares.receive()) // 打印前 5 个数字
     println("Done!") // 我们的操作已经结束了
     coroutineContext.cancelChildren() // 取消子协程
 //sampleEnd
@@ -222,7 +222,7 @@ fun main() = runBlocking {
 
 fun CoroutineScope.produceNumbers() = produce<Int> {
     var x = 1
-    while (true) send(x++) // 从1开始的无限的整数流
+    while (true) send(x++) // 从 1 开始的无限的整数流
 }
 
 fun CoroutineScope.square(numbers: ReceiveChannel<Int>): ReceiveChannel<Int> = produce {
@@ -276,7 +276,7 @@ fun CoroutineScope.filter(numbers: ReceiveChannel<Int>, prime: Int) = produce<In
 
 
 
-现在我们开启了一个从2开始的数字流管道，从当前的通道中取一个素数，
+现在我们开启了一个从 2 开始的数字流管道，从当前的通道中取一个素数，
 并为每一个我们发现的素数启动一个流水线阶段：
  
 ```
@@ -365,10 +365,10 @@ fun CoroutineScope.filter(numbers: ReceiveChannel<Int>, prime: Int) = produce<In
 
 ```kotlin
 fun CoroutineScope.produceNumbers() = produce<Int> {
-    var x = 1 // 从1开始
+    var x = 1 // 从 1 开始
     while (true) {
         send(x++) // 产生下一个数字
-        delay(100) // 等待0.1秒
+        delay(100) // 等待 0.1 秒
     }
 }
 ```
@@ -413,7 +413,7 @@ fun CoroutineScope.produceNumbers() = produce<Int> {
     var x = 1 // start from 1
     while (true) {
         send(x++) // 产生下一个数字
-        delay(100) // 等待0.1秒
+        delay(100) // 等待 0.1 秒
     }
 }
 
@@ -560,7 +560,7 @@ fun main() = runBlocking<Unit> {
 
 > 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-channel-08.kt)获得完整代码
 
-使用缓冲通道并给 capacity 参数传入 _四_ 它将打印 “sending” _五_ 次：
+使用缓冲通道并给 capacity 参数传入 _四_ 它将打印“sending” _五_ 次：
 
 ```text
 Sending 0
@@ -578,7 +578,7 @@ Sending 4
 
 发送和接收操作是 _公平的_ 并且尊重调用它们的<!--
 -->多个协程。它们遵守先进先出原则，可以看到第一个协程调用 `receive`
-并得到了元素。在下面的例子中两个协程 “乒” 和 "乓" 都<!--
+并得到了元素。在下面的例子中两个协程“乒”和“乓”都<!--
 -->从共享的“桌子”通道接收到这个“球”元素。
 
 
@@ -596,7 +596,7 @@ fun main() = runBlocking {
     launch { player("ping", table) }
     launch { player("pong", table) }
     table.send(Ball(0)) // 乒乓球
-    delay(1000) // 延迟1秒钟
+    delay(1000) // 延迟 1 秒钟
     coroutineContext.cancelChildren() // 游戏结束，取消它们
 }
 
