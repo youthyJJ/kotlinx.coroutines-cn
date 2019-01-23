@@ -58,13 +58,13 @@ fun CoroutineScope.fizz() = produce<String> {
 
 </div>
 
-接着 `buzz` 每500毫秒生成一个 “Buzz!” 字符串：
+接着 `buzz` 每 500 毫秒生成一个 “Buzz!” 字符串：
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
 
 ```kotlin
 fun CoroutineScope.buzz() = produce<String> {
-    while (true) { // 每500毫秒发送一个 "Buzz!"
+    while (true) { // 每 500 毫秒发送一个 "Buzz!"
         delay(500)
         send("Buzz!")
     }
@@ -106,14 +106,14 @@ import kotlinx.coroutines.channels.*
 import kotlinx.coroutines.selects.*
 
 fun CoroutineScope.fizz() = produce<String> {
-    while (true) { // 每300毫秒发送一个 "Fizz"
+    while (true) { // 每 300 毫秒发送一个 "Fizz"
         delay(300)
         send("Fizz")
     }
 }
 
 fun CoroutineScope.buzz() = produce<String> {
-    while (true) { // 每500毫秒发送一个 "Buzz!"
+    while (true) { // 每 500 毫秒发送一个 "Buzz!"
         delay(500)
         send("Buzz!")
     }
@@ -189,8 +189,8 @@ suspend fun selectAorB(a: ReceiveChannel<String>, b: ReceiveChannel<String>): St
 
 </div>
 
-现在有一个生成四次 “Hello” 字符串的 `a` 通道，
-和一个生成四次 “World” 字符串的 `b` 通道，我们在这两个通道上使用它：
+现在有一个生成四次“Hello”字符串的 `a` 通道，
+和一个生成四次“World”字符串的 `b` 通道，我们在这两个通道上使用它：
 
 <!--- CLEAR -->
 
@@ -274,8 +274,8 @@ Select 表达式具有 [onSend][SendChannel.onSend] 子句，可以很好的与<
 
 ```kotlin
 fun CoroutineScope.produceNumbers(side: SendChannel<Int>) = produce<Int> {
-    for (num in 1..10) { // 生产从 1 到 10 的10个数值
-        delay(100) // 延迟100毫秒
+    for (num in 1..10) { // 生产从 1 到 10 的 10 个数值
+        delay(100) // 延迟 100 毫秒
         select<Unit> {
             onSend(num) {} // 发送到主通道
             side.onSend(num) {} // 或者发送到 side 通道
@@ -298,8 +298,8 @@ import kotlinx.coroutines.channels.*
 import kotlinx.coroutines.selects.*
 
 fun CoroutineScope.produceNumbers(side: SendChannel<Int>) = produce<Int> {
-    for (num in 1..10) { // 生产从 1 到 10 的10个数值
-        delay(100) // 延迟100毫秒
+    for (num in 1..10) { // 生产从 1 到 10 的 10 个数值
+        delay(100) // 延迟 100 毫秒
         select<Unit> {
             onSend(num) {} // 发送到主通道
             side.onSend(num) {} // 或者发送到 side 通道
