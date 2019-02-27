@@ -51,7 +51,7 @@ class GuideReactiveTest : ReactiveTestBase() {
   * [迭代的基础](#迭代的基础)
   * [订阅与取消](#订阅与取消)
   * [背压](#背压)
-  * [Rx 主题 vs 广播通道](#rx-subject-vs-broadcastchannel)
+  * [Rx 主题 vs 广播通道](#rx-主题-vs-广播通道)
 * [操作符](#操作符)
   * [Range](#range)
   * [熔合 filter 与 map 操作符](#熔合-filter-与-map-操作符)
