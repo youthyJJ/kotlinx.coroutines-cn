@@ -47,22 +47,22 @@ class GuideReactiveTest : ReactiveTestBase() {
 
 <!--- TOC -->
 
-* [响应式流与通道的区别](#differences-between-reactive-streams-and-channels)
-  * [迭代的基础](#basics-of-iteration)
-  * [订阅与取消](#subscription-and-cancellation)
-  * [背压](#backpressure)
+* [响应式流与通道的区别](#响应式流与通道的区别)
+  * [迭代的基础](#迭代的基础)
+  * [订阅与取消](#订阅与取消)
+  * [背压](#背压)
   * [Rx 主题 vs 广播通道](#rx-subject-vs-broadcastchannel)
-* [操作符](#operators)
+* [操作符](#操作符)
   * [Range](#range)
-  * [熔合 filter 与 map 操作符](#fused-filter-map-hybrid)
+  * [熔合 filter 与 map 操作符](#熔合-filter-与-map-操作符)
   * [Take until](#take-until)
   * [Merge](#merge)
-* [协程上下文](#coroutine-context)
-  * [线程与 Rx](#threads-with-rx)
-  * [线程与协程](#threads-with-coroutines)
+* [协程上下文](#协程上下文)
+  * [线程与 Rx](#线程与-rx)
+  * [线程与协程](#线程与协程)
   * [Rx observeOn](#rx-observeon)
-  * [使用协程上下文来管理它们](#coroutine-context-to-rule-them-all)
-  * [不受限的上下文](#unconfined-context)
+  * [使用协程上下文来管理它们](#使用协程上下文来管理它们)
+  * [不受限的上下文](#不受限的上下文)
 
 <!--- END_TOC -->
 
