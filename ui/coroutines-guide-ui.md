@@ -83,22 +83,22 @@ class ExampleApp : Application() {
 
 <!--- TOC -->
 
-* [体系](#setup)
+* [体系](#体系)
   * [JavaFx](#javafx)
   * [Android](#android)
-* [UI 协程基础](#basic-ui-coroutines)
-  * [启动 UI 协程](#launch-ui-coroutine)
-  * [取消 UI 协程](#cancel-ui-coroutine)
-* [在 UI 上下文中使用 actors](#using-actors-within-ui-context)
-  * [协程扩展](#extensions-for-coroutines)
-  * [最多一个并发任务](#at-most-one-concurrent-job)
-  * [事件归并](#event-conflation)
-* [阻塞操作](#blocking-operations)
-  * [UI 冻结的问题](#the-problem-of-ui-freezes)
-  * [结构化并发，生命周期以及协程父子层级结构](#structured-concurrency-lifecycle-and-coroutine-parent-child-hierarchy)
-  * [阻塞操作](#blocking-operations)
-* [高级主题](#advanced-topics)
-  * [没有调度器时在 UI 事件处理器中启动协程](#starting-coroutine-in-ui-event-handlers-without-dispatch)
+* [UI 协程基础](#ui-协程基础)
+  * [启动 UI 协程](#启动-ui-协程)
+  * [取消 UI 协程](#取消-ui-协程)
+* [在 UI 上下文中使用 actors](#在-ui-上下文中使用-actors)
+  * [协程扩展](#协程扩展)
+  * [最多一个并发任务](#最多一个并发任务)
+  * [事件归并](#事件归并)
+* [阻塞操作](#阻塞操作)
+  * [UI 冻结的问题](#ui-冻结的问题)
+  * [结构化并发，生命周期以及协程父子层级结构](#结构化并发，生命周期以及协程父子层级结构)
+  * [阻塞操作](#阻塞操作)
+* [高级主题](#高级主题)
+  * [没有调度器时在 UI 事件处理器中启动协程](#没有调度器时在-ui-事件处理器中启动协程)
 
 <!--- END_TOC -->
 
