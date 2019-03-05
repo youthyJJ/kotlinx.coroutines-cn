@@ -405,7 +405,7 @@ fun main() = runBlocking<Unit> {
     val producer = produceNumbers()
     repeat(5) { launchProcessor(it, producer) }
     delay(950)
-    producer.cancel() // 取消协程处理器从而将它们全部杀死
+    producer.cancel() // 取消协程处理者从而将它们全部杀死
 //sampleEnd
 }
 
@@ -428,7 +428,7 @@ fun CoroutineScope.launchProcessor(id: Int, channel: ReceiveChannel<Int>) = laun
 
 > 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-channel-06.kt)获得完整代码
 
-该输出将类似于如下所示，尽管接收的是处理器的 id
+该输出将类似于如下所示，尽管接收的是处理者的 id
 但每个整数也许会不同：
 
 ```
@@ -451,8 +451,8 @@ Processor #3 received 10
 
 还有，注意我们如何使用 `for` 循环显式迭代通道以在 `launchProcessor` 代码中执行扇出。
 与 `consumeEach` 不同，这个 `for` 循环是安全完美地使用多个协程的。如果其中一个处理者<!--
--->协程执行失败，其它的处理器协程仍然会继续处理通道，而通过 `consumeEach`
-编写的处理器始终在正常或非正常完成时消耗（取消）底层通道。
+-->协程执行失败，其它的处理者协程仍然会继续处理通道，而通过 `consumeEach`
+编写的处理者始终在正常或非正常完成时消耗（取消）底层通道。
 
 ### 扇入
 
