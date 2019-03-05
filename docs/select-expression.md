@@ -43,13 +43,13 @@ select 表达式可以同时等待多个挂起函数，并 _选择_
 
 ### 在通道中 select
 
-我们现在有两个字符串生产者：`fizz` 和 `buzz` 。其中 `fizz` 每300毫秒生成一个 “Fizz” 字符串：
+我们现在有两个字符串生产者：`fizz` 和 `buzz` 。其中 `fizz` 每 300 毫秒生成一个“Fizz”字符串：
 
 
 
 ```kotlin
 fun CoroutineScope.fizz() = produce<String> {
-    while (true) { // 每300毫秒发送一个 "Fizz"
+    while (true) { // 每 300 毫秒发送一个 "Fizz"
         delay(300)
         send("Fizz")
     }
@@ -64,7 +64,7 @@ fun CoroutineScope.fizz() = produce<String> {
 
 ```kotlin
 fun CoroutineScope.buzz() = produce<String> {
-    while (true) { // 每 500 毫秒发送一个 "Buzz!"
+    while (true) { // 每 500 毫秒发送一个"Buzz!"
         delay(500)
         send("Buzz!")
     }
@@ -94,7 +94,7 @@ suspend fun selectFizzBuzz(fizz: ReceiveChannel<String>, buzz: ReceiveChannel<St
 
 
 
-让我们运行代码7次：
+让我们运行代码 7 次：
 
 <!--- CLEAR -->
 
