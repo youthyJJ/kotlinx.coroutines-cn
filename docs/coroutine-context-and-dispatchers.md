@@ -6,8 +6,8 @@
 // This file was automatically generated from coroutines-guide.md by Knit tool. Do not edit.
 package kotlinx.coroutines.guide.$$1$$2
 -->
-<!--- KNIT     ../core/kotlinx-coroutines-core/test/guide/.*\.kt -->
-<!--- TEST_OUT ../core/kotlinx-coroutines-core/test/guide/test/DispatcherGuideTest.kt
+<!--- KNIT     ../kotlinx-coroutines-core/jvm/test/guide/.*\.kt -->
+<!--- TEST_OUT ../kotlinx-coroutines-core/jvm/test/guide/test/DispatcherGuideTest.kt
 // This file was automatically generated from coroutines-guide.md by Knit tool. Do not edit.
 package kotlinx.coroutines.guide.test
 
@@ -30,7 +30,7 @@ class DispatchersGuideTest {
   * [父协程的职责](#父协程的职责)
   * [命名协程以用于调试](#命名协程以用于调试)
   * [组合上下文中的元素](#组合上下文中的元素)
-  * [通过显式任务取消](#通过显式任务取消)
+  * [Coroutine scope](#coroutine-scope)
   * [线程局部数据](#线程局部数据)
 
 <!--- END_TOC -->
@@ -81,7 +81,7 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-context-01.kt)获得完整代码
+> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-01.kt)获得完整代码
 
 它执行后得到了如下输出（也许顺序会有所不同）：
 
@@ -145,7 +145,7 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-context-02.kt)获得完整代码
+> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-02.kt)获得完整代码
 
 执行后的输出：
  
@@ -202,7 +202,7 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-context-03.kt)获得完整代码
+> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-03.kt)获得完整代码
 
 这里有三个协程，其中主协程是 (#1) —— `runBlocking`，
 而另外两个协程计算延期的值 `a` (#2) 和 `b` (#3)。
@@ -253,7 +253,7 @@ fun main() {
 
 </div>
 
-> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-context-04.kt)获得完整代码
+> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-04.kt)获得完整代码
 
 它演示了一些新技术。其中一个使用 [runBlocking] 来显式指定了一个上下文，并且<!--
 -->另一个使用 [withContext] 函数来改变协程的上下文，而仍然驻留在相同的<!--
@@ -289,7 +289,7 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-context-05.kt)获得完整代码
+> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-05.kt)获得完整代码
 
 当它运行于[调试模式](#调试协程与线程)时将处理一些任务：
 
@@ -347,7 +347,7 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-context-06.kt)获得完整代码
+> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-06.kt)获得完整代码
 
 这段代码的输出如下：
 
@@ -390,7 +390,7 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-context-07.kt)获得完整代码
+> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-07.kt)获得完整代码
 
 结果如下所示：
 
@@ -442,7 +442,7 @@ fun main() = runBlocking(CoroutineName("main")) {
 
 </div>
 
-> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-context-08.kt)获得完整代码
+> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-08.kt)获得完整代码
 
 程序执行使用了 `-Dkotlinx.coroutines.debug` JVM 参数，输出如下所示：
  
@@ -477,7 +477,7 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-context-09.kt)获得完整代码
+> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-09.kt)获得完整代码
 
 这段代码使用了 `-Dkotlinx.coroutines.debug` JVM 参数，输出如下所示：
 
@@ -487,48 +487,44 @@ I'm working in thread DefaultDispatcher-worker-1 @test#2
 
 <!--- TEST FLEXIBLE_THREAD -->
 
-### 通过显式任务取消
+### Coroutine scope
 
 让我们把有关上下文、子协程以及任务的知识梳理一下。假设我们的应用程序中有<!--
 -->一个在生命周期中的对象，但这个对象并不是协程。假如，我们写了一个 Android 应用程序<!--
 -->并在上下文中启动了多个协程来为 Android activity 进行异步操作来拉取<!--
 -->以及更新数据，或作动画等。当 activity 被销毁的时候这些协程必须被取消<!--
--->以防止内存泄漏。
-  
-我们通过创建一个 [Job] 的实例来管理协程的生命周期，并让它与<!--
--->我们的 activity 的生命周期相关联。当一个 activity 被创建的时候一个任务（job）实例被使用 [Job()] 工厂函数<!--
--->创建，并且当这个 activity 被销毁的时候它也被取消，就像下面这样：
+-->以防止内存泄漏。We, of course, can manipulate contexts and jobs manually to tie activity's
+and coroutines lifecycles, but `kotlinx.coroutines` provides an abstraction that encapsulates that: [CoroutineScope].
+You should be already familiar with coroutine scope as all coroutine builders are declared as extensions on it.
 
+We manage a lifecycle of our coroutines by creating an instance of [CoroutineScope] that is tied to
+the lifecycle of our activity. `CoroutineScope` instance can be created by [CoroutineScope()] or [MainScope()]
+factory functions. The former creates a general-purpose scope, while the latter creates scope for UI applications and uses
+[Dispatchers.Main] as default dispatcher:
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
 
 ```kotlin
-class Activity : CoroutineScope {
-    lateinit var job: Job
-
-    fun create() {
-        job = Job()
-    }
+class Activity {
+    private val mainScope = MainScope()
 
     fun destroy() {
-        job.cancel()
+        mainScope.cancel()
     }
     // 继续运行……
 ```
 
 </div>
 
-我们也可以在 `Actvity` 类中实现 [CoroutineScope] 接口。我们只需提供一个覆盖的
-[CoroutineScope.coroutineContext] 属性来在作用域中为协程指定<!--
--->上下文。我们结合所需要的调度器（我们在这个例子中使用 [Dispatchers.Default]）和任务：
+Alternatively, we can implement [CoroutineScope] interface in this `Actvity` class. The best way to do it is
+to use delegation with default factory functions.
+We also can combine the desired dispatcher (we used [Dispatchers.Default] in this example) with the scope:
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
 
 ```kotlin
-    // 在 Activity 类中
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Default + job
-    // 继续运行……
+    class Activity : CoroutineScope by CoroutineScope(Dispatchers.Default) {
+    // to be continued ...
 ```
 
 </div>
@@ -566,24 +562,14 @@ class Activity : CoroutineScope {
 import kotlin.coroutines.*
 import kotlinx.coroutines.*
 
-class Activity : CoroutineScope {
-    lateinit var job: Job
-
-    fun create() {
-        job = Job()
-    }
+class Activity : CoroutineScope by CoroutineScope(Dispatchers.Default) {
 
     fun destroy() {
-        job.cancel()
+        cancel() // Extension on CoroutineScope
     }
     // 继续运行……
 
-    // Activity 类继续
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Default + job
-    // 继续运行……
-
-    // Activity 类继续
+    // class Activity continues
     fun doSomething() {
         // 在示例中启动了 10 个协程，且每个都工作了不同的时长
         repeat(10) { i ->
@@ -598,7 +584,6 @@ class Activity : CoroutineScope {
 fun main() = runBlocking<Unit> {
 //sampleStart
     val activity = Activity()
-    activity.create() // 启动一个 activity
     activity.doSomething() // 运行测试函数
     println("Launched coroutines")
     delay(500L) // 延迟半秒钟
@@ -611,7 +596,7 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-context-10.kt)获得完整代码
+> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-10.kt)获得完整代码
 
 这个示例的输出如下所示：
 
@@ -650,7 +635,7 @@ fun main() = runBlocking<Unit> {
     threadLocal.set("main")
     println("Pre-main, current thread: ${Thread.currentThread()}, thread local value: '${threadLocal.get()}'")
     val job = launch(Dispatchers.Default + threadLocal.asContextElement(value = "launch")) {
-       println("Launch start, current thread: ${Thread.currentThread()}, thread local value: '${threadLocal.get()}'")
+        println("Launch start, current thread: ${Thread.currentThread()}, thread local value: '${threadLocal.get()}'")
         yield()
         println("After yield, current thread: ${Thread.currentThread()}, thread local value: '${threadLocal.get()}'")
     }
@@ -662,7 +647,7 @@ fun main() = runBlocking<Unit> {
 
 </div>                                                                                       
 
-> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-context-11.kt)获得完整代码
+> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-11.kt)获得完整代码
 
 在这个例子中我们使用 [Dispatchers.Default] 在后台线程池中启动了一个新的协程，所以<!--
 -->它工作在线程池中的不同线程中，但它仍然具有线程局部变量的值，
@@ -678,6 +663,10 @@ Post-main, current thread: Thread[main @coroutine#1,5,main], thread local value:
 ```
 
 <!--- TEST FLEXIBLE_THREAD -->
+
+Note how easily one may forget the corresponding context element and then still safely access thread local.
+To avoid such situations, it is recommended to use [ensurePresent] method
+and fail-fast on improper usages.
 
 `ThreadLocal` 具有一流的支持，可以与任何原始的 `kotlinx.coroutines` 一起使用。
 它有一个关键限制：当线程局部发生突变，新值不会传递到协程调用者中
@@ -712,7 +701,10 @@ Post-main, current thread: Thread[main @coroutine#1,5,main], thread local value:
 [CoroutineScope.coroutineContext]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-coroutine-scope/coroutine-context.html
 [Job.join]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-job/join.html
 [CoroutineName]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-coroutine-name/index.html
-[Job()]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-job.html
+[CoroutineScope()]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-coroutine-scope.html
+[MainScope()]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-main-scope.html
+[Dispatchers.Main]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-dispatchers/-main.html
 [asContextElement]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/java.lang.-thread-local/as-context-element.html
+[ensurePresent]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/java.lang.-thread-local/ensure-present.html
 [ThreadContextElement]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-thread-context-element/index.html
 <!--- END -->

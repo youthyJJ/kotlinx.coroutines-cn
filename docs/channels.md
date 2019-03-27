@@ -6,8 +6,8 @@
 // This file was automatically generated from coroutines-guide.md by Knit tool. Do not edit.
 package kotlinx.coroutines.guide.$$1$$2
 -->
-<!--- KNIT     ../core/kotlinx-coroutines-core/test/guide/.*\.kt -->
-<!--- TEST_OUT ../core/kotlinx-coroutines-core/test/guide/test/ChannelsGuideTest.kt
+<!--- KNIT     ../kotlinx-coroutines-core/jvm/test/guide/.*\.kt -->
+<!--- TEST_OUT ../kotlinx-coroutines-core/jvm/test/guide/test/ChannelsGuideTest.kt
 // This file was automatically generated from coroutines-guide.md by Knit tool. Do not edit.
 package kotlinx.coroutines.guide.test
 
@@ -72,7 +72,7 @@ fun main() = runBlocking {
 
 </div>
 
-> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-channel-01.kt)获得完整代码
+> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-channel-01.kt)获得完整代码
 
 这段代码的输出如下：
 
@@ -119,7 +119,7 @@ fun main() = runBlocking {
 
 </div>
 
-> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-channel-02.kt)获得完整代码
+> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-channel-02.kt)获得完整代码
 
 <!--- TEST 
 1
@@ -161,7 +161,7 @@ fun main() = runBlocking {
 
 </div>
 
-> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-channel-03.kt)获得完整代码
+> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-channel-03.kt)获得完整代码
 
 <!--- TEST 
 1
@@ -232,7 +232,7 @@ fun CoroutineScope.square(numbers: ReceiveChannel<Int>): ReceiveChannel<Int> = p
 
 </div>
 
-> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-channel-04.kt)获得完整代码
+> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-channel-04.kt)获得完整代码
 
 <!--- TEST 
 1
@@ -323,7 +323,7 @@ fun CoroutineScope.filter(numbers: ReceiveChannel<Int>, prime: Int) = produce<In
 
 </div>
 
-> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-channel-05.kt)获得完整代码
+> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-channel-05.kt)获得完整代码
 
 这段代码的输出如下：
 
@@ -426,7 +426,7 @@ fun CoroutineScope.launchProcessor(id: Int, channel: ReceiveChannel<Int>) = laun
 
 </div>
 
-> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-channel-06.kt)获得完整代码
+> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-channel-06.kt)获得完整代码
 
 该输出将类似于如下所示，尽管接收的是生产者的 id
 但每个整数也许会不同：
@@ -506,7 +506,7 @@ suspend fun sendString(channel: SendChannel<String>, s: String, time: Long) {
 
 </div>
 
-> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-channel-07.kt)获得完整代码
+> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-channel-07.kt)获得完整代码
 
 输出如下：
 
@@ -558,7 +558,7 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-channel-08.kt)获得完整代码
+> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-channel-08.kt)获得完整代码
 
 使用缓冲通道并给 capacity 参数传入 _四_ 它将打印“sending” _五_ 次：
 
@@ -613,7 +613,7 @@ suspend fun player(name: String, table: Channel<Ball>) {
 
 </div>
 
-> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-channel-09.kt)得到完整代码
+> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-channel-09.kt)得到完整代码
 
 “乒”协程首先被启动，所以它首先接收到了球。甚至虽然“乒”
 协程在将球发送会桌子以后立即开始接收，但是球还是被“乓”
@@ -676,7 +676,7 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-channel-10.kt)获得完整代码
+> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-channel-10.kt)获得完整代码
 
 它的打印如下：
 

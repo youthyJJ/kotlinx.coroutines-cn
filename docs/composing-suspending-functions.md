@@ -6,8 +6,8 @@
 // This file was automatically generated from coroutines-guide.md by Knit tool. Do not edit.
 package kotlinx.coroutines.guide.$$1$$2
 -->
-<!--- KNIT     ../core/kotlinx-coroutines-core/test/guide/.*\.kt -->
-<!--- TEST_OUT ../core/kotlinx-coroutines-core/test/guide/test/ComposingGuideTest.kt
+<!--- KNIT     ../kotlinx-coroutines-core/jvm/test/guide/.*\.kt -->
+<!--- TEST_OUT ../kotlinx-coroutines-core/jvm/test/guide/test/ComposingGuideTest.kt
 // This file was automatically generated from coroutines-guide.md by Knit tool. Do not edit.
 package kotlinx.coroutines.guide.test
 
@@ -97,7 +97,7 @@ suspend fun doSomethingUsefulTwo(): Int {
 
 </div>
 
-> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-compose-01.kt)获得完整代码
+> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-compose-01.kt)获得完整代码
 
 它的打印输出如下：
 
@@ -150,7 +150,7 @@ suspend fun doSomethingUsefulTwo(): Int {
 
 </div>
 
-> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-compose-02.kt)获得完整代码
+> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-compose-02.kt)获得完整代码
 
 它的打印输出如下：
 
@@ -204,7 +204,7 @@ suspend fun doSomethingUsefulTwo(): Int {
 
 </div>
 
-> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-compose-03.kt)获得完整代码
+> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-compose-03.kt)获得完整代码
 
 它的打印输出如下：
 
@@ -301,7 +301,7 @@ suspend fun doSomethingUsefulTwo(): Int {
 
 </div>
 
-> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-compose-04.kt)获得完整代码
+> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-compose-04.kt)获得完整代码
 
 <!--- TEST ARBITRARY_TIME
 The answer is 42
@@ -377,7 +377,7 @@ suspend fun doSomethingUsefulTwo(): Int {
 
 </div>
 
-> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-compose-05.kt)获得完整代码
+> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-compose-05.kt)获得完整代码
 
 从上面的 main 函数的输出可以看出，我们仍然可以同时执行这两个操作：
 
@@ -424,7 +424,7 @@ suspend fun failedConcurrentSum(): Int = coroutineScope {
 
 </div>
 
-> 你可以点击这里[这里](../core/kotlinx-coroutines-core/test/guide/example-compose-06.kt)获得完整代码
+> 你可以点击这里[这里](../kotlinx-coroutines-core/jvm/test/guide/example-compose-06.kt)获得完整代码
 
 注意，当第一个子协程失败的时候第一个 `async` 是如何等待父线程被取消的：
 ```text
