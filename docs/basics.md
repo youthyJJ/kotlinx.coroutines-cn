@@ -6,8 +6,8 @@
 // This file was automatically generated from coroutines-guide.md by Knit tool. Do not edit.
 package kotlinx.coroutines.guide.$$1$$2
 -->
-<!--- KNIT     ../core/kotlinx-coroutines-core/test/guide/.*\.kt -->
-<!--- TEST_OUT ../core/kotlinx-coroutines-core/test/guide/test/BasicsGuideTest.kt
+<!--- KNIT     ../kotlinx-coroutines-core/jvm/test/guide/.*\.kt -->
+<!--- TEST_OUT ../kotlinx-coroutines-core/jvm/test/guide/test/BasicsGuideTest.kt
 // This file was automatically generated from coroutines-guide.md by Knit tool. Do not edit.
 package kotlinx.coroutines.guide.test
 
@@ -58,7 +58,7 @@ fun main() {
 
 
 
-> 你可以点击[这里](https://github.com/hltj/kotlinx.coroutines-cn/blob/master/core/kotlinx-coroutines-core/test/guide/example-basic-01.kt)获得完整代码
+> 你可以点击[这里](https://github.com/hltj/kotlinx.coroutines-cn/blob/master/kotlinx-coroutines-core/jvm/test/guide/example-basic-01.kt)获得完整代码
 
 代码运行的结果：
 
@@ -111,7 +111,7 @@ fun main() {
 
 
 
-> 你可以点击[这里](https://github.com/hltj/kotlinx.coroutines-cn/blob/master/core/kotlinx-coroutines-core/test/guide/example-basic-02.kt)来获得完整代码
+> 你可以点击[这里](https://github.com/hltj/kotlinx.coroutines-cn/blob/master/kotlinx-coroutines-core/jvm/test/guide/example-basic-02.kt)来获得完整代码
 
 <!--- TEST
 Hello,
@@ -141,7 +141,7 @@ fun main() = runBlocking<Unit> { // 开始执行主协程
 
 
 
-> 你可以点击[这里](https://github.com/hltj/kotlinx.coroutines-cn/blob/master/core/kotlinx-coroutines-core/test/guide/example-basic-02b.kt)获得完整代码
+> 你可以点击[这里](https://github.com/hltj/kotlinx.coroutines-cn/blob/master/kotlinx-coroutines-core/jvm/test/guide/example-basic-02b.kt)获得完整代码
 
 <!--- TEST
 Hello,
@@ -196,7 +196,7 @@ fun main() = runBlocking {
 
 
 
-> 你可以点击[这里](https://github.com/hltj/kotlinx.coroutines-cn/blob/master/core/kotlinx-coroutines-core/test/guide/example-basic-03.kt)来获得完整代码
+> 你可以点击[这里](https://github.com/hltj/kotlinx.coroutines-cn/blob/master/kotlinx-coroutines-core/jvm/test/guide/example-basic-03.kt)来获得完整代码
 
 <!--- TEST
 Hello,
@@ -241,7 +241,7 @@ fun main() = runBlocking { // this: CoroutineScope
 
 
 
-> 你可以点击[这里](https://github.com/hltj/kotlinx.coroutines-cn/blob/master/core/kotlinx-coroutines-core/test/guide/example-basic-03s.kt)来获取完整代码
+> 你可以点击[这里](https://github.com/hltj/kotlinx.coroutines-cn/blob/master/kotlinx-coroutines-core/jvm/test/guide/example-basic-03s.kt)来获取完整代码
 
 <!--- TEST
 Hello,
@@ -281,7 +281,7 @@ fun main() = runBlocking { // this: CoroutineScope
 
 
 
-> 你可以点击[这里](https://github.com/hltj/kotlinx.coroutines-cn/blob/master/core/kotlinx-coroutines-core/test/guide/example-basic-04.kt)来获得完整代码
+> 你可以点击[这里](https://github.com/hltj/kotlinx.coroutines-cn/blob/master/kotlinx-coroutines-core/jvm/test/guide/example-basic-04.kt)来获得完整代码
 
 <!--- TEST
 Task from coroutine scope
@@ -317,7 +317,7 @@ suspend fun doWorld() {
 
 
 
-> 你可以点击[这里](https://github.com/hltj/kotlinx.coroutines-cn/blob/master/core/kotlinx-coroutines-core/test/guide/example-basic-05.kt)来获得完整代码
+> 你可以点击[这里](https://github.com/hltj/kotlinx.coroutines-cn/blob/master/kotlinx-coroutines-core/jvm/test/guide/example-basic-05.kt)来获得完整代码
 
 <!--- TEST
 Hello,
@@ -354,7 +354,7 @@ fun main() = runBlocking {
 
 
 
-> 你可以点击[这里](https://github.com/hltj/kotlinx.coroutines-cn/blob/master/core/kotlinx-coroutines-core/test/guide/example-basic-06.kt)来获得完整代码
+> 你可以点击[这里](https://github.com/hltj/kotlinx.coroutines-cn/blob/master/kotlinx-coroutines-core/jvm/test/guide/example-basic-06.kt)来获得完整代码
 
 <!--- TEST lines.size == 1 && lines[0] == ".".repeat(100_000) -->
 
@@ -386,7 +386,7 @@ fun main() = runBlocking {
 
 
 
-> 你可以点击[这里](https://github.com/hltj/kotlinx.coroutines-cn/blob/master/core/kotlinx-coroutines-core/test/guide/example-basic-07.kt)来获取完整代码
+> 你可以点击[这里](https://github.com/hltj/kotlinx.coroutines-cn/blob/master/kotlinx-coroutines-core/jvm/test/guide/example-basic-07.kt)来获取完整代码
 
 你可以运行这个程序并看到它输出了以下三行后终止：
 

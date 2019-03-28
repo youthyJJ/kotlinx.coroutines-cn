@@ -22,21 +22,21 @@ class GuideReactiveTest : ReactiveTestBase() {
 
 这篇教程介绍了 Kotlin 协程与响应式流的不同点并展示了<!--
 -->如何将它们更好的一起使用。在此之前熟悉包含在<!--
--->[协程指南](../docs/coroutines-guide.md)中的基础协程概念不是必须的， 
+-->[协程指南](../docs/coroutines-guide.md)中的基础协程概念不是必须的，
 但如果熟悉它将会是个很大的加分。如果你熟悉响应式流，你可能发现本指南会<!--
 -->更好地介绍协程的世界。
 
 在 `kotlinx.coroutines` 项目中有一系列和响应式流相关的模块：
 
-* [kotlinx-coroutines-reactive](kotlinx-coroutines-reactive) ——为 [Reactive Streams](http://www.reactive-streams.org) 提供的适配
+* [kotlinx-coroutines-reactive](kotlinx-coroutines-reactive) ——为 [Reactive Streams](https://www.reactive-streams.org) 提供的适配
 * [kotlinx-coroutines-reactor](kotlinx-coroutines-reactor) ——为 [Reactor](https://projectreactor.io) 提供的适配
 * [kotlinx-coroutines-rx2](kotlinx-coroutines-rx2) ——为 [RxJava 2.x](https://github.com/ReactiveX/RxJava) 提供的适配
 
-本指南主要基于 [Reactive Streams](http://www.reactive-streams.org) 的规范并使用
+本指南主要基于 [Reactive Streams](https://www.reactive-streams.org) 的规范并使用
 `Publisher` 接口和一些基于 [RxJava 2.x](https://github.com/ReactiveX/RxJava) 的示例，
 该示例实现了响应式流的规范。
 
-欢迎你在 Github 上 clone 
+欢迎你在 Github 上 clone
 [`kotlinx.coroutines` 项目](https://github.com/Kotlin/kotlinx.coroutines)
 到你的工作站中，这是为了<!--
 -->可以运行所有在本指南中展示的示例。它们被包含在项目的
@@ -75,8 +75,8 @@ class GuideReactiveTest : ReactiveTestBase() {
 [Channel] 与如下所示的响应式流类有类似的概念：
 
 * Reactive stream [Publisher](https://github.com/reactive-streams/reactive-streams-jvm/blob/master/api/src/main/java/org/reactivestreams/Publisher.java)；
-* Rx Java 1.x [Observable](http://reactivex.io/RxJava/javadoc/rx/Observable.html)；
-* Rx Java 2.x [Flowable](http://reactivex.io/RxJava/2.x/javadoc/)，`Publisher` 的实现者。
+* Rx Java 1.x [Observable](https://reactivex.io/RxJava/javadoc/rx/Observable.html)；
+* Rx Java 2.x [Flowable](https://reactivex.io/RxJava/2.x/javadoc/)，`Publisher` 的实现者。
 
 它们都描述了一个异步的有限或无限的元素流（在 Rx 中又名 items），
 并且都支持背压。
@@ -131,16 +131,16 @@ Again:
 <!--- TEST -->
 
 注意，“Begin” 只被打印了一次，因为 [produce] _协程构建器_ 被执行的时候，
-只创建了一个协程来生产元素流。所有被生产的元素都被 
-[ReceiveChannel.consumeEach][consumeEach] 
+只创建了一个协程来生产元素流。所有被生产的元素都被
+[ReceiveChannel.consumeEach][consumeEach]
 扩展函数消费。没有办法从这个通道重复<!--
 -->接收元素。当生产者协程结束时该通道被关闭，
 再次尝试接收元素将不会接收到任何东西。
 
 让我们使用 `kotlinx-coroutines-reactive` 模块中的 [publish] 协程构建器 代替 `kotlinx-coroutines-core` 模块中的 [produce]
-来重写这段代码。代码保持相似， 
+来重写这段代码。代码保持相似，
 但是在 `source` 接收 [ReceiveChannel] 类型的地方，现在它接收响应式流的
-[Publisher](http://www.reactive-streams.org/reactive-streams-1.0.0-javadoc/org/reactivestreams/Publisher.html) 
+[Publisher](https://www.reactive-streams.org/reactive-streams-1.0.0-javadoc/org/reactivestreams/Publisher.html)
 类型。
 
 <!--- INCLUDE
@@ -211,8 +211,8 @@ Begin
 -->的细节。
 
 > 注意，我们可以使用 Rx 中的
-[publish](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#publish()) 
-操作符与 [connect](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/flowables/ConnectableFlowable.html#connect())
+[publish](https://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#publish())
+操作符与 [connect](https://reactivex.io/RxJava/2.x/javadoc/io/reactivex/flowables/ConnectableFlowable.html#connect())
 方法来替换我们在通道中所看到的类似的行为。
 
 ### 订阅与取消
@@ -264,7 +264,7 @@ Finally
 来取消订阅响应的订阅源。这里不需要显示的调用 `cancel`——因为
 `consume` 为我们做了这些事。
 添加
-[doFinally](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#doFinally(io.reactivex.functions.Action))
+[doFinally](https://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#doFinally(io.reactivex.functions.Action))
 监听器并打印“Finally”来确认订阅确实被取消了。注意“OnComplete”
 永远不会被打印因为我们没有消费所有的元素。
 
@@ -320,15 +320,15 @@ _恢复_ 了主协程，它被分派到主线程上打印出来
 -->_挂起_ 并且它提供了一个自然的解决方式来处理背压。
 
 在 Rx Java 2.x 中一个支持背压的类被称为
-[Flowable](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html)。
+[Flowable](https://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html)。
 在下面的示例中我们可以使用 `kotlinx-coroutines-rx2` 模块中的协程构建器 [rxFlowable] 来定义一个
-发送从 1 到 3 三个整数的 flowable。 
+发送从 1 到 3 三个整数的 flowable。
 在调用挂起的 [send][SendChannel.send] 函数之前，
 它在输出中打印了一条消息，所以我们可以来研究它是如何操作的。
 
 这些整数在主线程的上下文中被产生，
 但是在使用 Rx 的
-[observeOn](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#observeOn(io.reactivex.Scheduler,%20boolean,%20int))
+[observeOn](https://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#observeOn(io.reactivex.Scheduler,%20boolean,%20int))
 操作符后缓冲区大小为 1 的订阅被转移到了另一个线程。
 为了模拟订阅者很慢，它使用了 `Thread.sleep` 来模拟消耗 500 毫秒来处理每个元素。
 
@@ -385,7 +385,7 @@ Complete
 RxJava 有一个 [主题（Subject）](https://github.com/ReactiveX/RxJava/wiki/Subject) 的概念：一个对象可以有效地向所有<!--
 -->订阅者广播元素。与此相匹配的概念在协程的世界中被称为
 [BroadcastChannel]。在 Rx 中有一种主题——
-[BehaviorSubject](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/subjects/BehaviorSubject.html)
+[BehaviorSubject](https://reactivex.io/RxJava/2.x/javadoc/io/reactivex/subjects/BehaviorSubject.html)
 被用来管理状态：
 
 <!--- INCLUDE
@@ -481,7 +481,7 @@ fun main() = runBlocking<Unit> {
     subject.onNext("three")
     subject.onNext("four")
     yield() // 使主线程让步来启动协程 <--- 这里
-    subject.onComplete() // 现在也结束主题的序列来取消消费者   
+    subject.onComplete() // 现在也结束主题的序列来取消消费者
 }
 ```
 
@@ -517,7 +517,7 @@ fun main() = runBlocking<Unit> {
     broadcast.offer("three")
     broadcast.offer("four")
     yield() // 使主线程让步来启动协程
-    broadcast.close() // 现在也结束主题的序列来取消消费者   
+    broadcast.close() // 现在也结束主题的序列来取消消费者
 }
 ```
 
@@ -532,34 +532,34 @@ four
 <!--- TEST -->
 
 另一个 [BroadcastChannel] 的实现是 `ArrayBroadcastChannel` ——一个使用数组的缓冲区<!--
--->来规定 `capacity`。它可以使用 `BroadcastChannel(capacity)` 来启动。 
+-->来规定 `capacity`。它可以使用 `BroadcastChannel(capacity)` 来启动。
 它为每一个订阅者<!--
 -->自相应订阅开放之时起提供每一个事件。它对应于 Rx 中的
-[PublishSubject](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/subjects/PublishSubject.html)。
+[PublishSubject](https://reactivex.io/RxJava/2.x/javadoc/io/reactivex/subjects/PublishSubject.html)。
 `ArrayBroadcastChannel` 构造函数中的缓冲区的 capacity 参数控制<!--
 -->发送者在挂起等待接收者接收这些元素之前的元素的数量。
 
 ## 操作符
 
-全功能的响应式流库，比如 Rx，都伴随着<!-- 
--->[非常大量的操作符](http://reactivex.io/documentation/operators.html)用于创建、变换、合并<!--
+全功能的响应式流库，比如 Rx，都伴随着<!--
+-->[非常大量的操作符](https://reactivex.io/documentation/operators.html)用于创建、变换、合并<!--
 -->以及反转来处理相关的流。创建你自己的并且支持背压的<!--
--->操作符是非常[臭名昭著](http://akarnokd.blogspot.ru/2015/05/pitfalls-of-operator-implementations.html)以及<!--
+-->操作符是非常[臭名昭著](https://akarnokd.blogspot.ru/2015/05/pitfalls-of-operator-implementations.html)以及<!--
 -->[困难](https://github.com/ReactiveX/RxJava/wiki/Writing-operators-for-2.0)的。
 
-协程与通道则被设计为提供完全相反的体验。这里没有内建的操作符， 
+协程与通道则被设计为提供完全相反的体验。这里没有内建的操作符，
 但是处理元素流是非常简单并且自动支持背压的，
 即使是在你没有明确思考这一点的情况下。
 
-本节将展示以协程为基础而实现的一系列响应式流操作符。 
+本节将展示以协程为基础而实现的一系列响应式流操作符。
 
 ### Range
 
 让我们推出自己的为响应式流 `Publisher` 接口实现的
-[range](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#range(int,%20int))
+[range](https://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#range(int,%20int))
 操作符。为响应式流提供的本操作符从零开始的异步实现<!--
 -->被包含在<!--
--->[这篇博客](http://akarnokd.blogspot.ru/2017/03/java-9-flow-api-asynchronous-integer.html)中。
+-->[这篇博客](https://akarnokd.blogspot.ru/2017/03/java-9-flow-api-asynchronous-integer.html)中。
 它需要很多代码。
 以下是与协同程序相对应的代码：
 
@@ -605,8 +605,8 @@ fun main() = runBlocking<Unit> {
 ### 熔合 filter 与 map 操作符
 
 响应式操作符比如：
-[filter](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#filter(io.reactivex.functions.Predicate)) 以及
-[map](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#map(io.reactivex.functions.Function))
+[filter](https://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#filter(io.reactivex.functions.Predicate)) 以及
+[map](https://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#map(io.reactivex.functions.Function))
 使用协程实现是非常琐碎的。对于一些挑战和展示，让我们将它们合并<!--
 -->到单个的 `fusedFilterMap` 操作符中：
 
@@ -630,7 +630,7 @@ fun <T, R> Publisher<T>.fusedFilterMap(
 }
 ```
 
-使用先前 `range` 中的示例我们可以测试我们的 `fusedFilterMap` 
+使用先前 `range` 中的示例我们可以测试我们的 `fusedFilterMap`
 来过滤偶数以及将它们映射到字符串：
 
 <!--- INCLUDE
@@ -662,8 +662,8 @@ fun main() = runBlocking<Unit> {
 ### Take until
 
 让我们为
-[takeUntil](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#takeUntil(org.reactivestreams.Publisher))
-操作符实现自己的版本。它是非常[难于](http://akarnokd.blogspot.ru/2015/05/pitfalls-of-operator-implementations.html)<!--
+[takeUntil](https://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#takeUntil(org.reactivestreams.Publisher))
+操作符实现自己的版本。它是非常[难于](https://akarnokd.blogspot.ru/2015/05/pitfalls-of-operator-implementations.html)<!--
 -->去实现的，因为需要跟踪和管理两个流的订阅。
 我们需要以来源流中的所有元素直到另一个流也执行完成或<!--
 -->发射了任何东西。然而，我们有 [select] 表达式可以在协程的实现中拯救我们：
@@ -697,9 +697,9 @@ fun <T, U> Publisher<T>.takeUntil(context: CoroutineContext, other: Publisher<U>
 表达式会在退出时关闭通道，并取消订阅相应的发布者。
 
 在下面手写的
-[range](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#range(int,%20int)) 与
-[interval](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#interval(long,%20java.util.concurrent.TimeUnit,%20io.reactivex.Scheduler))
-的组合被用来测试。它在编码中使用 `publish` 协程构建器 
+[range](https://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#range(int,%20int)) 与
+[interval](https://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#interval(long,%20java.util.concurrent.TimeUnit,%20io.reactivex.Scheduler))
+的组合被用来测试。它在编码中使用 `publish` 协程构建器
 （在下一小节中它将是纯 Rx 实现的）：
 
 ```kotlin
@@ -711,7 +711,7 @@ fun CoroutineScope.rangeWithInterval(time: Long, start: Int, count: Int) = publi
 }
 ```
 
-下面的代码展示了 `takeUntil` 是如何工作的： 
+下面的代码展示了 `takeUntil` 是如何工作的：
 
 ```kotlin
 fun main() = runBlocking<Unit> {
@@ -736,8 +736,8 @@ fun main() = runBlocking<Unit> {
 
 使用协程处理多个数据流总是至少有两种方法。一种方法是调用
 [select]，这被展示在先前的示例中。另一种方法是只是启动过个协程。让<!--
--->我们使用 
-[merge](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#merge(org.reactivestreams.Publisher))
+-->我们使用
+[merge](https://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#merge(org.reactivestreams.Publisher))
 操作符来使用第二种的方法：
 
 <!--- INCLUDE
@@ -781,7 +781,7 @@ fun CoroutineScope.rangeWithInterval(time: Long, start: Int, count: Int) = publi
 
 ```kotlin
 fun CoroutineScope.testPub() = publish<Publisher<Int>> {
-    send(rangeWithInterval(250, 1, 4)) // 数字 1 在 250 毫秒发射，2 在 500 毫秒，3 在 750 毫秒，4 在 1000 毫秒 
+    send(rangeWithInterval(250, 1, 4)) // 数字 1 在 250 毫秒发射，2 在 500 毫秒，3 在 750 毫秒，4 在 1000 毫秒
     delay(100) // 等待 100 毫秒
     send(rangeWithInterval(500, 11, 3)) // 数字 11 在 600 毫秒，12 在 1100 毫秒，13 在 1600 毫秒
     delay(1100) // 在启动完成后的 1.2 秒之后等待 1.1 秒
@@ -817,12 +817,12 @@ fun main() = runBlocking<Unit> {
 所有的示例操作符都在先前的示例中显式地设置了
 [CoroutineContext](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/-coroutine-context/) 
 参数。在 Rx 的世界中它大概对应于<!--
--->一个 [Scheduler](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Scheduler.html)。
+-->一个 [Scheduler](https://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Scheduler.html)。
 
 ### 线程与 Rx
 
 下面的示例中展示了基本的在 Rx 中管理线程上下文。
-这里的 `rangeWithIntervalRx` 是`rangeWithInterval` 函数使用 Rx 的 
+这里的 `rangeWithIntervalRx` 是`rangeWithInterval` 函数使用 Rx 的
 `zip`、`range` 以及 `interval` 操作符的一个实现。
 
 <!--- INCLUDE
@@ -849,7 +849,7 @@ fun main() {
 > 你可以从[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-context-01.kt)获得完整代码
 
 我们显式地通过
-[Schedulers.computation()](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/schedulers/Schedulers.html#computation()) 
+[Schedulers.computation()](https://reactivex.io/RxJava/2.x/javadoc/io/reactivex/schedulers/Schedulers.html#computation())
 调度器，并将它用于 `rangeWithIntervalRx` 操作符，所以<!--
 -->它将执行在 Rx 的计算线程池。输出将类似于以下内容：
 
@@ -901,7 +901,7 @@ fun main() {
 <!--- TEST LINES_START -->
 
 这里我们使用了 Rx 的
-[subscribe](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#subscribe(io.reactivex.functions.Consumer))
+[subscribe](https://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#subscribe(io.reactivex.functions.Consumer))
 操作符，没有自己的调度器和操作符并且运行在同一个线程上，而发布者在本示例中<!--
 -->运行在共享的线程池上。
 
@@ -909,11 +909,11 @@ fun main() {
 
 在 Rx 中你操作使用了特别的操作符来为调用链修改线程上下文。
 如果你不熟悉它的话，
-你可以从这篇[很棒的教程](http://tomstechnicalblog.blogspot.ru/2016/02/rxjava-understanding-observeon-and.html)中获得指导。
+你可以从这篇[很棒的教程](https://tomstechnicalblog.blogspot.ru/2016/02/rxjava-understanding-observeon-and.html)中获得指导。
 
 举例来说，这里使用了
-[observeOn](http://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#observeOn(io.reactivex.Scheduler)) 
-操作符。让我们修改先前的示例并观察使用 `Schedulers.computation()` 的效果：  
+[observeOn](https://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#observeOn(io.reactivex.Scheduler))
+操作符。让我们修改先前的示例并观察使用 `Schedulers.computation()` 的效果：
 
 <!--- INCLUDE
 import io.reactivex.*
@@ -1049,7 +1049,7 @@ fun main() = runBlocking<Unit> {
 原本的生产者协程调用 `send` 后会暂停直至不受限的消费者协程运行至下一个<!--
 -->挂起点。这与缺乏 Rx 世界中的锁步单线程 `onNext` 执行<!--
 -->线程切换操作符是非常类似的。这在 Rx 中是默认正常的，因为操作符经常做一些非常小块的<!--
--->工作并且你必须做一些复杂处理来合并大量的操作符。然而，这对于协程来说是不常见的， 
+-->工作并且你必须做一些复杂处理来合并大量的操作符。然而，这对于协程来说是不常见的，
 你可以在一个协程中进行任意复杂的处理。通常，你只需要在多个工作协程之间使用扇入和扇出<!--
 -->来为复杂的流水线链接流处理协程。
 

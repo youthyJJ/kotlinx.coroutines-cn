@@ -6,8 +6,8 @@
 // This file was automatically generated from coroutines-guide.md by Knit tool. Do not edit.
 package kotlinx.coroutines.guide.$$1$$2
 -->
-<!--- KNIT     ../core/kotlinx-coroutines-core/test/guide/.*\.kt -->
-<!--- TEST_OUT ../core/kotlinx-coroutines-core/test/guide/test/SelectGuideTest.kt
+<!--- KNIT     ../kotlinx-coroutines-core/jvm/test/guide/.*\.kt -->
+<!--- TEST_OUT ../kotlinx-coroutines-core/jvm/test/guide/test/SelectGuideTest.kt
 // This file was automatically generated from coroutines-guide.md by Knit tool. Do not edit.
 package kotlinx.coroutines.guide.test
 
@@ -144,7 +144,7 @@ fun main() = runBlocking<Unit> {
 
 
 
-> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-select-01.kt)获得完整代码
+> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-select-01.kt)获得完整代码
 
 这段代码的执行结果如下：
 
@@ -235,7 +235,7 @@ fun main() = runBlocking<Unit> {
 
 
 
-> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-select-02.kt)获得完整代码
+> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-select-02.kt)获得完整代码
 
 这段代码的结果非常有趣，所以我们将在细节中分析它：
 
@@ -325,7 +325,7 @@ fun main() = runBlocking<Unit> {
 
 
 
-> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-select-03.kt)获得完整代码
+> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-select-03.kt)获得完整代码
 
 让我们看看会发生什么：
 
@@ -418,7 +418,7 @@ fun main() = runBlocking<Unit> {
 
 
 
-> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-select-04.kt)获得完整代码
+> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-select-04.kt)获得完整代码
 
 该输出如下：
 
@@ -537,7 +537,7 @@ fun main() = runBlocking<Unit> {
 
 
 
-> 你可以点击[这里](../core/kotlinx-coroutines-core/test/guide/example-select-05.kt)获得完整代码
+> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-select-05.kt)获得完整代码
 
 这段代码的执行结果：
 
