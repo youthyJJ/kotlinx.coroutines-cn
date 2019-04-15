@@ -1,5 +1,28 @@
 # Change log for kotlinx.coroutines
 
+## Version 1.2.0
+
+ * Kotlin updated to 1.3.30.
+ * New API: `CancellableContinuation.resume` with `onCancelling` lambda (#1044) to consistently handle closeable resources.
+ * Play services task version updated to 16.0.1.
+ * `ReceiveChannel.isEmpty` is no longer deprecated
+
+A lot of `Flow` improvements:
+  * Purity property is renamed to context preservation and became more restrictive.
+  * `zip` and `combineLatest` operators.
+  * Integration with RxJava2
+  * `flatMap`, `merge` and `concatenate` are replaced with `flattenConcat`, `flattenMerge`, `flatMapConcat` and `flatMapMerge`.
+  * Various documentation improvements and minor bug fixes.
+  
+Note that `Flow` **is not** leaving its [preview status](/docs/compatibility.md#flow-preview-api).
+  
+## Version 1.2.0-alpha-2
+
+This release contains major [feature preview](/docs/compatibility.md#flow-preview-api): cold streams aka `Flow` (#254). 
+
+Performance:
+* Performance of `Dispatcher.Main` initialization is significantly improved (#878).
+
 ## Version 1.2.0-alpha
 
 * Major debug agent improvements. Real stacktraces are merged with coroutine stacktraces for running coroutines, merging heuristic is improved, API is cleaned up and is on its road to stabilization (#997).
@@ -14,7 +37,6 @@
 * `withContext` checks cancellation on entering (#962).
 * Operator `invoke` on `CoroutineDispatcher` (#428).
 * Java 8 extensions for `delay` and `withTimeout` now properly handle too large values (#428).
-* Performance of `Dispatcher.Main` initialization is significantly improved (#878).
 * A global exception handler for fatal exceptions in coroutines is introduced (#808, #773).
 * Major improvements in cancellation machinery and exceptions delivery consistency. Cancel with custom exception is completely removed.
 * Kotlin version is updated to 1.3.21.
