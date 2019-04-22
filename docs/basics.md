@@ -58,7 +58,7 @@ fun main() {
 
 </div>
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-basic-01.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-basic-01.kt)获取完整代码。
 
 代码运行的结果：
 
@@ -111,7 +111,7 @@ fun main() {
 
 </div>
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-basic-02.kt)来获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-basic-02.kt)获取完整代码。
 
 <!--- TEST
 Hello,
@@ -141,7 +141,7 @@ fun main() = runBlocking<Unit> { // 开始执行主协程
 
 </div>
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-basic-02b.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-basic-02b.kt)获取完整代码。
 
 <!--- TEST
 Hello,
@@ -196,7 +196,7 @@ fun main() = runBlocking {
 
 </div>
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-basic-03.kt)来获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-basic-03.kt)获取完整代码。
 
 <!--- TEST
 Hello,
@@ -231,7 +231,7 @@ World!
 import kotlinx.coroutines.*
 
 fun main() = runBlocking { // this: CoroutineScope
-    launch { // 在 runBlocking 作用域中启动新协程
+    launch { // 在 runBlocking 作用域中启动一个新协程
         delay(1000L)
         println("World!")
     }
@@ -241,7 +241,7 @@ fun main() = runBlocking { // this: CoroutineScope
 
 </div>
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-basic-03s.kt)来获取完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-basic-03s.kt)获取完整代码。
 
 <!--- TEST
 Hello,
@@ -250,7 +250,7 @@ World!
 
 ### 作用域构建器
 除了由不同的构建器提供协程作用域之外，还可以使用
-[coroutineScope] 构建器声明自己的作用域。它会创建新的协程作用域并且在所有已启动子协程执行完毕之前不会<!--
+[coroutineScope] 构建器声明自己的作用域。它会创建一个协程作用域并且在所有已启动子协程执行完毕之前不会<!--
 -->结束。[runBlocking] 与 [coroutineScope] 的主要区别在于后者<!--
 -->在等待所有子协程执行完毕时不会阻塞当前线程。
 
@@ -265,7 +265,7 @@ fun main() = runBlocking { // this: CoroutineScope
         println("Task from runBlocking")
     }
     
-    coroutineScope { // 创建一个新的协程作用域
+    coroutineScope { // 创建一个协程作用域
         launch {
             delay(500L) 
             println("Task from nested launch")
@@ -281,7 +281,7 @@ fun main() = runBlocking { // this: CoroutineScope
 
 </div>
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-basic-04.kt)来获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-basic-04.kt)获取完整代码。
 
 <!--- TEST
 Task from coroutine scope
@@ -317,7 +317,7 @@ suspend fun doWorld() {
 
 </div>
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-basic-05.kt)来获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-basic-05.kt)获取完整代码。
 
 <!--- TEST
 Hello,
@@ -354,7 +354,7 @@ fun main() = runBlocking {
 
 </div>
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-basic-06.kt)来获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-basic-06.kt)获取完整代码。
 
 <!--- TEST lines.size == 1 && lines[0] == ".".repeat(100_000) -->
 
@@ -386,7 +386,7 @@ fun main() = runBlocking {
 
 </div>
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-basic-07.kt)来获取完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-basic-07.kt)获取完整代码。
 
 你可以运行这个程序并看到它输出了以下三行后终止：
 

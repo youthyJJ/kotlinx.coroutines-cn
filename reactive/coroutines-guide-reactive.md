@@ -115,7 +115,7 @@ fun main() = runBlocking<Unit> {
 }
 ```
 
-> 你可以从[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-basic-01.kt)获得完整代码
+> 可以在[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-basic-01.kt)获取完整代码。
 
 这段代码产生了如下输出：
 
@@ -173,7 +173,7 @@ fun main() = runBlocking<Unit> {
 }
 ```
 
-> 你可以从[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-basic-02.kt)获得完整代码
+> 可以在[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-basic-02.kt)获取完整代码。
 
 现在这段代码的输出变为：
 
@@ -246,7 +246,7 @@ fun main() = runBlocking<Unit> {
 }
 ```
 
-> 你可以从[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-basic-03.kt)获得完整代码
+> 可以在[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-basic-03.kt)获取完整代码。
 
 它将产生如下输出：
  
@@ -289,7 +289,7 @@ fun main() = runBlocking<Unit> {
 }
 ```
 
-> 你可以从[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-basic-04.kt)获得完整代码
+> 可以在[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-basic-04.kt)获取完整代码。
 
 我们得到如下输出：
 
@@ -360,7 +360,7 @@ fun main() = runBlocking<Unit> {
 }
 ```
 
-> 你可以从[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-basic-05.kt)获得完整代码
+> 可以在[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-basic-05.kt)获取完整代码。
 
 这段代码的输出更好地说明了背压是如何在协程中工作的：
 
@@ -404,7 +404,7 @@ fun main() {
 }
 ```
 
-> 你可以从[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-basic-06.kt)获得完整代码
+> 可以在[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-basic-06.kt)获取完整代码。
 
 这段代码打印订阅时主题的当前状态及其所有后续更新：
 
@@ -439,7 +439,7 @@ fun main() = runBlocking<Unit> {
 }
 ```   
 
-> 你可以从[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-basic-07.kt)获得完整代码
+> 可以在[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-basic-07.kt)获取完整代码。
 
 结果是相同的：
 
@@ -485,7 +485,7 @@ fun main() = runBlocking<Unit> {
 }
 ```
 
-> 你可以从[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-basic-08.kt)获得完整代码
+> 可以在[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-basic-08.kt)获取完整代码。
 
 现在协程只处理（打印）最近的更新：
 
@@ -521,7 +521,7 @@ fun main() = runBlocking<Unit> {
 }
 ```
 
-> 你可以从[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-basic-09.kt)获得完整代码
+> 可以在[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-basic-09.kt)获取完整代码。
 
 它与基于 `BehaviorSubject` 的先前的示例产生了相同的输出：
 
@@ -588,7 +588,7 @@ fun main() = runBlocking<Unit> {
 }
 ```
 
-> 你可以从[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-operators-01.kt)获得完整代码
+> 可以在[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-operators-01.kt)获取完整代码。
 
 这段代码的结果非常值得我们期待：
    
@@ -648,7 +648,7 @@ fun main() = runBlocking<Unit> {
 }
 ```
 
-> 你可以从[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-operators-02.kt)获得完整代码
+> 可以在[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-operators-02.kt)获取完整代码。
 
 不难看出，结果将是：
 
@@ -721,7 +721,7 @@ fun main() = runBlocking<Unit> {
 }
 ```
 
-> 你可以从[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-operators-03.kt)获得完整代码
+> 可以在[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-operators-03.kt)获取完整代码。
 
 执行
 
@@ -796,7 +796,7 @@ fun main() = runBlocking<Unit> {
 }
 ```
 
-> 你可以从[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-operators-04.kt)获得完整代码
+> 可以在[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-operators-04.kt)获取完整代码。
 
 并且结果应该是：
 
@@ -846,7 +846,7 @@ fun main() {
 }
 ```
 
-> 你可以从[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-context-01.kt)获得完整代码
+> 可以在[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-context-01.kt)获取完整代码。
 
 我们显式地通过
 [Schedulers.computation()](https://reactivex.io/RxJava/2.x/javadoc/io/reactivex/schedulers/Schedulers.html#computation())
@@ -888,7 +888,7 @@ fun main() {
 }
 ```
 
-> 你可以从[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-context-02.kt)获得完整代码
+> 可以在[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-context-02.kt)获取完整代码。
 
 产生的输出将类似于：
 
@@ -939,7 +939,7 @@ fun main() {
 }
 ```
 
-> 你可以从[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-context-03.kt)获得完整代码
+> 可以在[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-context-03.kt)获取完整代码。
 
 这里的输出有所不同了，提示了“RxComputationThreadPool”：
 
@@ -979,7 +979,7 @@ fun main() = runBlocking<Unit> {
 }
 ```
 
-> 你可以从[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-context-04.kt)获得完整代码
+> 可以在[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-context-04.kt)获取完整代码。
 
 结果信息将会被打印在主线程中：
 
@@ -1027,7 +1027,7 @@ fun main() = runBlocking<Unit> {
 }
 ```
 
-> 你可以从[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-context-05.kt)获得完整代码
+> 可以在[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-context-05.kt)获取完整代码。
 
 现在，这段代码中协程执行在了 Rx 的计算线程池并输出，只是<!--
 -->就像我们初始的示例中使用了 Rx 的 `subscribe` 操作符。

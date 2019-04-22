@@ -97,7 +97,7 @@ suspend fun doSomethingUsefulTwo(): Int {
 
 </div>
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-compose-01.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-compose-01.kt)获取完整代码。
 
 它的打印输出如下：
 
@@ -150,7 +150,7 @@ suspend fun doSomethingUsefulTwo(): Int {
 
 </div>
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-compose-02.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-compose-02.kt)获取完整代码。
 
 它的打印输出如下：
 
@@ -204,7 +204,7 @@ suspend fun doSomethingUsefulTwo(): Int {
 
 </div>
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-compose-03.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-compose-03.kt)获取完整代码。
 
 它的打印输出如下：
 
@@ -219,11 +219,11 @@ Completed in 1017 ms
 -->程序员准确的在开始执行时调用 [start][Job.start]。我们首先
 调用 `one`，然后调用 `two`，接下来等待这个协程执行完毕。
 
-注意，如果我们在 `println` 中调用了 [await][Deferred.await] 并且在这个协程中省略调用了
-[start][Job.start]，接下来 [await][Deferred.await] 会开始执行协程并且等待协程执行结束，
-因此我们会得到顺序的行为，但这不是惰性启动的预期用例。
-当调用挂起函数计算值的时候
-`async(start = CoroutineStart.LAZY)` 用例是标准的 `lazy` 函数的替换方案。
+Note that if we have called [await][Deferred.await] in `println` and omitted [start][Job.start] on individual
+coroutines, then we would have got the sequential behaviour as [await][Deferred.await] starts the coroutine 
+execution and waits for the execution to finish, which is not the intended use-case for laziness. 
+The use-case for `async(start = CoroutineStart.LAZY)` is a replacement for the 
+standard `lazy` function in cases when computation of the value involves suspending functions.
 
 ### async 风格的函数
 
@@ -301,7 +301,7 @@ suspend fun doSomethingUsefulTwo(): Int {
 
 </div>
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-compose-04.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-compose-04.kt)获取完整代码。
 
 <!--- TEST ARBITRARY_TIME
 The answer is 42
@@ -377,7 +377,7 @@ suspend fun doSomethingUsefulTwo(): Int {
 
 </div>
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-compose-05.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-compose-05.kt)获取完整代码。
 
 从上面的 main 函数的输出可以看出，我们仍然可以同时执行这两个操作：
 
@@ -424,7 +424,7 @@ suspend fun failedConcurrentSum(): Int = coroutineScope {
 
 </div>
 
-> 你可以点击这里[这里](../kotlinx-coroutines-core/jvm/test/guide/example-compose-06.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-compose-06.kt)获取完整代码。
 
 注意，当第一个子协程失败的时候第一个 `async` 是如何等待父线程被取消的：
 ```text

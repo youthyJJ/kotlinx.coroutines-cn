@@ -48,7 +48,7 @@ class ExceptionsGuideTest {
 -->异常，比如说，通过 [await][Deferred.await] 或 [receive][ReceiveChannel.receive]
 （[produce] 以及 [receive][ReceiveChannel.receive] 在[通道](https://www.kotlincn.net/docs/reference/coroutines/channels.html)中介绍过）。
 
-可以通过一个在 [GlobalScope] 中创建新协程的简单示例来进行演示：
+可以通过一个在 [GlobalScope] 中创建协程的简单示例来进行演示：
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
 
@@ -77,7 +77,7 @@ fun main() = runBlocking {
 
 </div>
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-exceptions-01.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-exceptions-01.kt)获取完整代码。
 
 这段代码的输出如下（[调试](https://github.com/Kotlin/kotlinx.coroutines/blob/master/docs/coroutine-context-and-dispatchers.md#debugging-coroutines-and-threads)）：
 
@@ -130,7 +130,7 @@ fun main() = runBlocking {
 
 </div>
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-exceptions-02.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-exceptions-02.kt)获取完整代码。
 
 这段代码的输出如下：
 
@@ -177,7 +177,7 @@ fun main() = runBlocking {
 
 </div>
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-exceptions-03.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-exceptions-03.kt)获取完整代码。
 
 这段代码的输出如下：
 
@@ -235,7 +235,7 @@ fun main() = runBlocking {
 
 </div>
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-exceptions-04.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-exceptions-04.kt)获取完整代码。
 
 这段代码的输出如下：
 
@@ -295,7 +295,7 @@ fun main() = runBlocking {
 
 </div>
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-exceptions-05.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-exceptions-05.kt)获取完整代码。
 
 > 注意：上面的代码将只在 JDK7 以上支持 `suppressed` 异常的环境中才能正确工作。
 
@@ -345,7 +345,7 @@ fun main() = runBlocking {
 
 </div>
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-exceptions-06.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-exceptions-06.kt)获取完整代码。
 
 这段代码的输出如下：
 
@@ -408,7 +408,7 @@ fun main() = runBlocking {
 
 </div>
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-supervision-01.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-supervision-01.kt)获取完整代码。
 
 这段代码的输出如下：
 
@@ -457,7 +457,7 @@ fun main() = runBlocking {
 
 </div>
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-supervision-02.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-supervision-02.kt)获取完整代码。
 
 这段代码的输出如下：
 
@@ -498,7 +498,7 @@ fun main() = runBlocking {
 
 </div>
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-supervision-03.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-supervision-03.kt)获取完整代码。
 
 这段代码的输出如下：
 
