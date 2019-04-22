@@ -101,7 +101,7 @@ fun main() = runBlocking<Unit> {
 
 
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-sync-01.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-sync-01.kt)获取完整代码。
 
 <!--- TEST LINES_START
 Completed 100000 actions in
@@ -152,7 +152,7 @@ fun main() = runBlocking<Unit> {
 
 
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-sync-01b.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-sync-01b.kt)获取完整代码。
 
 <!--- TEST LINES_START
 Completed 100000 actions in
@@ -198,7 +198,7 @@ fun main() = runBlocking<Unit> {
 
 
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-sync-02.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-sync-02.kt)获取完整代码。
 
 <!--- TEST LINES_START
 Completed 100000 actions in
@@ -253,7 +253,7 @@ fun main() = runBlocking<Unit> {
 
 
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-sync-03.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-sync-03.kt)获取完整代码。
 
 <!--- TEST ARBITRARY_TIME
 Completed 100000 actions in xxx ms
@@ -310,7 +310,7 @@ fun main() = runBlocking<Unit> {
 
 
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-sync-04.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-sync-04.kt)获取完整代码。
 
 <!--- TEST ARBITRARY_TIME
 Completed 100000 actions in xxx ms
@@ -364,7 +364,7 @@ fun main() = runBlocking<Unit> {
 
 
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-sync-05.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-sync-05.kt)获取完整代码。
 
 <!--- TEST ARBITRARY_TIME
 Completed 100000 actions in xxx ms
@@ -423,7 +423,7 @@ fun main() = runBlocking<Unit> {
 
 
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-sync-06.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-sync-06.kt)获取完整代码。
 
 <!--- TEST ARBITRARY_TIME
 Completed 100000 actions in xxx ms
@@ -539,7 +539,7 @@ fun main() = runBlocking<Unit> {
 
 
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-sync-07.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-sync-07.kt)获取完整代码。
 
 <!--- TEST ARBITRARY_TIME
 Completed 100000 actions in xxx ms

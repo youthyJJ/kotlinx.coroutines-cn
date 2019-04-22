@@ -125,7 +125,7 @@ fun setup(hello: Text, fab: Circle) {
 }
 ```
 
-> 你可以从[这里](kotlinx-coroutines-javafx/test/guide/example-ui-basic-01.kt)获得完整代码
+> 可以在[这里](kotlinx-coroutines-javafx/test/guide/example-ui-basic-01.kt)获取完整代码。
 
 你可以在 Github 上 clone [kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines) 这个项目到你的<!--
 -->工作站中并在 IDE 中打开这个项目。所有本教程中的示例都在
@@ -207,7 +207,7 @@ fun setup(hello: Text, fab: Circle) {
 }
 ```
 
-> 你可以从[这里](kotlinx-coroutines-javafx/test/guide/example-ui-basic-02.kt)获得完整代码
+> 可以在[这里](kotlinx-coroutines-javafx/test/guide/example-ui-basic-02.kt)获取完整代码。
 
 所以，这里将发生什么？由于我们在主 UI 上下文中启动协程，我们可以在该协程内部<!--
 -->自如的更新 UI，并同时调用就像 [delay] 这样的 _挂起函数_ 。当 `delay` 函数的等待期间<!--
@@ -234,7 +234,7 @@ fun setup(hello: Text, fab: Circle) {
 }
 ```
 
-> 你可以从[这里](kotlinx-coroutines-javafx/test/guide/example-ui-basic-03.kt)获得完整代码
+> 可以在[这里](kotlinx-coroutines-javafx/test/guide/example-ui-basic-03.kt)获取完整代码。
 
 现在，如果当倒计时仍然在运行时点击圆形按钮，倒计时会停止。
 注意，[Job.cancel] 的调用是完全线程安全和非阻塞的。它仅仅是示意协程取消<!--
@@ -286,7 +286,7 @@ fun Node.onClick(action: suspend (MouseEvent) -> Unit) {
 }
 ```  
 
-> 你可以点击[这里](kotlinx-coroutines-javafx/test/guide/example-ui-actor-01.kt)获得完整代码
+> You can get full code [here](kotlinx-coroutines-javafx/test/guide/example-ui-actor-01.kt).
 
 注意，当每次圆形按钮被点击时，它启动了一个新的协程并都将竞争<!--
 -->更新文本。尝试一下。它看起来并不是非常棒。我们将在稍后修正它。
@@ -328,7 +328,7 @@ fun Node.onClick(action: suspend (MouseEvent) -> Unit) {
 }
 ```  
 
-> 你可以从[这里](kotlinx-coroutines-javafx/test/guide/example-ui-actor-02.kt)获得完整代码
+> 可以在[这里](kotlinx-coroutines-javafx/test/guide/example-ui-actor-02.kt)获取完整代码。
   
 构成协程和常规事件处理程序的集成基础的关键思想是
 [SendChannel] 上的 [offer][SendChannel.offer] 函数不会等待。它会立即将一个元素发送到 actor，
@@ -381,7 +381,7 @@ fun Node.onClick(action: suspend (MouseEvent) -> Unit) {
 }
 ```  
 
-> 你可以从[这里](kotlinx-coroutines-javafx/test/guide/example-ui-actor-03.kt)获得完整代码。
+> 可以在[这里](kotlinx-coroutines-javafx/test/guide/example-ui-actor-03.kt)获取完整代码。
   在 Android 中你需要在前面的示例中更新 `val eventActor = ...` 这一行。
 
 现在，当动画运行中时如果这个圆形按钮被点击，动画将在结束后重新运行。仅仅一次。
@@ -454,7 +454,7 @@ fun setup(hello: Text, fab: Circle) {
 }
 ```
  
-> 你可以从[这里](kotlinx-coroutines-javafx/test/guide/example-ui-blocking-01.kt)获得完整的 JavaFx 代码。
+> 可以在[这里](kotlinx-coroutines-javafx/test/guide/example-ui-blocking-01.kt)获得完整的 JavaFx 代码。
   你可以只拷贝 `fib` 函数和 `setup` 函数的函数体到你的 Android 工程中。
 
 尝试在这个例子中点击圆形按钮。在大约 30 到 40 次点击后我们的简单计算将会变得<!--
@@ -588,7 +588,7 @@ suspend fun fib(x: Int): Int = withContext(Dispatchers.Default) {
 }
 ```
 
-> 你可以从[这里](kotlinx-coroutines-javafx/test/guide/example-ui-blocking-02.kt)获得完整代码。
+> 可以在[这里](kotlinx-coroutines-javafx/test/guide/example-ui-blocking-02.kt)获取完整代码。
 
 你可以运行这段代码并验证当大量的计算斐波那契数时 UI 并不会被冻结。
 然而，这段代码计算 `fib` 有些慢，因为每次递归都会调用 `fib` 去调用 `withContext`。这在<!--
@@ -610,7 +610,7 @@ fun fibBlocking(x: Int): Int =
     if (x <= 1) x else fibBlocking(x - 1) + fibBlocking(x - 2)
 ```
 
-> 你可以从[这里](kotlinx-coroutines-javafx/test/guide/example-ui-blocking-03.kt)获得完整代码。
+> 可以在[这里](kotlinx-coroutines-javafx/test/guide/example-ui-blocking-03.kt)获取完整代码。
 
 现在你可以享受全速的，不阻塞 UI 主线程的简单斐波那契计算。
 我们需要的都在 `withContext(Dispatchers.Default)` 中。
@@ -644,7 +644,7 @@ fun setup(hello: Text, fab: Circle) {
 }
 ```
  
-> 你可以从[这里](kotlinx-coroutines-javafx/test/guide/example-ui-advanced-01.kt)获得完整的 JavaFX 代码。
+> 可以在[这里](kotlinx-coroutines-javafx/test/guide/example-ui-advanced-01.kt)获得完整的 JavaFX 代码。
 
 当我们运行这段代码并点击粉色圆形按钮，下面的信息将会在控制台中打印：
  
@@ -686,7 +686,7 @@ fun setup(hello: Text, fab: Circle) {
 }
 ```
  
-> 你可以从[这里](kotlinx-coroutines-javafx/test/guide/example-ui-advanced-02.kt)获得完整的 JavaFx 代码。
+> 可以在[这里](kotlinx-coroutines-javafx/test/guide/example-ui-advanced-02.kt)获得完整的 JavaFx 代码。
 
 它在点击后将会打印如下信息，确认这段代码在协程启动后会立即执行：
 

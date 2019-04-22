@@ -81,7 +81,7 @@ fun main() = runBlocking<Unit> {
 
 
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-01.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-01.kt)获取完整代码。
 
 它执行后得到了如下输出（也许顺序会有所不同）：
 
@@ -105,7 +105,7 @@ main runBlocking      : I'm working in thread main
 它代表 [Dispatchers.Default] 使用了共享的后台线程池，
 所以 `GlobalScope.launch { …… }` 也可以使用相同的调度器—— `launch(Dispatchers.Default) { …… }`。
   
-[newSingleThreadContext] 为协程的运行启动了一个新的线程。
+[newSingleThreadContext] 为协程的运行启动了一个线程。
 一个专用的线程是一种非常昂贵的资源。
 在真实的应用程序中两者都必须被释放，当不再需要的时候，使用 [close][ExecutorCoroutineDispatcher.close]
 函数，或存储在一个顶级变量中使它在整个应用程序中被重用。
@@ -145,7 +145,7 @@ fun main() = runBlocking<Unit> {
 
 
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-02.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-02.kt)获取完整代码。
 
 执行后的输出：
  
@@ -202,7 +202,7 @@ fun main() = runBlocking<Unit> {
 
 
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-03.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-03.kt)获取完整代码。
 
 这里有三个协程，其中主协程是 (#1) —— `runBlocking`，
 而另外两个协程计算延期的值 `a` (#2) 和 `b` (#3)。
@@ -253,7 +253,7 @@ fun main() {
 
 
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-04.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-04.kt)获取完整代码。
 
 它演示了一些新技术。其中一个使用 [runBlocking] 来显式指定了一个上下文，并且<!--
 -->另一个使用 [withContext] 函数来改变协程的上下文，而仍然驻留在相同的<!--
@@ -289,7 +289,7 @@ fun main() = runBlocking<Unit> {
 
 
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-05.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-05.kt)获取完整代码。
 
 当它运行于[调试模式](#调试协程与线程)时将处理一些任务：
 
@@ -347,7 +347,7 @@ fun main() = runBlocking<Unit> {
 
 
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-06.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-06.kt)获取完整代码。
 
 这段代码的输出如下：
 
@@ -390,7 +390,7 @@ fun main() = runBlocking<Unit> {
 
 
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-07.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-07.kt)获取完整代码。
 
 结果如下所示：
 
@@ -442,7 +442,7 @@ fun main() = runBlocking(CoroutineName("main")) {
 
 
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-08.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-08.kt)获取完整代码。
 
 程序执行使用了 `-Dkotlinx.coroutines.debug` JVM 参数，输出如下所示：
  
@@ -477,7 +477,7 @@ fun main() = runBlocking<Unit> {
 
 
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-09.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-09.kt)获取完整代码。
 
 这段代码使用了 `-Dkotlinx.coroutines.debug` JVM 参数，输出如下所示：
 
@@ -516,7 +516,7 @@ class Activity {
 
 
 
-Alternatively, we can implement [CoroutineScope] interface in this `Actvity` class. The best way to do it is
+Alternatively, we can implement [CoroutineScope] interface in this `Activity` class. The best way to do it is
 to use delegation with default factory functions.
 We also can combine the desired dispatcher (we used [Dispatchers.Default] in this example) with the scope:
 
@@ -596,7 +596,7 @@ fun main() = runBlocking<Unit> {
 
 
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-10.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-10.kt)获取完整代码。
 
 这个示例的输出如下所示：
 
@@ -647,7 +647,7 @@ fun main() = runBlocking<Unit> {
 
 
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-11.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-11.kt)获取完整代码。
 
 在这个例子中我们使用 [Dispatchers.Default] 在后台线程池中启动了一个新的协程，所以<!--
 -->它工作在线程池中的不同线程中，但它仍然具有线程局部变量的值，

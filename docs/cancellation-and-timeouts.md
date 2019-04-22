@@ -64,7 +64,7 @@ fun main() = runBlocking {
 
 
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-cancel-01.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-cancel-01.kt)获取完整代码。
 
 程序执行后的输出如下：
 
@@ -119,7 +119,7 @@ fun main() = runBlocking {
 
 
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-cancel-02.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-cancel-02.kt)获取完整代码。
 
 运行示例代码，并且我们可以看到它连续打印出了“I'm sleeping” ，甚至在调用取消后，
 任务仍然执行了五次循环迭代并运行到了它结束为止。
@@ -171,7 +171,7 @@ fun main() = runBlocking {
 
 
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-cancel-03.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-cancel-03.kt)获取完整代码。
 
 你可以看到，现在循环被取消了。[isActive] 是一个可以被使用在
 [CoroutineScope] 中的扩展属性。
@@ -218,7 +218,7 @@ fun main() = runBlocking {
 
 
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-cancel-04.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-cancel-04.kt)获取完整代码。
 
 [join][Job.join] 和 [cancelAndJoin] 等待了所有的终结动作执行完毕，
 所以运行示例得到了下面的输出：
@@ -274,7 +274,7 @@ fun main() = runBlocking {
 
 
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-cancel-05.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-cancel-05.kt)获取完整代码。
 
 <!--- TEST
 I'm sleeping 0 ...
@@ -313,7 +313,7 @@ fun main() = runBlocking {
 
 
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-cancel-06.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-cancel-06.kt)获取完整代码。
 
 运行后得到如下输出：
 
@@ -357,7 +357,7 @@ fun main() = runBlocking {
 
 
 
-> 你可以点击[这里](../kotlinx-coroutines-core/jvm/test/guide/example-cancel-07.kt)获得完整代码
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-cancel-07.kt)获取完整代码。
 
 运行这段代码时不再抛出异常：
 
