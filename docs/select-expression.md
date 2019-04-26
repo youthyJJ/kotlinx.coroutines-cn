@@ -286,7 +286,7 @@ fun CoroutineScope.produceNumbers(side: SendChannel<Int>) = produce<Int> {
 
 
 
-消费者将会非常缓慢，每个数值处理需要250毫秒：
+消费者将会非常缓慢，每个数值处理需要 250 毫秒：
 
 <!--- CLEAR -->
 

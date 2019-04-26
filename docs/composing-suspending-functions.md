@@ -219,11 +219,11 @@ Completed in 1017 ms
 -->程序员准确的在开始执行时调用 [start][Job.start]。我们首先
 调用 `one`，然后调用 `two`，接下来等待这个协程执行完毕。
 
-Note that if we have called [await][Deferred.await] in `println` and omitted [start][Job.start] on individual
-coroutines, then we would have got the sequential behaviour as [await][Deferred.await] starts the coroutine 
-execution and waits for the execution to finish, which is not the intended use-case for laziness. 
-The use-case for `async(start = CoroutineStart.LAZY)` is a replacement for the 
-standard `lazy` function in cases when computation of the value involves suspending functions.
+注意，如果我们在 `println` 中调用 [await][Deferred.await] 并在个别协程上省略 [start][Job.start]，<!--
+-->则我们会得到顺序的行为作为 [await][Deferred.await] 来启动协程的<!--
+-->执行并且等待执行结束，这不是懒序列的预期用例。
+当计算值涉及暂停函数时，该用例中使用 `async(start = CoroutineStart.LAZY)` 替换
+标准库中的 `lazy` 函数。
 
 ### async 风格的函数
 

@@ -30,7 +30,7 @@ class DispatchersGuideTest {
   * [父协程的职责](#父协程的职责)
   * [命名协程以用于调试](#命名协程以用于调试)
   * [组合上下文中的元素](#组合上下文中的元素)
-  * [Coroutine scope](#coroutine-scope)
+  * [协程作用域](#协程作用域)
   * [线程局部数据](#线程局部数据)
 
 <!--- END_TOC -->
@@ -487,20 +487,20 @@ I'm working in thread DefaultDispatcher-worker-1 @test#2
 
 <!--- TEST FLEXIBLE_THREAD -->
 
-### Coroutine scope
+### 协程作用域
 
 让我们把有关上下文、子协程以及任务的知识梳理一下。假设我们的应用程序中有<!--
 -->一个在生命周期中的对象，但这个对象并不是协程。假如，我们写了一个 Android 应用程序<!--
 -->并在上下文中启动了多个协程来为 Android activity 进行异步操作来拉取<!--
 -->以及更新数据，或作动画等。当 activity 被销毁的时候这些协程必须被取消<!--
--->以防止内存泄漏。We, of course, can manipulate contexts and jobs manually to tie activity's
-and coroutines lifecycles, but `kotlinx.coroutines` provides an abstraction that encapsulates that: [CoroutineScope].
-You should be already familiar with coroutine scope as all coroutine builders are declared as extensions on it.
+-->以防止内存泄漏。我们当然可以手动操作上下文以及作业来绑定 activity
+与协程的生命周期，但是 `kotlinx.coroutines` 提供了一个抽象的封装：[CoroutineScope]。
+你应该已经熟悉了协程作用域，因为所有的协程构建器都被声明为扩展。
 
-We manage a lifecycle of our coroutines by creating an instance of [CoroutineScope] that is tied to
-the lifecycle of our activity. `CoroutineScope` instance can be created by [CoroutineScope()] or [MainScope()]
-factory functions. The former creates a general-purpose scope, while the latter creates scope for UI applications and uses
-[Dispatchers.Main] as default dispatcher:
+我们通过创建一个 [CoroutineScope] 实例来管理协程的生命周期，并使它与
+activit 的生命周期相关联。`CoroutineScope` 可以通过 [CoroutineScope()] 创建或者通过[MainScope()]
+工厂函数。前者创建了一个通用作用域，而后者为使用 [Dispatchers.Main] 作为默认调度器的 UI 应用程序
+创建作用域：
 
 
 
@@ -516,15 +516,15 @@ class Activity {
 
 
 
-Alternatively, we can implement [CoroutineScope] interface in this `Activity` class. The best way to do it is
-to use delegation with default factory functions.
-We also can combine the desired dispatcher (we used [Dispatchers.Default] in this example) with the scope:
+或者，我们可以在这个 `Activity` 类中实现 [CoroutineScope] 接口。最好的方法是<!--
+-->使用具有默认工厂函数的委托。
+我们也可以将所需的调度器与作用域合并（我们在这个示例中使用 [Dispatchers.Default]）。
 
 
 
 ```kotlin
     class Activity : CoroutineScope by CoroutineScope(Dispatchers.Default) {
-    // to be continued ...
+    // 继续运行……
 ```
 
 
@@ -664,9 +664,9 @@ Post-main, current thread: Thread[main @coroutine#1,5,main], thread local value:
 
 <!--- TEST FLEXIBLE_THREAD -->
 
-Note how easily one may forget the corresponding context element and then still safely access thread local.
-To avoid such situations, it is recommended to use [ensurePresent] method
-and fail-fast on improper usages.
+注意，使用者可能很容易忘记相应的上下文元素，然后仍然安全地访问本地线程。
+为避免这种情况，建议使用 [ensurePresent] 方法<!--
+-->并且在不正确的使用上快速失败。
 
 `ThreadLocal` 具有一流的支持，可以与任何原始的 `kotlinx.coroutines` 一起使用。
 它有一个关键限制：当线程局部发生突变，新值不会传递到协程调用者中
