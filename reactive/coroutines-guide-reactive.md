@@ -141,7 +141,8 @@ Again:
 来重写这段代码。代码保持相似，
 但是在 `source` 接收 [ReceiveChannel] 类型的地方，现在它接收响应式流的
 [Publisher](https://www.reactive-streams.org/reactive-streams-1.0.0-javadoc/org/reactivestreams/Publisher.html)
-类型。
+类型，where [consumeEach] was used to _consume_ elements from the channel,
+now [collect][org.reactivestreams.Publisher.collect] is used to _collect_ elements from the publisher.
 
 <!--- INCLUDE
 import kotlinx.coroutines.*
@@ -162,12 +163,12 @@ fun main() = runBlocking<Unit> {
     }
     // 从 source 中打印元素
     println("Elements:")
-    source.consumeEach { // 在 source 中消费元素
+    source.collect { // collect elements from it
         println(it)
     }
     // 再次从 source 中打印元素
     println("Again:")
-    source.consumeEach { // 在 source 中消费元素
+    source.collect { // collect elements from it
         println(it)
     }
 }
@@ -192,17 +193,17 @@ Begin
 
 <!--- TEST -->
 
-这个例子使用高亮标记了响应式流与通道的不同点。响应式流是一种<!--
--->高阶的概念。当通道 _是_ 一个元素的流时，该响应式流定义了一个“食谱”来规定元素<!--
--->在流中如何被生产。它成为了 _订阅_ 上真实的元素流。每一个订阅者也许会接收相同或不同的<!--
--->元素流，这取决于 `Publisher` 的相应实现如何工作。
+This example highlights the key difference between a reactive stream and a channel. A reactive stream is a higher-order
+functional concept. While the channel _is_ a stream of elements, the reactive stream defines a recipe on how the stream of
+elements is produced. It becomes the actual stream of elements when _collected_. Each collector may receive the same or
+a different stream of elements, depending on how the corresponding implementation of `Publisher` works.
 
-[publish] 协程构建器已经被用于先前的示例，每次订阅都会启动一个新的协程。
-每一次 [Publisher.consumeEach][org.reactivestreams.Publisher.consumeEach] 被调用都创建了一个新的订阅者。
-在这段代码中我们有两处调用，所以我们能看到“Begin”被打印了两次。
+The [publish] coroutine builder, that is used in the above example, does not launch a coroutine,
+but every [collect][org.reactivestreams.Publisher.collect] invocation launches a coroutine.
+We have two of them in this code and that is why we see "Begin" printed twice. 
 
-在 Rx 的术语中这是调用了一个 _冷_ 发布者。大量的标准 Rx 操作符也会生产冷流。我们可以在<!--
--->协程中迭代它们，并且每个订阅者都会生产相同的元素流。
+In Rx lingo this is called a _cold_ publisher. Many standard Rx operators produce cold streams, too. We can collect
+them from a coroutine, and every collector gets the same stream of elements.
 
 **警告**：它计划在未来的一秒钟内在通道上调用 `consumeEach` 方法<!--
 -->来准备好消费元素可以快速的失败，这会<!--
@@ -217,10 +218,10 @@ Begin
 
 ### 订阅与取消
 
-在先前小节的例子中使用 `source.consumeEach { ... }` 代码片段来打开一个订阅<!--
--->并从它接受所有元素。如果我们需要在如何处理<!--
--->从通道中接收到的元素施加更多控制，我们可以使用 [Publisher.openSubscription][org.reactivestreams.Publisher.openSubscription]，
-这将在下面的示例中展示：
+An example in the previous section uses `source.collect { ... }` to collect all elements.
+Instead of collecting elements, we can open a channel using [openSubscription][org.reactivestreams.Publisher.openSubscription]
+and iterate over it, so that we have more finer-grained control on our iteration,
+for example using `break`, as shown below:
 
 <!--- INCLUDE
 import io.reactivex.*
@@ -259,17 +260,16 @@ Finally
 ```
 
 <!--- TEST -->
- 
-使用显示的 `openSubscription` 时我们应该使用 [cancel][ReceiveChannel.cancel]
-来取消订阅响应的订阅源。这里不需要显示的调用 `cancel`——因为
-`consume` 为我们做了这些事。
-添加
+
+With an explicit `openSubscription` we should [cancel][ReceiveChannel.cancel] the corresponding
+subscription to unsubscribe from the source, but there is no need to call `cancel` explicitly -- under the hood
+[consume] does that for us.
+The installed 
 [doFinally](https://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#doFinally(io.reactivex.functions.Action))
 监听器并打印“Finally”来确认订阅确实被取消了。注意“OnComplete”
 永远不会被打印因为我们没有消费所有的元素。
 
-如果对发布者发送出的所有元素执行迭代，
-则我们不需要显示的 `cancel`，因为它被 `consumeEach` 自动取消了：
+We do not need to use an explicit `cancel` either if we `collect` all the elements:
 
 <!--- INCLUDE
 import io.reactivex.*
@@ -282,10 +282,10 @@ import kotlin.coroutines.*
 fun main() = runBlocking<Unit> {
     val source = Flowable.range(1, 5) // 五个数字的区间
         .doOnSubscribe { println("OnSubscribe") } // 提供了一些可被观察的点
-        .doOnComplete { println("OnComplete") }   // ...
-        .doFinally { println("Finally") }         // ... 在正在执行的代码中
-    // iterate over the source fully
-    source.consumeEach { println(it) }
+        .doOnComplete { println("OnComplete") }   // ……
+        .doFinally { println("Finally") }         // …… 在正在执行的代码中
+    // collect the source fully
+    source.collect { println(it) }
 }
 ```
 
@@ -308,7 +308,7 @@ Finally
 
 注意，如何使“OnComplete”与“Finally”在最后一个元素“5”之前被打印。在这个示例中它将发生在我们的 `main`
 函数在协程中执行时，使用 [runBlocking] 协程构建器来启动它。
-我们的主协程在通道中使用 `source.consumeEach { ... }` 扩展函数来接收通道。
+我们的主协程在 flowable 中使用 `source.collect { …… }` 扩展函数来接收通道。
 当它等待源发射元素的时候该主协程是 _挂起的_ ，
 当最后一个元素被 `Flowable.range(1, 5)` 发射时它
 _恢复_ 了主协程，它被分派到主线程上打印出来
@@ -422,7 +422,7 @@ four
 <!--- INCLUDE 
 import io.reactivex.subjects.BehaviorSubject
 import kotlinx.coroutines.*
-import kotlinx.coroutines.rx2.consumeEach
+import kotlinx.coroutines.rx2.collect
 -->   
    
 ```kotlin
@@ -432,7 +432,7 @@ fun main() = runBlocking<Unit> {
     subject.onNext("two")
     // 现在启动一个协程来打印所有东西
     GlobalScope.launch(Dispatchers.Unconfined) { // 在不受限的上下文中启动协程
-        subject.consumeEach { println(it) }
+        subject.collect { println(it) }
     }
     subject.onNext("three")
     subject.onNext("four")
@@ -476,7 +476,7 @@ fun main() = runBlocking<Unit> {
     subject.onNext("two")
     // 现在启动一个协程来打印最近的更新
     launch { // 为协程使用主线程的上下文
-        subject.consumeEach { println(it) }
+        subject.collect { println(it) }
     }
     subject.onNext("three")
     subject.onNext("four")
@@ -584,7 +584,7 @@ fun CoroutineScope.range(context: CoroutineContext, start: Int, count: Int) = pu
 ```kotlin
 fun main() = runBlocking<Unit> {
     // Range 从 runBlocking 中承袭了父 job，但是使用 Dispatchers.Default 来覆盖调度器
-    range(Dispatchers.Default, 1, 5).consumeEach { println(it) }
+    range(Dispatchers.Default, 1, 5).collect { println(it) }
 }
 ```
 
@@ -623,9 +623,9 @@ fun <T, R> Publisher<T>.fusedFilterMap(
     predicate: (T) -> Boolean,   // 过滤器 predicate
     mapper: (T) -> R             // mapper 函数
 ) = GlobalScope.publish<R>(context) {
-    consumeEach {                // 消费源流
-        if (predicate(it))       // 过滤的部分
-            send(mapper(it))     // 变换的部分
+    collect {                    // collect the source stream
+        if (predicate(it))       // filter part
+            send(mapper(it))     // map part
     }        
 }
 ```
@@ -644,7 +644,7 @@ fun CoroutineScope.range(start: Int, count: Int) = publish<Int> {
 fun main() = runBlocking<Unit> {
    range(1, 5)
        .fusedFilterMap(coroutineContext, { it % 2 == 0}, { "$it is even" })
-       .consumeEach { println(it) } // 打印所有的字符串结果
+       .collect { println(it) } // 打印所有的字符串结果
 }
 ```
 
@@ -684,8 +684,8 @@ fun <T, U> Publisher<T>.takeUntil(context: CoroutineContext, other: Publisher<U>
         other.openSubscription().consume { // 显式地打开 Publisher<U> 的通道
             val other = this
             whileSelect {
-                other.onReceive { false }          // 释放任何从 `other` 接收到的元素
-                current.onReceive { send(it); true }  // 在这个通道上重新发送元素并继续
+                other.onReceive { false }            // 释放任何从 `other` 接收到的元素
+                current.onReceive { send(it); true } // 在这个通道上重新发送元素并继续
             }
         }
     }
@@ -717,7 +717,7 @@ fun CoroutineScope.rangeWithInterval(time: Long, start: Int, count: Int) = publi
 fun main() = runBlocking<Unit> {
     val slowNums = rangeWithInterval(200, 1, 10)         // 数字之间有 200 毫秒的间隔
     val stop = rangeWithInterval(500, 1, 10)             // 第一个在 500 毫秒之后
-    slowNums.takeUntil(coroutineContext, stop).consumeEach { println(it) } // 让我们测试它
+    slowNums.takeUntil(coroutineContext, stop).collect { println(it) } // 让我们测试它
 }
 ```
 
@@ -749,9 +749,9 @@ import kotlin.coroutines.*
 
 ```kotlin
 fun <T> Publisher<Publisher<T>>.merge(context: CoroutineContext) = GlobalScope.publish<T>(context) {
-  consumeEach { pub ->                 // 为每一个 publisher 在源通道上接收元素
-      launch {  // 启动一个子协程
-          pub.consumeEach { send(it) } // 从这个 publisher 上重新发送所有元素
+  collect { pub -> // for each publisher collected
+      launch {  // launch a child coroutine
+          pub.collect { send(it) } // resend all element from this publisher
       }
   }
 }
@@ -792,7 +792,7 @@ fun CoroutineScope.testPub() = publish<Publisher<Int>> {
 
 ```kotlin
 fun main() = runBlocking<Unit> {
-    testPub().merge(coroutineContext).consumeEach { println(it) } // 打印整个流
+    testPub().merge(coroutineContext).collect { println(it) } // 打印整个流
 }
 ```
 
@@ -975,7 +975,7 @@ fun rangeWithIntervalRx(scheduler: Scheduler, time: Long, start: Int, count: Int
 
 fun main() = runBlocking<Unit> {
     rangeWithIntervalRx(Schedulers.computation(), 100, 1, 3)
-        .consumeEach { println("$it on thread ${Thread.currentThread().name}") }
+        .collect { println("$it on thread ${Thread.currentThread().name}") }
 }
 ```
 
@@ -1021,7 +1021,7 @@ fun rangeWithIntervalRx(scheduler: Scheduler, time: Long, start: Int, count: Int
 fun main() = runBlocking<Unit> {
     val job = launch(Dispatchers.Unconfined) { // 在不受限的山下文中启动一个新协程（没有它自己的线程池）
         rangeWithIntervalRx(Schedulers.computation(), 100, 1, 3)
-            .consumeEach { println("$it on thread ${Thread.currentThread().name}") }
+            .collect { println("$it on thread ${Thread.currentThread().name}") }
     }
     job.join() // 等待我们的协程结束
 }
@@ -1068,6 +1068,7 @@ fun main() = runBlocking<Unit> {
 [consumeEach]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/consume-each.html
 [ReceiveChannel]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-receive-channel/index.html
 [ReceiveChannel.cancel]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-receive-channel/cancel.html
+[consume]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/consume.html
 [SendChannel.send]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-send-channel/send.html
 [BroadcastChannel]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-broadcast-channel/index.html
 [ConflatedBroadcastChannel]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-conflated-broadcast-channel/index.html
@@ -1077,7 +1078,7 @@ fun main() = runBlocking<Unit> {
 <!--- MODULE kotlinx-coroutines-reactive -->
 <!--- INDEX kotlinx.coroutines.reactive -->
 [publish]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-reactive/kotlinx.coroutines.reactive/kotlinx.coroutines.-coroutine-scope/publish.html
-[org.reactivestreams.Publisher.consumeEach]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-reactive/kotlinx.coroutines.reactive/org.reactivestreams.-publisher/consume-each.html
+[org.reactivestreams.Publisher.collect]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-reactive/kotlinx.coroutines.reactive/org.reactivestreams.-publisher/collect.html
 [org.reactivestreams.Publisher.openSubscription]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-reactive/kotlinx.coroutines.reactive/org.reactivestreams.-publisher/open-subscription.html
 <!--- MODULE kotlinx-coroutines-rx2 -->
 <!--- INDEX kotlinx.coroutines.rx2 -->
