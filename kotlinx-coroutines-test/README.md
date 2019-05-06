@@ -264,7 +264,7 @@ This style is preferred when the `CoroutineScope` is passed through an extension
 
 ### Providing an explicit `TestCoroutineScope`
 
-In many cases, the direct style is not preferred because [CoroutineScope] may need to be provided through anther means 
+In many cases, the direct style is not preferred because [CoroutineScope] may need to be provided through another means 
 such as dependency injection or service locators.
 
 Tests can declare a [TestCoroutineScope] explicitly in the class to support these use cases.
@@ -449,5 +449,4 @@ If you have any suggestions for improvements to this experimental API please sha
 [TestCoroutineScope]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-test/kotlinx.coroutines.test/-test-coroutine-scope/index.html
 [TestCoroutineExceptionHandler]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-test/kotlinx.coroutines.test/-test-coroutine-exception-handler/index.html
 [TestCoroutineScope.cleanupTestCoroutines]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-test/kotlinx.coroutines.test/-test-coroutine-scope/cleanup-test-coroutines.html
-[TestCoroutineDispatcher.cleanupTestCoroutines]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-test/kotlinx.coroutines.test/-test-coroutine-dispatcher/cleanup-test-coroutines.html
 <!--- END -->
