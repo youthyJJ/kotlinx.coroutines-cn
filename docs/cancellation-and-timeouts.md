@@ -23,7 +23,7 @@ class CancellationTimeOutsGuideTest {
   * [取消协程的执行](#取消协程的执行)
   * [取消是协作的](#取消是协作的)
   * [使计算代码可取消](#使计算代码可取消)
-  * [在 finally 中释放资源](#在-finally-中释放资源)
+  * [在 `finally` 中释放资源](#在-finally-中释放资源)
   * [运行不能取消的代码块](#运行不能取消的代码块)
   * [超时](#超时)
 
@@ -49,7 +49,7 @@ fun main() = runBlocking {
 //sampleStart
     val job = launch {
         repeat(1000) { i ->
-            println("I'm sleeping $i ...")
+            println("job: I'm sleeping $i ...")
             delay(500L)
         }
     }
@@ -69,9 +69,9 @@ fun main() = runBlocking {
 程序执行后的输出如下：
 
 ```text
-I'm sleeping 0 ...
-I'm sleeping 1 ...
-I'm sleeping 2 ...
+job: I'm sleeping 0 ...
+job: I'm sleeping 1 ...
+job: I'm sleeping 2 ...
 main: I'm tired of waiting!
 main: Now I can quit.
 ```
@@ -104,7 +104,7 @@ fun main() = runBlocking {
         while (i < 5) { // 一个执行计算的循环，只是为了占用 CPU
             // 每秒打印消息两次
             if (System.currentTimeMillis() >= nextPrintTime) {
-                println("I'm sleeping ${i++} ...")
+                println("job: I'm sleeping ${i++} ...")
                 nextPrintTime += 500L
             }
         }
@@ -125,12 +125,12 @@ fun main() = runBlocking {
 任务仍然执行了五次循环迭代并运行到了它结束为止。
 
 <!--- TEST 
-I'm sleeping 0 ...
-I'm sleeping 1 ...
-I'm sleeping 2 ...
+job: I'm sleeping 0 ...
+job: I'm sleeping 1 ...
+job: I'm sleeping 2 ...
 main: I'm tired of waiting!
-I'm sleeping 3 ...
-I'm sleeping 4 ...
+job: I'm sleeping 3 ...
+job: I'm sleeping 4 ...
 main: Now I can quit.
 -->
 
@@ -156,7 +156,7 @@ fun main() = runBlocking {
         while (isActive) { // 可以被取消的计算循环
             // 每秒打印消息两次
             if (System.currentTimeMillis() >= nextPrintTime) {
-                println("I'm sleeping ${i++} ...")
+                println("job: I'm sleeping ${i++} ...")
                 nextPrintTime += 500L
             }
         }
@@ -177,14 +177,14 @@ fun main() = runBlocking {
 [CoroutineScope] 中的扩展属性。
 
 <!--- TEST
-I'm sleeping 0 ...
-I'm sleeping 1 ...
-I'm sleeping 2 ...
+job: I'm sleeping 0 ...
+job: I'm sleeping 1 ...
+job: I'm sleeping 2 ...
 main: I'm tired of waiting!
 main: Now I can quit.
 -->
 
-### 在 finally 中释放资源
+### 在 `finally` 中释放资源
 
 我们通常使用如下的方法处理在被取消时抛出 [CancellationException] 的可被取消<!--
 -->的挂起函数。比如说，`try {……} finally {……}` 表达式以及 Kotlin 的 `use` 函数一般在协程被取消的时候<!--
@@ -201,11 +201,11 @@ fun main() = runBlocking {
     val job = launch {
         try {
             repeat(1000) { i ->
-                println("I'm sleeping $i ...")
+                println("job: I'm sleeping $i ...")
                 delay(500L)
             }
         } finally {
-            println("I'm running finally")
+            println("job: I'm running finally")
         }
     }
     delay(1300L) // 延迟一段时间
@@ -224,11 +224,11 @@ fun main() = runBlocking {
 所以运行示例得到了下面的输出：
 
 ```text
-I'm sleeping 0 ...
-I'm sleeping 1 ...
-I'm sleeping 2 ...
+job: I'm sleeping 0 ...
+job: I'm sleeping 1 ...
+job: I'm sleeping 2 ...
 main: I'm tired of waiting!
-I'm running finally
+job: I'm running finally
 main: Now I can quit.
 ```
 
@@ -253,14 +253,14 @@ fun main() = runBlocking {
     val job = launch {
         try {
             repeat(1000) { i ->
-                println("I'm sleeping $i ...")
+                println("job: I'm sleeping $i ...")
                 delay(500L)
             }
         } finally {
             withContext(NonCancellable) {
-                println("I'm running finally")
+                println("job: I'm running finally")
                 delay(1000L)
-                println("And I've just delayed for 1 sec because I'm non-cancellable")
+                println("job: And I've just delayed for 1 sec because I'm non-cancellable")
             }
         }
     }
@@ -277,12 +277,12 @@ fun main() = runBlocking {
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-cancel-05.kt)获取完整代码。
 
 <!--- TEST
-I'm sleeping 0 ...
-I'm sleeping 1 ...
-I'm sleeping 2 ...
+job: I'm sleeping 0 ...
+job: I'm sleeping 1 ...
+job: I'm sleeping 2 ...
 main: I'm tired of waiting!
-I'm running finally
-And I've just delayed for 1 sec because I'm non-cancellable
+job: I'm running finally
+job: And I've just delayed for 1 sec because I'm non-cancellable
 main: Now I can quit.
 -->
 
