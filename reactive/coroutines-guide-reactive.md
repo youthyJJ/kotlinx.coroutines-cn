@@ -130,7 +130,7 @@ Again:
 
 <!--- TEST -->
 
-注意，“Begin” 只被打印了一次，因为 [produce] _协程构建器_ 被执行的时候，
+注意，“Begin”只被打印了一次，因为 [produce] _协程构建器_ 被执行的时候，
 只创建了一个协程来生产元素流。所有被生产的元素都被
 [ReceiveChannel.consumeEach][consumeEach]
 扩展函数消费。没有办法从这个通道重复<!--
@@ -141,8 +141,8 @@ Again:
 来重写这段代码。代码保持相似，
 但是在 `source` 接收 [ReceiveChannel] 类型的地方，现在它接收响应式流的
 [Publisher](https://www.reactive-streams.org/reactive-streams-1.0.0-javadoc/org/reactivestreams/Publisher.html)
-类型，where [consumeEach] was used to _consume_ elements from the channel,
-now [collect][org.reactivestreams.Publisher.collect] is used to _collect_ elements from the publisher.
+类型，在 [consumeEach] 被用来 _消费_ 来源于通道中的元素的地方，
+现在 [collect][org.reactivestreams.Publisher.collect] 被用来从 publisher 中 _收集_ 元素。
 
 <!--- INCLUDE
 import kotlinx.coroutines.*
@@ -163,12 +163,12 @@ fun main() = runBlocking<Unit> {
     }
     // 从 source 中打印元素
     println("Elements:")
-    source.collect { // collect elements from it
+    source.collect { // 收集元素 it
         println(it)
     }
     // 再次从 source 中打印元素
     println("Again:")
-    source.collect { // collect elements from it
+    source.collect { // 收集元素 it
         println(it)
     }
 }
@@ -193,17 +193,17 @@ Begin
 
 <!--- TEST -->
 
-This example highlights the key difference between a reactive stream and a channel. A reactive stream is a higher-order
-functional concept. While the channel _is_ a stream of elements, the reactive stream defines a recipe on how the stream of
-elements is produced. It becomes the actual stream of elements when _collected_. Each collector may receive the same or
-a different stream of elements, depending on how the corresponding implementation of `Publisher` works.
+此示例突出显示了响应式流与通道之间的主要区别。响应式流是一种更高阶的<!--
+-->功能概念。当该通道 _是_ 一个元素流的时候，该响应式流定义了一种如何<!--
+-->在流中生产元素的方案。当 _收集_ 发生时，它成为元素的实际流。每个收集器都将接收到一个相同或<!--
+-->不同的流，这取决于取决于 `Publisher` 的相应实现如何工作。
 
-The [publish] coroutine builder, that is used in the above example, does not launch a coroutine,
-but every [collect][org.reactivestreams.Publisher.collect] invocation launches a coroutine.
-We have two of them in this code and that is why we see "Begin" printed twice. 
+[publish] 协程构建器在上面的示例中没有启动协程，
+但是每个 [collect][org.reactivestreams.Publisher.collect] 调用都会启动一个协程。
+在这段代码中有两个 [publish]，这也就是为什么我们看到了“Begin”被打印了两次。
 
-In Rx lingo this is called a _cold_ publisher. Many standard Rx operators produce cold streams, too. We can collect
-them from a coroutine, and every collector gets the same stream of elements.
+在 Rx 的术语中这被称为 _冷_ 流。有很多标准的 Rx 操作符同样会生产冷流。我们可以再同一个协程中<!--
+-->收集它们，并且每个收集器都获得相同的元素流。
 
 **警告**：它计划在未来的一秒钟内在通道上调用 `consumeEach` 方法<!--
 -->来准备好消费元素可以快速的失败，这会<!--
@@ -218,10 +218,10 @@ them from a coroutine, and every collector gets the same stream of elements.
 
 ### 订阅与取消
 
-An example in the previous section uses `source.collect { ... }` to collect all elements.
-Instead of collecting elements, we can open a channel using [openSubscription][org.reactivestreams.Publisher.openSubscription]
-and iterate over it, so that we have more finer-grained control on our iteration,
-for example using `break`, as shown below:
+在先前小节的示例中使用了 `source.collect { ... }` 来收集所有的元素。
+我们可以使用 [openSubscription][org.reactivestreams.Publisher.openSubscription] 来打开一个通道并迭代它，
+而不是收集元素，这样我们就可以对迭代进行更精细的控制，
+例如使用 `break`，并如下所示：
 
 <!--- INCLUDE
 import io.reactivex.*
@@ -261,15 +261,15 @@ Finally
 
 <!--- TEST -->
 
-With an explicit `openSubscription` we should [cancel][ReceiveChannel.cancel] the corresponding
-subscription to unsubscribe from the source, but there is no need to call `cancel` explicitly -- under the hood
-[consume] does that for us.
-The installed 
+使用一个显式的 `openSubscription` 我们应该从相应的订阅源 [cancel][ReceiveChannel.cancel]
+订阅，但是这里不需要显式调用 `cancel` —— 在内部
+[consume] 会为我们做这些事。
+配置
 [doFinally](https://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#doFinally(io.reactivex.functions.Action))
 监听器并打印“Finally”来确认订阅确实被取消了。注意“OnComplete”
-永远不会被打印因为我们没有消费所有的元素。
+永远不会被打印，因为我们没有消费所有的元素。
 
-We do not need to use an explicit `cancel` either if we `collect` all the elements:
+如果我们 `collect` 所有的元素，那我们不需要使用显式的 `cancel`：
 
 <!--- INCLUDE
 import io.reactivex.*
@@ -623,9 +623,9 @@ fun <T, R> Publisher<T>.fusedFilterMap(
     predicate: (T) -> Boolean,   // 过滤器 predicate
     mapper: (T) -> R             // mapper 函数
 ) = GlobalScope.publish<R>(context) {
-    collect {                    // collect the source stream
-        if (predicate(it))       // filter part
-            send(mapper(it))     // map part
+    collect {                    // 收集源流
+        if (predicate(it))       // 过滤的部分
+            send(mapper(it))     // 转换的部分
     }        
 }
 ```

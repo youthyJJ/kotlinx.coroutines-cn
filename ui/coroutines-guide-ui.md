@@ -286,7 +286,7 @@ fun Node.onClick(action: suspend (MouseEvent) -> Unit) {
 }
 ```  
 
-> You can get full code [here](kotlinx-coroutines-javafx/test/guide/example-ui-actor-01.kt).
+> 你可以在[这里](kotlinx-coroutines-javafx/test/guide/example-ui-actor-01.kt)获取完整代码。
 
 注意，当每次圆形按钮被点击时，它启动了一个新的协程并都将竞争<!--
 -->更新文本。尝试一下。它看起来并不是非常棒。我们将在稍后修正它。
