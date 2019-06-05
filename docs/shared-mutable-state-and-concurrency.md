@@ -49,7 +49,7 @@ suspend fun massiveRun(action: suspend () -> Unit) {
     val n = 100  // 启动的协程数量
     val k = 1000 // 每个协程重复执行同一动作的次数
     val time = measureTimeMillis {
-        coroutineScope { // scope for coroutines
+        coroutineScope { // 协程的作用域
             repeat(n) {
                 launch {
                     repeat(k) { action() }
@@ -78,7 +78,7 @@ suspend fun massiveRun(action: suspend () -> Unit) {
     val n = 100  // 启动的协程数量
     val k = 1000 // 每个协程重复执行同一动作的次数
     val time = measureTimeMillis {
-        coroutineScope { // scope for coroutines
+        coroutineScope { // 协程的作用域
             repeat(n) {
                 launch {
                     repeat(k) { action() }
@@ -131,7 +131,7 @@ suspend fun massiveRun(action: suspend () -> Unit) {
     val n = 100  // 启动的协程数量
     val k = 1000 // 每个协程重复执行同一动作的次数
     val time = measureTimeMillis {
-        coroutineScope { // scope for coroutines
+        coroutineScope { // 协程的作用域
             repeat(n) {
                 launch {
                     repeat(k) { action() }
@@ -190,7 +190,7 @@ suspend fun massiveRun(action: suspend () -> Unit) {
     val n = 100  // 启动的协程数量
     val k = 1000 // 每个协程重复执行同一动作的次数
     val time = measureTimeMillis {
-        coroutineScope { // scope for coroutines
+        coroutineScope { // 协程的作用域
             repeat(n) {
                 launch {
                     repeat(k) { action() }
@@ -247,7 +247,7 @@ suspend fun massiveRun(action: suspend () -> Unit) {
     val n = 100  // 启动的协程数量
     val k = 1000 // 每个协程重复执行同一动作的次数
     val time = measureTimeMillis {
-        coroutineScope { // scope for coroutines
+        coroutineScope { // 协程的作用域
             repeat(n) {
                 launch {
                     repeat(k) { action() }
@@ -265,7 +265,7 @@ var counter = 0
 fun main() = runBlocking {
     withContext(Dispatchers.Default) {
         massiveRun {
-            // confine each increment to a single-threaded context
+            // 将每次自增限制在单线程上下文中
             withContext(counterContext) {
                 counter++
             }
@@ -307,7 +307,7 @@ suspend fun massiveRun(action: suspend () -> Unit) {
     val n = 100  // 启动的协程数量
     val k = 1000 // 每个协程重复执行同一动作的次数
     val time = measureTimeMillis {
-        coroutineScope { // scope for coroutines
+        coroutineScope { // 协程的作用域
             repeat(n) {
                 launch {
                     repeat(k) { action() }
@@ -323,7 +323,7 @@ val counterContext = newSingleThreadContext("CounterContext")
 var counter = 0
 
 fun main() = runBlocking {
-    // confine everything to a single-threaded context
+    // 将一切都限制在单线程上下文中
     withContext(counterContext) {
         massiveRun {
             counter++
@@ -368,7 +368,7 @@ suspend fun massiveRun(action: suspend () -> Unit) {
     val n = 100  // 启动的协程数量
     val k = 1000 // 每个协程重复执行同一动作的次数
     val time = measureTimeMillis {
-        coroutineScope { // scope for coroutines
+        coroutineScope { // 协程的作用域
             repeat(n) {
                 launch {
                     repeat(k) { action() }
@@ -386,7 +386,7 @@ var counter = 0
 fun main() = runBlocking {
     withContext(Dispatchers.Default) {
         massiveRun {
-            // protect each increment with lock
+            // 用锁保护每次自增
             mutex.withLock {
                 counter++
             }
@@ -473,7 +473,7 @@ suspend fun massiveRun(action: suspend () -> Unit) {
     val n = 100  // 启动的协程数量
     val k = 1000 // 每个协程重复执行同个动作的次数
     val time = measureTimeMillis {
-        coroutineScope { // scope for coroutines
+        coroutineScope { // 协程的作用域
             repeat(n) {
                 launch {
                     repeat(k) { action() }
