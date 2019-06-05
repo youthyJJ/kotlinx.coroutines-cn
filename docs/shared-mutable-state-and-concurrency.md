@@ -45,16 +45,17 @@ class SharedStateGuideTest {
 
 
 ```kotlin
-suspend fun CoroutineScope.massiveRun(action: suspend () -> Unit) {
+suspend fun massiveRun(action: suspend () -> Unit) {
     val n = 100  // 启动的协程数量
     val k = 1000 // 每个协程重复执行同一动作的次数
     val time = measureTimeMillis {
-        val jobs = List(n) {
-            launch {
-                repeat(k) { action() }
+        coroutineScope { // scope for coroutines
+            repeat(n) {
+                launch {
+                    repeat(k) { action() }
+                }
             }
         }
-        jobs.forEach { it.join() }
     }
     println("Completed ${n * k} actions in $time ms")    
 }
@@ -62,7 +63,7 @@ suspend fun CoroutineScope.massiveRun(action: suspend () -> Unit) {
 
 
 
-我们从一个非常简单的动作开始：在 [GlobalScope] 中使用<!--
+我们从一个非常简单的动作开始：使用<!--
 -->多线程的 [Dispatchers.Default] 来递增一个共享的可变变量。
 
 <!--- CLEAR -->
@@ -73,30 +74,33 @@ suspend fun CoroutineScope.massiveRun(action: suspend () -> Unit) {
 import kotlinx.coroutines.*
 import kotlin.system.*
 
-suspend fun CoroutineScope.massiveRun(action: suspend () -> Unit) {
+suspend fun massiveRun(action: suspend () -> Unit) {
     val n = 100  // 启动的协程数量
     val k = 1000 // 每个协程重复执行同一动作的次数
     val time = measureTimeMillis {
-        val jobs = List(n) {
-            launch {
-                repeat(k) { action() }
+        coroutineScope { // scope for coroutines
+            repeat(n) {
+                launch {
+                    repeat(k) { action() }
+                }
             }
         }
-        jobs.forEach { it.join() }
     }
     println("Completed ${n * k} actions in $time ms")
 }
 
+//sampleStart
 var counter = 0
 
-fun main() = runBlocking<Unit> {
-//sampleStart
-    GlobalScope.massiveRun {
-        counter++
+fun main() = runBlocking {
+    withContext(Dispatchers.Default) {
+        massiveRun {
+            counter++
+        }
     }
     println("Counter = $counter")
-//sampleEnd
 }
+//sampleEnd
 ```
 
 
@@ -111,54 +115,6 @@ Counter =
 这段代码最后打印出什么结果？它不太可能打印出“Counter = 100000”，因为一百个协程<!--
 -->在多个线程中同时递增计数器但没有做并发处理。
 
-> 注意：如果你运行程序的机器使用两个或者更少的 CPU，那么你 _将_ 总是会看到 100000，因为<!--
--->线程池在这种情况下只有一个线程可运行。要重现这个问题，可以做<!--
--->如下的变动：
-
-<!--- CLEAR -->
-
-
-
-```kotlin
-import kotlinx.coroutines.*
-import kotlin.system.*
-
-suspend fun CoroutineScope.massiveRun(action: suspend () -> Unit) {
-    val n = 100  // 启动的协程数量
-    val k = 1000 // 每个协程重复执行同一动作的次数
-    val time = measureTimeMillis {
-        val jobs = List(n) {
-            launch {
-                repeat(k) { action() }
-            }
-        }
-        jobs.forEach { it.join() }
-    }
-    println("Completed ${n * k} actions in $time ms")
-}
-
-val mtContext = newFixedThreadPoolContext(2, "mtPool") // 明确地用两个线程自定义上下文
-var counter = 0
-
-fun main() = runBlocking<Unit> {
-//sampleStart
-    CoroutineScope(mtContext).massiveRun { // 在此及以下示例中使用刚才定义的上下文，而不是默认的 Dispatchers.Default
-        counter++
-    }
-    println("Counter = $counter")
-//sampleEnd
-}
-```
-
-
-
-> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-sync-01b.kt)获取完整代码。
-
-<!--- TEST LINES_START
-Completed 100000 actions in
-Counter =
--->
-
 ### volatile 无济于事
 
 有一种常见的误解：volatile 可以解决并发问题。让我们尝试一下：
@@ -171,29 +127,34 @@ Counter =
 import kotlinx.coroutines.*
 import kotlin.system.*
 
-suspend fun CoroutineScope.massiveRun(action: suspend () -> Unit) {
+suspend fun massiveRun(action: suspend () -> Unit) {
     val n = 100  // 启动的协程数量
     val k = 1000 // 每个协程重复执行同一动作的次数
     val time = measureTimeMillis {
-        val jobs = List(n) {
-            launch {
-                repeat(k) { action() }
+        coroutineScope { // scope for coroutines
+            repeat(n) {
+                launch {
+                    repeat(k) { action() }
+                }
             }
         }
-        jobs.forEach { it.join() }
     }
     println("Completed ${n * k} actions in $time ms")
 }
 
+//sampleStart
 @Volatile // 在 Kotlin 中 `volatile` 是一个注解
 var counter = 0
 
-fun main() = runBlocking<Unit> {
-    GlobalScope.massiveRun {
-        counter++
+fun main() = runBlocking {
+    withContext(Dispatchers.Default) {
+        massiveRun {
+            counter++
+        }
     }
     println("Counter = $counter")
 }
+//sampleEnd
 ```
 
 
@@ -225,30 +186,33 @@ import kotlinx.coroutines.*
 import java.util.concurrent.atomic.*
 import kotlin.system.*
 
-suspend fun CoroutineScope.massiveRun(action: suspend () -> Unit) {
+suspend fun massiveRun(action: suspend () -> Unit) {
     val n = 100  // 启动的协程数量
     val k = 1000 // 每个协程重复执行同一动作的次数
     val time = measureTimeMillis {
-        val jobs = List(n) {
-            launch {
-                repeat(k) { action() }
+        coroutineScope { // scope for coroutines
+            repeat(n) {
+                launch {
+                    repeat(k) { action() }
+                }
             }
         }
-        jobs.forEach { it.join() }
     }
     println("Completed ${n * k} actions in $time ms")
 }
 
+//sampleStart
 var counter = AtomicInteger()
 
-fun main() = runBlocking<Unit> {
-//sampleStart
-    GlobalScope.massiveRun {
-        counter.incrementAndGet()
+fun main() = runBlocking {
+    withContext(Dispatchers.Default) {
+        massiveRun {
+            counter.incrementAndGet()
+        }
     }
-    println("Counter = ${counter.get()}")
-//sampleEnd
+    println("Counter = $counter")
 }
+//sampleEnd
 ```
 
 
@@ -279,33 +243,37 @@ Counter = 100000
 import kotlinx.coroutines.*
 import kotlin.system.*
 
-suspend fun CoroutineScope.massiveRun(action: suspend () -> Unit) {
+suspend fun massiveRun(action: suspend () -> Unit) {
     val n = 100  // 启动的协程数量
     val k = 1000 // 每个协程重复执行同一动作的次数
     val time = measureTimeMillis {
-        val jobs = List(n) {
-            launch {
-                repeat(k) { action() }
+        coroutineScope { // scope for coroutines
+            repeat(n) {
+                launch {
+                    repeat(k) { action() }
+                }
             }
         }
-        jobs.forEach { it.join() }
     }
     println("Completed ${n * k} actions in $time ms")
 }
 
+//sampleStart
 val counterContext = newSingleThreadContext("CounterContext")
 var counter = 0
 
-fun main() = runBlocking<Unit> {
-//sampleStart
-    GlobalScope.massiveRun { // 使用 DefaultDispathcer 运行每个协程
-        withContext(counterContext) { // 但是把每个递增操作都限制在此单线程上下文中
-            counter++
+fun main() = runBlocking {
+    withContext(Dispatchers.Default) {
+        massiveRun {
+            // confine each increment to a single-threaded context
+            withContext(counterContext) {
+                counter++
+            }
         }
     }
     println("Counter = $counter")
-//sampleEnd
 }
+//sampleEnd
 ```
 
 
@@ -318,14 +286,14 @@ Counter = 100000
 -->
 
 这段代码运行非常缓慢，因为它进行了 _细粒度_ 的线程限制。每个增量操作都得使用
-[withContext] 块从多线程 [Dispatchers.Default] 上下文切换到单线程上下文。
+[withContext(counterContext)] 块<!--
+-->从多线程 [Dispatchers.Default] 上下文切换到单线程上下文。
 
 ### 以粗粒度限制线程
 
 在实践中，线程限制是在大段代码中执行的，例如：状态更新类业务逻辑中大部分<!--
 -->都是限于单线程中。下面的示例演示了这种情况，
 在单线程上下文中运行每个协程。
-这里我们使用 [CoroutineScope()] 函数来切换协程上下文为 [CoroutineScope]：
 
 <!--- CLEAR -->
 
@@ -335,31 +303,35 @@ Counter = 100000
 import kotlinx.coroutines.*
 import kotlin.system.*
 
-suspend fun CoroutineScope.massiveRun(action: suspend () -> Unit) {
+suspend fun massiveRun(action: suspend () -> Unit) {
     val n = 100  // 启动的协程数量
     val k = 1000 // 每个协程重复执行同一动作的次数
     val time = measureTimeMillis {
-        val jobs = List(n) {
-            launch {
-                repeat(k) { action() }
+        coroutineScope { // scope for coroutines
+            repeat(n) {
+                launch {
+                    repeat(k) { action() }
+                }
             }
         }
-        jobs.forEach { it.join() }
     }
     println("Completed ${n * k} actions in $time ms")
 }
 
+//sampleStart
 val counterContext = newSingleThreadContext("CounterContext")
 var counter = 0
 
-fun main() = runBlocking<Unit> {
-//sampleStart
-    CoroutineScope(counterContext).massiveRun { // 在单线程上下文中运行每个协程
-        counter++
+fun main() = runBlocking {
+    // confine everything to a single-threaded context
+    withContext(counterContext) {
+        massiveRun {
+            counter++
+        }
     }
     println("Counter = $counter")
-//sampleEnd
 }
+//sampleEnd
 ```
 
 
@@ -392,33 +364,37 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.*
 import kotlin.system.*
 
-suspend fun CoroutineScope.massiveRun(action: suspend () -> Unit) {
+suspend fun massiveRun(action: suspend () -> Unit) {
     val n = 100  // 启动的协程数量
     val k = 1000 // 每个协程重复执行同一动作的次数
     val time = measureTimeMillis {
-        val jobs = List(n) {
-            launch {
-                repeat(k) { action() }
+        coroutineScope { // scope for coroutines
+            repeat(n) {
+                launch {
+                    repeat(k) { action() }
+                }
             }
         }
-        jobs.forEach { it.join() }
     }
     println("Completed ${n * k} actions in $time ms")
 }
 
+//sampleStart
 val mutex = Mutex()
 var counter = 0
 
-fun main() = runBlocking<Unit> {
-//sampleStart
-    GlobalScope.massiveRun {
-        mutex.withLock {
-            counter++        
+fun main() = runBlocking {
+    withContext(Dispatchers.Default) {
+        massiveRun {
+            // protect each increment with lock
+            mutex.withLock {
+                counter++
+            }
         }
     }
     println("Counter = $counter")
-//sampleEnd
 }
+//sampleEnd
 ```
 
 
@@ -436,7 +412,8 @@ Counter = 100000
 
 ### Actors
 
-一个 [actor](https://en.wikipedia.org/wiki/Actor_model) 是由协程、被限制并封装到该协程中的状态<!--
+一个 [actor](https://en.wikipedia.org/wiki/Actor_model) 是由协程、
+被限制并封装到该协程中的状态<!--
 -->以及一个与其它协程通信的 _通道_ 组合而成的一个实体。一个简单的 actor 可以简单的写成一个函数，
 但是一个拥有复杂状态的 actor 更适合由类来表示。
 
@@ -492,16 +469,17 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.*
 import kotlin.system.*
 
-suspend fun CoroutineScope.massiveRun(action: suspend () -> Unit) {
+suspend fun massiveRun(action: suspend () -> Unit) {
     val n = 100  // 启动的协程数量
     val k = 1000 // 每个协程重复执行同个动作的次数
     val time = measureTimeMillis {
-        val jobs = List(n) {
-            launch {
-                repeat(k) { action() }
+        coroutineScope { // scope for coroutines
+            repeat(n) {
+                launch {
+                    repeat(k) { action() }
+                }
             }
         }
-        jobs.forEach { it.join() }
     }
     println("Completed ${n * k} actions in $time ms")
 }
@@ -522,19 +500,21 @@ fun CoroutineScope.counterActor() = actor<CounterMsg> {
     }
 }
 
-fun main() = runBlocking<Unit> {
 //sampleStart
+fun main() = runBlocking {
     val counter = counterActor() // 创建该 actor
-    GlobalScope.massiveRun {
-        counter.send(IncCounter)
+    withContext(Dispatchers.Default) {
+        massiveRun {
+            counter.send(IncCounter)
+        }
     }
     // 发送一条消息以用来从一个 actor 中获取计数值
     val response = CompletableDeferred<Int>()
     counter.send(GetCounter(response))
     println("Counter = ${response.await()}")
     counter.close() // 关闭该actor
-//sampleEnd
 }
+//sampleEnd
 ```
 
 
@@ -548,7 +528,8 @@ Counter = 100000
 
 actor 本身执行时所处上下文（就正确性而言）无关紧要。一个 actor 是<!--
 -->一个协程，而一个协程是按顺序执行的，因此将状态限制到特定协程<!--
--->可以解决共享可变状态的问题。实际上，actor 可以修改自己的私有状态，但只能通过消息互相影响（避免任何锁定）。
+-->可以解决共享可变状态的问题。实际上，actor 可以修改自己的私有状态，
+但只能通过消息互相影响（避免任何锁定）。
 
 actor 在高负载下比锁更有效，因为在这种情况下它总是有工作要做，而且根本不<!--
 -->需要切换到不同的上下文。
@@ -560,10 +541,7 @@ actor 在高负载下比锁更有效，因为在这种情况下它总是有工�
 <!--- MODULE kotlinx-coroutines-core -->
 <!--- INDEX kotlinx.coroutines -->
 [Dispatchers.Default]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-dispatchers/-default.html
-[GlobalScope]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-global-scope/index.html
 [withContext]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/with-context.html
-[CoroutineScope()]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-coroutine-scope.html
-[CoroutineScope]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-coroutine-scope/index.html
 [CompletableDeferred]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-completable-deferred/index.html
 <!--- INDEX kotlinx.coroutines.sync -->
 [Mutex]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.sync/-mutex/index.html
