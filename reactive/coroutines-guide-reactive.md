@@ -205,12 +205,6 @@ Begin
 在 Rx 的术语中这被称为 _冷_ 发布者。有很多标准的 Rx 操作符同样会生产冷流。我们可以在同一个协程中<!--
 -->收集它们，并且每个收集器都获得相同的元素流。
 
-**警告**：它计划在未来的一秒钟内在通道上调用 `consumeEach` 方法<!--
--->来准备好消费元素可以快速的失败，这会<!--
--->立即抛出一个 `IllegalStateException`。
-查看[这个提案](https://github.com/Kotlin/kotlinx.coroutines/issues/167)<!--
--->的细节。
-
 > 注意，我们可以使用 Rx 中的
 [publish](https://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#publish())
 操作符与 [connect](https://reactivex.io/RxJava/2.x/javadoc/io/reactivex/flowables/ConnectableFlowable.html#connect())
