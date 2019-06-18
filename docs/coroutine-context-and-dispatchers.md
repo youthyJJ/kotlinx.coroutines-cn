@@ -25,7 +25,7 @@ class DispatchersGuideTest {
   * [非受限调度器 vs 受限调度器](#非受限调度器-vs-受限调度器)
   * [调试协程与线程](#调试协程与线程)
   * [在不同线程间跳转](#在不同线程间跳转)
-  * [上下文中的任务](#上下文中的任务)
+  * [上下文中的作业](#上下文中的作业)
   * [子协程](#子协程)
   * [父协程的职责](#父协程的职责)
   * [命名协程以用于调试](#命名协程以用于调试)
@@ -270,7 +270,7 @@ fun main() {
 注意，在这个例子中，当我们不再需要某个在 [newSingleThreadContext] 中创建的线程的时候，
 它使用了 Kotlin 标准库中的 `use` 函数来释放该线程。
 
-### 上下文中的任务
+### 上下文中的作业
 
 协程的 [Job] 是它上下文中的一部分。协程可以在它所属的上下文中使用
 `coroutineContext[Job]` 表达式来取回它：
@@ -307,7 +307,7 @@ My job is "coroutine#1":BlockingCoroutine{Active}@6d311334
 当一个协程被其它协程在 [CoroutineScope] 中启动的时候，
 它将通过 [CoroutineScope.coroutineContext] 来承袭上下文，并且<!--
 -->这个新协程的 [Job] 将会成为<!--
--->父协程任务的 _子_ 任务。当一个父协程被取消的时候，所有它的子协程<!--
+-->父协程作业的 _子_ 作业。当一个父协程被取消的时候，所有它的子协程<!--
 -->也会被递归的取消。
 
 然而，当 [GlobalScope] 被用来启动一个协程时，它与作用域无关且<!--
@@ -323,7 +323,7 @@ fun main() = runBlocking<Unit> {
 //sampleStart
     // 启动一个协程来处理某种传入请求（request）
     val request = launch {
-        // 孵化了两个子任务, 其中一个通过 GlobalScope 启动
+        // 孵化了两个子作业, 其中一个通过 GlobalScope 启动
         GlobalScope.launch {
             println("job1: I run in GlobalScope and execute independently!")
             delay(1000)
@@ -374,7 +374,7 @@ fun main() = runBlocking<Unit> {
 //sampleStart
     // 启动一个协程来处理某种传入请求（request）
     val request = launch {
-        repeat(3) { i -> // 启动少量的子任务
+        repeat(3) { i -> // 启动少量的子作业
             launch  {
                 delay((i + 1) * 200L) // 延迟 200 毫秒、400 毫秒、600 毫秒的时间
                 println("Coroutine $i is done")
@@ -408,7 +408,7 @@ Now processing of the request is complete
 
 协程日志会频繁记录的时候以及当你只是需要来自相同协程的关联日志记录，
 自动分配 id 是非常棒的。然而，当协程与执行一个明确的请求<!--
--->或与执行一些显式的后台任务有关的时候，出于调试的目的给它明确的命名是更好的做法。
+-->或与执行一些显式的后台作业有关的时候，出于调试的目的给它明确的命名是更好的做法。
 [CoroutineName] 上下文元素可以给线程像给函数命名一样命名。它在协程被执行且<!--
 -->[调试模式](#调试协程与线程)被开启时将显示线程的名字。
 
@@ -489,7 +489,7 @@ I'm working in thread DefaultDispatcher-worker-1 @test#2
 
 ### 协程作用域
 
-让我们把有关上下文、子协程以及任务的知识梳理一下。假设我们的应用程序中有<!--
+让我们把有关上下文、子协程以及作业的知识梳理一下。假设我们的应用程序中有<!--
 -->一个在生命周期中的对象，但这个对象并不是协程。假如，我们写了一个 Android 应用程序<!--
 -->并在上下文中启动了多个协程来为 Android activity 进行异步操作来拉取<!--
 -->以及更新数据，或作动画等。当 activity 被销毁的时候这些协程必须被取消<!--

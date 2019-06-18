@@ -200,7 +200,7 @@ Begin
 
 [publish] 协程构建器在上面的示例中没有启动协程，
 但是每个 [collect][org.reactivestreams.Publisher.collect] 调用都会启动一个协程。
-在这段代码中有两个 [publish]，这也就是为什么我们看到了“Begin”被打印了两次。
+在这里有两个 [publish]，这也就是为什么我们看到了“Begin”被打印了两次。
 
 在 Rx 的术语中这被称为 _冷_ 发布者。有很多标准的 Rx 操作符同样会生产冷流。我们可以在同一个协程中<!--
 -->收集它们，并且每个收集器都获得相同的元素流。
@@ -212,10 +212,10 @@ Begin
 
 ### 订阅与取消
 
-在先前小节的示例中使用了 `source.collect { ... }` 来收集所有的元素。
-我们可以使用 [openSubscription][org.reactivestreams.Publisher.openSubscription] 来打开一个通道并迭代它，
-而不是收集元素，这样我们就可以对迭代进行更精细的控制，
-例如使用 `break`，并如下所示：
+In the second example from the previous section, `source.collect { ... }` was used to collect all elements.
+Instead, we can open a channel using [openSubscription][org.reactivestreams.Publisher.openSubscription]
+and iterate over it. In this way, we can have finer-grained control over our iteration
+(using `break`, for example), as shown below:
 
 <!--- INCLUDE
 import io.reactivex.*
@@ -256,8 +256,8 @@ Finally
 <!--- TEST -->
 
 使用一个显式的 `openSubscription` 我们应该从相应的订阅源 [cancel][ReceiveChannel.cancel]
-订阅，但是这里不需要显式调用 `cancel` —— 在内部
-[consume] 会为我们做这些事。
+订阅，但是这里不需要显式调用 `cancel`——
+[consume] 会在内部为我们做这些事。
 配置
 [doFinally](https://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#doFinally(io.reactivex.functions.Action))
 监听器并打印“Finally”来确认订阅确实被取消了。注意“OnComplete”
@@ -315,7 +315,7 @@ _恢复_ 了主协程，它被分派到主线程上打印出来
 
 在 Rx Java 2.x 中一个支持背压的类被称为
 [Flowable](https://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html)。
-在下面的示例中我们可以使用 `kotlinx-coroutines-rx2` 模块中的协程构建器 [rxFlowable] 来定义一个
+在下面的示例中，我们可以使用 `kotlinx-coroutines-rx2` 模块中的协程构建器 [rxFlowable] 来定义一个
 发送从 1 到 3 三个整数的 flowable。
 在调用挂起的 [send][SendChannel.send] 函数之前，
 它在输出中打印了一条消息，所以我们可以来研究它是如何操作的。
@@ -569,11 +569,11 @@ fun CoroutineScope.range(context: CoroutineContext, start: Int, count: Int) = pu
 }
 ```
 
-在这段代码中 `CoroutineScope` 与 `context` 被用来替代一个 `Executor` 并且所有的背压方面都被小心的<!--
+这里的 `CoroutineScope` 与 `context` 被用来替代一个 `Executor` 并且所有的背压方面都被小心的<!--
 -->用于协程机制。注意，此实现仅依赖于那些定义了 `Publisher` 接口和它的朋友们<!--
 -->的小型响应式流库。
 
-它可以直接在协程中被使用：
+直接在协程中使用：
 
 ```kotlin
 fun main() = runBlocking<Unit> {
@@ -644,7 +644,7 @@ fun main() = runBlocking<Unit> {
 
 > 可以在[这里](kotlinx-coroutines-rx2/test/guide/example-reactive-operators-02.kt)获取完整代码。
 
-不难看出，结果将是：
+不难看出其结果会是：
 
 ```text
 2 is even
@@ -657,10 +657,10 @@ fun main() = runBlocking<Unit> {
 
 让我们为
 [takeUntil](https://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#takeUntil(org.reactivestreams.Publisher))
-操作符实现自己的版本。它是非常[难于](https://akarnokd.blogspot.ru/2015/05/pitfalls-of-operator-implementations.html)<!--
--->去实现的，因为需要跟踪和管理两个流的订阅。
-我们需要以来源流中的所有元素直到另一个流也执行完成或<!--
--->发射了任何东西。然而，我们有 [select] 表达式可以在协程的实现中拯救我们：
+operator. It is quite [tricky](https://akarnokd.blogspot.ru/2015/05/pitfalls-of-operator-implementations.html)
+as subscriptions to two streams need to be tracked and managed.
+We need to relay all the elements from the source stream until the other stream either completes or
+emits anything. However, we have the [select] expression to rescue us in the coroutines implementation:
 
 <!--- INCLUDE
 import kotlinx.coroutines.channels.*
@@ -687,8 +687,7 @@ fun <T, U> Publisher<T>.takeUntil(context: CoroutineContext, other: Publisher<U>
 ```
 
 这段代码使用 [whileSelect] 作为比 `while(select{...}) {}` 循环更好的快捷方式，并且 Kotlin 的
-[use](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.io/use.html) 
-表达式会在退出时关闭通道，并取消订阅相应的发布者。
+[consume] 表达式会在退出时关闭通道，并取消订阅相应的发布者。
 
 在下面手写的
 [range](https://reactivex.io/RxJava/2.x/javadoc/io/reactivex/Flowable.html#range(int,%20int)) 与
@@ -751,11 +750,8 @@ fun <T> Publisher<Publisher<T>>.merge(context: CoroutineContext) = GlobalScope.p
 }
 ```
 
-注意，
-[coroutineContext](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/coroutine-context.html)
-在调用 [launch] 协程构建器中的用途。它被用来指定
-`publish` 协程的上下文。这种方法，所有被启动的协程<!--
--->在这里都是 `publish` 协程的[子协程](../docs/coroutines-guide.md#children-of-a-coroutine)<!--
+请注意，所有被启动的协程<!--
+-->在这里都是 `publish` 协程的子协程<!--
 -->并且当 `publish` 协程被取消或以其它的方式执行完毕时将会被取消。
 此外，父协程会等待至所有子协程执行完毕没，这个实现会完全<!--
 -->合并所有的响应式流。
@@ -1052,7 +1048,6 @@ fun main() = runBlocking<Unit> {
 [runBlocking]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/run-blocking.html
 [Dispatchers.Unconfined]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-dispatchers/-unconfined.html
 [yield]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/yield.html
-[launch]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/launch.html
 [Dispatchers.Default]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-dispatchers/-default.html
 [Job.join]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-job/join.html
 <!--- INDEX kotlinx.coroutines.channels -->
