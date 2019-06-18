@@ -55,8 +55,8 @@ fun main() = runBlocking {
     }
     delay(1300L) // 延迟一段时间
     println("main: I'm tired of waiting!")
-    job.cancel() // 取消该任务
-    job.join() // 等待任务执行结束
+    job.cancel() // 取消该作业
+    job.join() // 等待作业执行结束
     println("main: Now I can quit.")
 //sampleEnd
 }
@@ -111,7 +111,7 @@ fun main() = runBlocking {
     }
     delay(1300L) // 等待一段时间
     println("main: I'm tired of waiting!")
-    job.cancelAndJoin() // 取消一个任务并且等待它结束
+    job.cancelAndJoin() // 取消一个作业并且等待它结束
     println("main: Now I can quit.")
 //sampleEnd
 }
@@ -121,8 +121,8 @@ fun main() = runBlocking {
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-cancel-02.kt)获取完整代码。
 
-运行示例代码，并且我们可以看到它连续打印出了“I'm sleeping” ，甚至在调用取消后，
-任务仍然执行了五次循环迭代并运行到了它结束为止。
+运行示例代码，并且我们可以看到它连续打印出了“I'm sleeping”，甚至在调用取消后，
+作业仍然执行了五次循环迭代并运行到了它结束为止。
 
 <!--- TEST 
 job: I'm sleeping 0 ...
@@ -163,7 +163,7 @@ fun main() = runBlocking {
     }
     delay(1300L) // 等待一段时间
     println("main: I'm tired of waiting!")
-    job.cancelAndJoin() // 取消该任务并等待它结束
+    job.cancelAndJoin() // 取消该作业并等待它结束
     println("main: Now I can quit.")
 //sampleEnd
 }
@@ -210,7 +210,7 @@ fun main() = runBlocking {
     }
     delay(1300L) // 延迟一段时间
     println("main: I'm tired of waiting!")
-    job.cancelAndJoin() // 取消该任务并且等待它结束
+    job.cancelAndJoin() // 取消该作业并且等待它结束
     println("main: Now I can quit.")
 //sampleEnd
 }
@@ -238,7 +238,7 @@ main: Now I can quit.
 
 在前一个例子中任何尝试在 `finally` 块中调用挂起函数的行为都会抛出
 [CancellationException]，因为这里持续运行的代码是可以被取消的。通常，这并不是一个<!--
--->问题，所有良好的关闭操作（关闭一个文件、取消一个任务、或是关闭任何一种<!--
+-->问题，所有良好的关闭操作（关闭一个文件、取消一个作业、或是关闭任何一种<!--
 -->通信通道）通常都是非阻塞的，并且不会调用任何挂起函数。然而，在<!--
 -->真实的案例中，当你需要挂起一个被取消的协程，你可以将相应的代码包装在
 `withContext(NonCancellable) {……}` 中，并使用 [withContext] 函数以及 [NonCancellable] 上下文，见如下示例所示：
@@ -266,7 +266,7 @@ fun main() = runBlocking {
     }
     delay(1300L) // 延迟一段时间
     println("main: I'm tired of waiting!")
-    job.cancelAndJoin() // 取消该任务并等待它结束
+    job.cancelAndJoin() // 取消该作业并等待它结束
     println("main: Now I can quit.")
 //sampleEnd
 }
