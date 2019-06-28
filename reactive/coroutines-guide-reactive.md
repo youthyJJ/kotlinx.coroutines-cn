@@ -292,15 +292,16 @@ OnSubscribe
 1
 2
 3
-4
 OnComplete
 Finally
+4
 5
 ```
 
 <!--- TEST -->
 
-注意，如何使“OnComplete”与“Finally”在最后一个元素“5”之前被打印。在这个示例中它将发生在我们的 `main`
+注意，如何使“OnComplete”与“Finally”在最后的元素“4”与“5”之前输出。
+在这个示例中它将发生在我们的 `main`
 函数在协程中执行时，使用 [runBlocking] 协程构建器来启动它。
 我们的主协程在 flowable 中使用 `source.collect { …… }` 扩展函数来接收通道。
 当它等待源发射元素的时候该主协程是 _挂起的_ ，
