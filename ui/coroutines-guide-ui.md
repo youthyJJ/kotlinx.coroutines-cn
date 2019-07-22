@@ -1,6 +1,6 @@
 <!--- INCLUDE .*/example-ui-([a-z]+)-([0-9]+)\.kt 
 /*
- * Copyright 2016-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license.
+ * Copyright 2016-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license.
  */
 
 // This file was automatically generated from coroutines-guide-ui.md by Knit tool. Do not edit.
@@ -165,7 +165,7 @@ fun setup(hello: TextView, fab: FloatingActionButton) {
 部分中添加 `kotlinx-coroutines-android` 模块的依赖：
 
 ```groovy
-implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.0-M2"
+implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.0-RC"
 ```
 
 你可以在 Github 上 clone [kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines) 这个项目到你的<!--

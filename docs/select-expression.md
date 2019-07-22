@@ -1,6 +1,6 @@
 <!--- INCLUDE .*/example-([a-z]+)-([0-9a-z]+)\.kt 
 /*
- * Copyright 2016-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license.
+ * Copyright 2016-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license.
  */
 
 // This file was automatically generated from coroutines-guide.md by Knit tool. Do not edit.
@@ -163,7 +163,7 @@ buzz -> 'Buzz!'
 ### 通道关闭时 select
 
 select 中的 [onReceive][ReceiveChannel.onReceive] 子句在已经关闭的通道执行会发生失败，并导致相应的
-`select` 抛出异常。我们可以使用 [onReceiveOrNull][ReceiveChannel.onReceiveOrNull] 子句在关闭通道时执行<!--
+`select` 抛出异常。我们可以使用 [onReceiveOrNull][onReceiveOrNull] 子句在关闭通道时执行<!--
 -->特定操作。以下示例还显示了 `select` 是一个返回<!--
 -->其查询方法结果的表达式：
 
@@ -188,6 +188,10 @@ suspend fun selectAorB(a: ReceiveChannel<String>, b: ReceiveChannel<String>): St
 ```
 
 </div>
+
+Note that [onReceiveOrNull][onReceiveOrNull] is an extension function defined only
+for channels with non-nullable elements so that there is no accidental confusion between a closed channel
+and a null value.
 
 现在有一个生成四次“Hello”字符串的 `a` 通道，
 和一个生成四次“World”字符串的 `b` 通道，我们在这两个通道上使用它：
@@ -260,7 +264,7 @@ Channel 'a' is closed
 [send][SendChannel.send] 时会不时地被挂起，进而 `b` 也有机会发送。
 
 第二个观察结果是，当通道已经关闭时，
-会立即选择 [onReceiveOrNull][ReceiveChannel.onReceiveOrNull]。
+会立即选择 [onReceiveOrNull][onReceiveOrNull]。
 
 ### Select 以发送
 
@@ -433,7 +437,7 @@ Deferred 4 produced answer 'Waited for 128 ms'
 
 我们现在来编写一个通道生产者函数，它消费一个产生延迟字符串的通道，并等待每个接收的<!--
 -->延迟值，但它只在下一个延迟值到达或者通道关闭之前处于运行状态。此示例将
-[onReceiveOrNull][ReceiveChannel.onReceiveOrNull] 和 [onAwait][Deferred.onAwait] 子句放在同一个 `select` 中：
+[onReceiveOrNull][onReceiveOrNull] 和 [onAwait][Deferred.onAwait] 子句放在同一个 `select` 中：
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
 
@@ -556,7 +560,7 @@ Channel was closed
 <!--- INDEX kotlinx.coroutines.channels -->
 [ReceiveChannel.receive]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-receive-channel/receive.html
 [ReceiveChannel.onReceive]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-receive-channel/on-receive.html
-[ReceiveChannel.onReceiveOrNull]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-receive-channel/on-receive-or-null.html
+[onReceiveOrNull]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/on-receive-or-null.html
 [SendChannel.send]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-send-channel/send.html
 [SendChannel.onSend]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-send-channel/on-send.html
 <!--- INDEX kotlinx.coroutines.selects -->
