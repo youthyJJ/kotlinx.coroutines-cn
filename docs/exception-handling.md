@@ -369,8 +369,8 @@ Caught original java.io.IOException
 
 ### 监督作业
 
-[SupervisorJob][SupervisorJob()] 可以被用于这些目的。它类似于常规的 [Job][Job()]，唯一的取消异常将<!--
--->只会向下传播。这是非常容易从示例中观察到的：
+[SupervisorJob][SupervisorJob()] 可以被用于这些目的。它类似于常规的 [Job][Job()]，唯一的不同是：<!--
+-->SupervisorJob 的取消只会向下传播。这是非常容易从示例中观察到的：
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
 
