@@ -1,5 +1,36 @@
 # Change log for kotlinx.coroutines
 
+## Version 1.3.0-RC
+
+### Flow
+
+* Core `Flow` API is promoted to stable
+* New basic `Flow` operators: `withIndex`, `collectIndexed`, `distinctUntilChanged` overload
+* New core `Flow` operators: `onStart` and `onCompletion`
+* `ReceiveChannel.consumeAsFlow` and `emitAll` (#1340)
+
+### General changes
+
+* Kotlin updated to 1.3.41
+* Added `kotlinx-coroutines-bom` with Maven Bill of Materials (#1110)
+* Reactive integrations are seriously improved
+  * All builders now are top-level functions instead of extensions on `CoroutineScope` and prohibit `Job` instance in their context to simplify lifecycle management
+  * Fatal exceptions are handled consistently (#1297)
+  * Integration with Reactor Context added (#284)
+* Stacktrace recovery for `suspend fun main` (#1328)
+* `CoroutineScope.cancel` extension with message (#1338)
+* Protection against non-monotonic clocks in `delay` (#1312)
+* `Duration.ZERO` is handled properly in JDK 8 extensions (#1349)
+* Library code is adjusted to be more minification-friendly 
+
+## Version 1.3.0-M2
+
+ * Kotlin updated to 1.3.40.
+ * `Flow` exception transparency concept.
+ * New declarative `Flow` operators: `onCompletion`, `catch`, `retryWhen`, `launchIn`. `onError*` operators are deprecated in favour of `catch`. (#1263)
+ * `Publisher.asFlow` is integrated with `buffer` operator.
+ * `Publisher.openSubscription` default request size is `1` instead of `0` (#1267).
+
 ## Version 1.3.0-M1
 
 Flow:
@@ -37,6 +68,10 @@ General changes:
  * Fix cancellation bug in onJoin (#1130).
  * Prevent internal names clash that caused errors for ProGuard (#1159).
  * POSIX's `nanosleep` as `delay` in `runBlocking ` in K/N (#1225).
+
+## Version 1.2.2
+
+* Kotlin updated to 1.3.40.
 
 ## Version 1.2.1
 

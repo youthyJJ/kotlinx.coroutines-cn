@@ -1,6 +1,6 @@
 <!--- INCLUDE .*/example-([a-z]+)-([0-9a-z]+)\.kt 
 /*
- * Copyright 2016-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license.
+ * Copyright 2016-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license.
  */
 
 // This file was automatically generated from coroutines-guide.md by Knit tool. Do not edit.
@@ -369,8 +369,8 @@ Caught original java.io.IOException
 
 ### 监督作业
 
-[SupervisorJob][SupervisorJob()] 可以被用于这些目的。它类似于常规的 [Job][Job()]，唯一的取消异常将<!--
--->只会向下传播。这是非常容易从示例中观察到的：
+[SupervisorJob][SupervisorJob()] 可以被用于这些目的。它类似于常规的 [Job][Job()]，唯一的不同是：<!--
+-->SupervisorJob 的取消只会向下传播。这是非常容易从示例中观察到的：
 
 
 

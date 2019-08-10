@@ -11,7 +11,7 @@ import kotlinx.coroutines.internal.*
 import kotlinx.coroutines.intrinsics.*
 import kotlin.coroutines.*
 import kotlin.coroutines.intrinsics.*
-import kotlinx.coroutines.flow.unsafeFlow as flow
+import kotlinx.coroutines.flow.internal.unsafeFlow as flow
 
 /**
  * Creates a [CoroutineScope] and calls the specified suspend block with this scope.
@@ -70,7 +70,6 @@ private class FlowCoroutine<T>(
     context: CoroutineContext,
     uCont: Continuation<T>
 ) : ScopeCoroutine<T>(context, uCont) {
-
     public override fun childCancelled(cause: Throwable): Boolean {
         if (cause is ChildCancelledException) return true
         return cancelImpl(cause)
@@ -81,7 +80,6 @@ private class FlowProduceCoroutine<T>(
     parentContext: CoroutineContext,
     channel: Channel<T>
 ) : ProducerCoroutine<T>(parentContext, channel) {
-
     public override fun childCancelled(cause: Throwable): Boolean {
         if (cause is ChildCancelledException) return true
         return cancelImpl(cause)

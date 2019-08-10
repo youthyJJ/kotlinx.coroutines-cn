@@ -1,6 +1,6 @@
 <!--- INCLUDE .*/example-reactive-([a-z]+)-([0-9]+)\.kt 
 /*
- * Copyright 2016-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license.
+ * Copyright 2016-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license.
  */
 
 // This file was automatically generated from coroutines-guide-reactive.md by Knit tool. Do not edit.
@@ -292,15 +292,16 @@ OnSubscribe
 1
 2
 3
-4
 OnComplete
 Finally
+4
 5
 ```
 
 <!--- TEST -->
 
-注意，如何使“OnComplete”与“Finally”在最后一个元素“5”之前被打印。在这个示例中它将发生在我们的 `main`
+注意，如何使“OnComplete”与“Finally”在最后的元素“4”与“5”之前输出。
+在这个示例中它将发生在我们的 `main`
 函数在协程中执行时，使用 [runBlocking] 协程构建器来启动它。
 我们的主协程在 flowable 中使用 `source.collect { …… }` 扩展函数来接收通道。
 当它等待源发射元素的时候该主协程是 _挂起的_ ，
@@ -616,7 +617,7 @@ fun <T, R> Publisher<T>.fusedFilterMap(
     context: CoroutineContext,   // 协程执行的上下文
     predicate: (T) -> Boolean,   // 过滤器 predicate
     mapper: (T) -> R             // mapper 函数
-) = GlobalScope.publish<R>(context) {
+) = publish<R>(context) {
     collect {                    // 收集源流
         if (predicate(it))       // 过滤的部分
             send(mapper(it))     // 转换的部分
@@ -637,7 +638,7 @@ fun CoroutineScope.range(start: Int, count: Int) = publish<Int> {
 ```kotlin
 fun main() = runBlocking<Unit> {
    range(1, 5)
-       .fusedFilterMap(coroutineContext, { it % 2 == 0}, { "$it is even" })
+       .fusedFilterMap(Dispatchers.Unconfined, { it % 2 == 0}, { "$it is even" })
        .collect { println(it) } // 打印所有的字符串结果
 }
 ```
@@ -672,7 +673,7 @@ import kotlin.coroutines.*
 -->
 
 ```kotlin
-fun <T, U> Publisher<T>.takeUntil(context: CoroutineContext, other: Publisher<U>) = GlobalScope.publish<T>(context) {
+fun <T, U> Publisher<T>.takeUntil(context: CoroutineContext, other: Publisher<U>) = publish<T>(context) {
     this@takeUntil.openSubscription().consume { // 显式地打开 Publisher<T> 的通道
         val current = this
         other.openSubscription().consume { // 显式地打开 Publisher<U> 的通道
@@ -710,7 +711,7 @@ fun CoroutineScope.rangeWithInterval(time: Long, start: Int, count: Int) = publi
 fun main() = runBlocking<Unit> {
     val slowNums = rangeWithInterval(200, 1, 10)         // 数字之间有 200 毫秒的间隔
     val stop = rangeWithInterval(500, 1, 10)             // 第一个在 500 毫秒之后
-    slowNums.takeUntil(coroutineContext, stop).collect { println(it) } // 让我们测试它
+    slowNums.takeUntil(Dispatchers.Unconfined, stop).collect { println(it) } // 让我们测试它
 }
 ```
 
@@ -741,7 +742,7 @@ import kotlin.coroutines.*
 -->
 
 ```kotlin
-fun <T> Publisher<Publisher<T>>.merge(context: CoroutineContext) = GlobalScope.publish<T>(context) {
+fun <T> Publisher<Publisher<T>>.merge(context: CoroutineContext) = publish<T>(context) {
   collect { pub -> // for each publisher collected
       launch {  // launch a child coroutine
           pub.collect { send(it) } // resend all element from this publisher
@@ -782,7 +783,7 @@ fun CoroutineScope.testPub() = publish<Publisher<Int>> {
 
 ```kotlin
 fun main() = runBlocking<Unit> {
-    testPub().merge(coroutineContext).collect { println(it) } // 打印整个流
+    testPub().merge(Dispatchers.Unconfined).collect { println(it) } // 打印整个流
 }
 ```
 
@@ -864,7 +865,7 @@ import kotlin.coroutines.CoroutineContext
 -->
 
 ```kotlin
-fun rangeWithInterval(context: CoroutineContext, time: Long, start: Int, count: Int) = GlobalScope.publish<Int>(context) {
+fun rangeWithInterval(context: CoroutineContext, time: Long, start: Int, count: Int) = publish<Int>(context) {
     for (x in start until start + count) { 
         delay(time) // 在每次数字发射前等待
         send(x)
@@ -914,7 +915,7 @@ import kotlin.coroutines.CoroutineContext
 -->
 
 ```kotlin
-fun rangeWithInterval(context: CoroutineContext, time: Long, start: Int, count: Int) = GlobalScope.publish<Int>(context) {
+fun rangeWithInterval(context: CoroutineContext, time: Long, start: Int, count: Int) = publish<Int>(context) {
     for (x in start until start + count) { 
         delay(time) // 在每次数字发射前等待
         send(x)
@@ -1066,12 +1067,12 @@ fun main() = runBlocking<Unit> {
 [whileSelect]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.selects/while-select.html
 <!--- MODULE kotlinx-coroutines-reactive -->
 <!--- INDEX kotlinx.coroutines.reactive -->
-[publish]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-reactive/kotlinx.coroutines.reactive/kotlinx.coroutines.-coroutine-scope/publish.html
+[publish]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-reactive/kotlinx.coroutines.reactive/publish.html
 [org.reactivestreams.Publisher.collect]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-reactive/kotlinx.coroutines.reactive/org.reactivestreams.-publisher/collect.html
 [org.reactivestreams.Publisher.openSubscription]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-reactive/kotlinx.coroutines.reactive/org.reactivestreams.-publisher/open-subscription.html
 <!--- MODULE kotlinx-coroutines-rx2 -->
 <!--- INDEX kotlinx.coroutines.rx2 -->
-[rxFlowable]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-rx2/kotlinx.coroutines.rx2/kotlinx.coroutines.-coroutine-scope/rx-flowable.html
+[rxFlowable]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-rx2/kotlinx.coroutines.rx2/rx-flowable.html
 <!--- END -->
 
 

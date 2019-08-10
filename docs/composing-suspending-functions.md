@@ -1,6 +1,6 @@
 <!--- INCLUDE .*/example-([a-z]+)-([0-9a-z]+)\.kt 
 /*
- * Copyright 2016-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license.
+ * Copyright 2016-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license.
  */
 
 // This file was automatically generated from coroutines-guide.md by Knit tool. Do not edit.
@@ -56,8 +56,8 @@ suspend fun doSomethingUsefulTwo(): Int {
 
 
 
-如果需要按 _顺序_ 调用它们，我们接下来会做什么--首先调用 `doSomethingUsefulOne` _接下来_
-调用 `doSomethingUsefulTwo` 并且计算它们结果的和吗？
+如果需要按 _顺序_ 调用它们，我们接下来会做什么——首先调用 `doSomethingUsefulOne` _接下来_
+调用 `doSomethingUsefulTwo`，并且计算它们结果的和吗？
 实际上，如果我们要根据第一个函数的结果来决定是否我们需要<!--
 -->调用第二个函数或者决定如何调用它时，我们就会这样做。
 
@@ -161,15 +161,15 @@ Completed in 1017 ms
 
 <!--- TEST ARBITRARY_TIME -->
 
-这里快了两倍，因为我们使用两个协程进行并发。
-注意，使用协程进行并发总是显式的。
+这里快了两倍，因为两个协程并发执行。
+请注意，使用协程进行并发总是显式的。
 
 ### 惰性启动的 async
 
-使用一个可选的参数 `start` 并传值 [CoroutineStart.LAZY]，可以对 [async] 进行惰性操作。
-只有当结果需要被 [await][Deferred.await] 或者如果一个
-[start][Job.start] 函数被调用，协程才会<!--
--->被启动。运行下面的示例：
+Optionally, [async] can be made lazy by setting its `start` parameter to [CoroutineStart.LAZY]. 
+In this mode it only starts the coroutine when its result is required by 
+[await][Deferred.await], or if its `Job`'s [start][Job.start] function 
+is invoked. Run the following example:
 
 
 
@@ -219,18 +219,18 @@ Completed in 1017 ms
 -->程序员准确的在开始执行时调用 [start][Job.start]。我们首先
 调用 `one`，然后调用 `two`，接下来等待这个协程执行完毕。
 
-注意，如果我们在 `println` 中调用 [await][Deferred.await] 并在个别协程上省略 [start][Job.start]，<!--
--->则我们会得到顺序的行为作为 [await][Deferred.await] 来启动协程的<!--
--->执行并且等待执行结束，这不是懒序列的预期用例。
-当计算值涉及暂停函数时，该用例中使用 `async(start = CoroutineStart.LAZY)` 替换
-标准库中的 `lazy` 函数。
+Note that if we just call [await][Deferred.await] in `println` without first calling [start][Job.start] on individual 
+coroutines, this will lead to sequential behavior, since [await][Deferred.await] starts the coroutine 
+execution and waits for its finish, which is not the intended use-case for laziness. 
+The use-case for `async(start = CoroutineStart.LAZY)` is a replacement for the 
+standard `lazy` function in cases when computation of the value involves suspending functions.
 
 ### async 风格的函数
 
 我们可以定义异步风格的函数来 _异步_ 的调用 `doSomethingUsefulOne` 和 `doSomethingUsefulTwo`
 并使用 [async] 协程建造器并带有一个显式的 [GlobalScope] 引用。
 我们给这样的函数的名称中加上<!--
--->“Async”后缀来突出表明：事实上，它们只做异步计算并且需要<!--
+-->“……Async”后缀来突出表明：事实上，它们只做异步计算并且需要<!--
 -->使用延期的值来获得结果。
 
 
@@ -339,7 +339,7 @@ suspend fun concurrentSum(): Int = coroutineScope {
 
 
 这种情况下，如果在 `concurrentSum` 函数内部发生了错误，并且它抛出了一个异常，
-所有在作用域中启动的协程都将会被取消。
+所有在作用域中启动的协程都会被取消。
 
 <!--- CLEAR -->
 
@@ -379,7 +379,7 @@ suspend fun doSomethingUsefulTwo(): Int {
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-compose-05.kt)获取完整代码。
 
-从上面的 main 函数的输出可以看出，我们仍然可以同时执行这两个操作：
+从上面的 `main` 函数的输出可以看出，我们仍然可以同时执行这两个操作：
 
 ```text
 The answer is 42
@@ -426,7 +426,8 @@ suspend fun failedConcurrentSum(): Int = coroutineScope {
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-compose-06.kt)获取完整代码。
 
-注意，当第一个子协程失败的时候第一个 `async` 是如何等待父线程被取消的：
+Note how both the first `async` and the awaiting parent are cancelled on failure of one of the children
+(namely, `two`):
 ```text
 Second child throws an exception
 First child was cancelled
