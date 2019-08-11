@@ -221,7 +221,8 @@ The `log` function prints the name of the thread in square brackets, and you can
 thread with the identifier of the currently executing coroutine appended to it. This identifier 
 is consecutively assigned to all created coroutines when the debugging mode is on.
 
-你可以在 [newCoroutineContext] 函数的文档中阅读有关调试工具的更多信息。
+> Debugging mode is also turned on when JVM is run with `-ea` option.
+你可以在 [DEBUG_PROPERTY_NAME] 属性的文档中阅读有关调试工具的更多信息。
 
 ### 在不同线程间跳转
 
@@ -696,7 +697,7 @@ Use [withContext] to update the value of the thread-local in a coroutine, see [a
 [ExecutorCoroutineDispatcher.close]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-executor-coroutine-dispatcher/close.html
 [runBlocking]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/run-blocking.html
 [delay]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/delay.html
-[newCoroutineContext]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/new-coroutine-context.html
+[DEBUG_PROPERTY_NAME]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-d-e-b-u-g_-p-r-o-p-e-r-t-y_-n-a-m-e.html
 [withContext]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/with-context.html
 [isActive]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/is-active.html
 [CoroutineScope.coroutineContext]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-coroutine-scope/coroutine-context.html
