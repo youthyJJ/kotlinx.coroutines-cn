@@ -46,7 +46,7 @@ class DispatchersGuideTest {
 
 ### 调度器与线程
 
-协程上下文包含一个 _协程调度器_ （查看 [CoroutineDispatcher]）它确定了哪些线程或与线程<!--
+协程上下文包含一个 _协程调度器_ （参见 [CoroutineDispatcher]）它确定了哪些线程或与线程<!--
 -->相对应的协程执行。协程调度器可以将协程限制在<!--
 -->一个特定的线程执行，或将它分派到一个线程池，亦或是让它不受限地运行。
 
@@ -673,7 +673,7 @@ Post-main, current thread: Thread[main @coroutine#1,5,main], thread local value:
 `ThreadLocal` 具有一流的支持，可以与任何 `kotlinx.coroutines` 提供的原语一起使用。
 但它有一个关键限制，即：当一个线程局部变量变化时，则这个新值不会传播给协程调用者<!--
 -->（因为上下文元素无法追踪所有 `ThreadLocal` 对象访问），并且下次挂起时更新的值将丢失。
-使用 [withContext] 在协程中更新线程局部变量，请查看 [asContextElement] 来获知更多细节。
+使用 [withContext] 在协程中更新线程局部变量，详见 [asContextElement]。
 
 另外，一个值可以存储在一个可变的域中，例如 `class Counter(var i: Int)`，是的，反过来，
 可以存储在线程局部的变量中。然而，在这个案例中你完全有责任来进行同步<!--
