@@ -47,7 +47,7 @@ class DispatchersGuideTest {
 ### 调度器与线程
 
 协程上下文包含一个 _协程调度器_ （查看 [CoroutineDispatcher]）它确定了哪些线程或与线程<!--
--->相对应的协程被执行。协程调度器可以将协程限制在<!--
+-->相对应的协程执行。协程调度器可以将协程限制在<!--
 -->一个特定的线程执行，或将它分派到一个线程池，亦或是让它不受限地运行。
 
 所有的协程构建器诸如 [launch] 和 [async] 接收一个可选的
@@ -101,14 +101,14 @@ main runBlocking      : I'm working in thread main
 [Dispatchers.Unconfined] 是一个特殊的调度器且似乎也运行在 `main` 线程中，但实际上，
 它是一种不同的机制，这会在后文中讲到。
 
-该默认调度器，当协程在 [GlobalScope] 中启动的时候被使用，
+该默认调度器，当协程在 [GlobalScope] 中启动的时候使用，
 它代表 [Dispatchers.Default] 使用了共享的后台线程池，
 所以 `GlobalScope.launch { …… }` 也可以使用相同的调度器—— `launch(Dispatchers.Default) { …… }`。
   
 [newSingleThreadContext] 为协程的运行启动了一个线程。
 一个专用的线程是一种非常昂贵的资源。
 在真实的应用程序中两者都必须被释放，当不再需要的时候，使用 [close][ExecutorCoroutineDispatcher.close]
-函数，或存储在一个顶级变量中使它在整个应用程序中被重用。
+函数，或存储在一个顶层变量中使它在整个应用程序中被重用。
 
 ### 非受限调度器 vs 受限调度器
  
@@ -117,7 +117,7 @@ main runBlocking      : I'm working in thread main
 -->被调用的挂起函数来决定。非受限的调度器非常适用于执行不<!--
 -->消耗 CPU 时间的任务，以及不更新局限于特定线程的任何共享数据（如UI）的协程。
 
-另一方面，该调度器默认承袭自外部的 [CoroutineScope]。
+另一方面，该调度器默认继承了外部的 [CoroutineScope]。
 [runBlocking] 协程的默认调度器，特别是，
 当它被限制在了调用者线程时，继承自它将会有效地限制协程<!--
 -->在该线程运行并且具有可预测的 FIFO 调度。
@@ -159,13 +159,13 @@ main runBlocking: After delay in thread main
 <!--- TEST LINES_START -->
  
 所以，该协程的上下文继承自 `runBlocking {...}` 协程并在
-`main` 线程中运行，当 [delay] 函数被调用的时候，非受限的那个协程在<!--
+`main` 线程中运行，当 [delay] 函数调用的时候，非受限的那个协程在<!--
 -->默认的执行者线程种恢复执行。
 
 > 非受限的调度器是一种高级机制，可以在某些极端情况下提供帮助<!--
 -->而不需要调度协程以便稍后执行或产生不希望的副作用，
 因为某些操作必须立即在协程中执行。
-非受限调度器不应该被用在通常的代码中。
+非受限调度器不应该在通常的代码中使用。
 
 ### 调试协程与线程
 
@@ -221,7 +221,7 @@ fun main() = runBlocking<Unit> {
 线程，并且附带了当前正在其上执行的协程的标识符。这个标识符<!--
 -->在调试模式开启时，将连续分配给所有创建的协程。
 
-> 当 JVM 以 `-ea` 参数配置运行时，调试模式也会被开启。
+> 当 JVM 以 `-ea` 参数配置运行时，调试模式也会开启。
 你可以在 [DEBUG_PROPERTY_NAME] 属性的文档中阅读有关调试工具的更多信息。
 
 ### 在不同线程间跳转
@@ -496,7 +496,7 @@ I'm working in thread DefaultDispatcher-worker-1 @test#2
 -->并更新数据以及执行动画等等。所有这些协程必须在这个 activity 销毁的时候取消<!--
 -->以避免内存泄漏。当然，我们也可以手动操作上下文与作业，以结合 activity 的生命周期<!--
 -->与它的协程，但是 `kotlinx.coroutines` 提供了一个封装：[CoroutineScope] 的抽象。
-你应该已经熟悉了协程作用域，因为所有的协程构建器都被声明为它之上的扩展。
+你应该已经熟悉了协程作用域，因为所有的协程构建器都声明为在它之上的扩展。
 
 我们通过创建一个 [CoroutineScope] 实例来管理协程的生命周期，并使它与
 activit 的生命周期相关联。`CoroutineScope` 可以通过 [CoroutineScope()] 创建或者通过[MainScope()]
@@ -611,7 +611,7 @@ Destroying activity!
 <!--- TEST -->
 
 你可以看到，只有前两个协程打印了消息，而另一个协程在
-`Activity.destroy()` 中被单次调用了 `job.cancel()`。
+`Activity.destroy()` 中单次调用了 `job.cancel()`。
 
 ### 线程局部数据
 
@@ -671,7 +671,7 @@ Post-main, current thread: Thread[main @coroutine#1,5,main], thread local value:
 方法并且在不正确的使用时快速失败。
 
 `ThreadLocal` 具有一流的支持，可以与任何 `kotlinx.coroutines` 提供的原语一起使用。
-但它又一个关键限制，即：当一个线程局部变量变化时，则这个新值不会传播给协程调用者<!--
+但它有一个关键限制，即：当一个线程局部变量变化时，则这个新值不会传播给协程调用者<!--
 -->（因为上下文元素无法追踪所有 `ThreadLocal` 对象访问），并且下次挂起时更新的值将丢失。
 使用 [withContext] 在协程中更新线程局部变量，请查看 [asContextElement] 来获知更多细节。
 
