@@ -166,10 +166,10 @@ Completed in 1017 ms
 
 ### 惰性启动的 async
 
-Optionally, [async] can be made lazy by setting its `start` parameter to [CoroutineStart.LAZY]. 
-In this mode it only starts the coroutine when its result is required by 
-[await][Deferred.await], or if its `Job`'s [start][Job.start] function 
-is invoked. Run the following example:
+可选的，[async] 可以通过将 `start` 参数设置为 [CoroutineStart.LAZY] 而变为惰性的。
+在这个模式下，只有结果通过 [await][Deferred.await]
+被获取的时候协程才会启动，或者在 `Job` 的 [start][Job.start]
+函数被调用的时候。运行下面的示例：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -219,11 +219,11 @@ Completed in 1017 ms
 -->程序员准确的在开始执行时调用 [start][Job.start]。我们首先
 调用 `one`，然后调用 `two`，接下来等待这个协程执行完毕。
 
-Note that if we just call [await][Deferred.await] in `println` without first calling [start][Job.start] on individual 
-coroutines, this will lead to sequential behavior, since [await][Deferred.await] starts the coroutine 
-execution and waits for its finish, which is not the intended use-case for laziness. 
-The use-case for `async(start = CoroutineStart.LAZY)` is a replacement for the 
-standard `lazy` function in cases when computation of the value involves suspending functions.
+注意，如果我们只是在 `println` 中调用 [await][Deferred.await]，而没有在<!--
+-->单独的协程中调用 [start][Job.start]，这将会导致顺序行为，直到 [await][Deferred.await] 启动该协程
+执行并等待至它结束，这将不是惰性的预期用例。
+在计算一个值涉及挂起函数时，这个 `async(start = CoroutineStart.LAZY)` 的用例被用于替代<!--
+-->标准库中的 `lazy` 函数。
 
 ### async 风格的函数
 
@@ -426,8 +426,8 @@ suspend fun failedConcurrentSum(): Int = coroutineScope {
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-compose-06.kt)获取完整代码。
 
-Note how both the first `async` and the awaiting parent are cancelled on failure of one of the children
-(namely, `two`):
+注意，当任意一个子协程失败的时候，第一个 `async` 以及等待中的父协程都会被取消
+（即 `two`）：
 ```text
 Second child throws an exception
 First child was cancelled
