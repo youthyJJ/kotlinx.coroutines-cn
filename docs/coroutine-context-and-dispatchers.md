@@ -46,9 +46,9 @@ class DispatchersGuideTest {
 
 ### 调度器与线程
 
-The coroutine context includes a _coroutine dispatcher_ (see [CoroutineDispatcher]) that determines what thread or threads 
-the corresponding coroutine uses for its execution. The coroutine dispatcher can confine coroutine execution 
-to a specific thread, dispatch it to a thread pool, or let it run unconfined. 
+协程上下文包含一个 _协程调度器_ （参见 [CoroutineDispatcher]）它确定了哪些线程或与线程<!--
+-->相对应的协程执行。协程调度器可以将协程限制在<!--
+-->一个特定的线程执行，或将它分派到一个线程池，亦或是让它不受限地运行。
 
 所有的协程构建器诸如 [launch] 和 [async] 接收一个可选的
 [CoroutineContext](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/-coroutine-context/) 
@@ -101,26 +101,26 @@ main runBlocking      : I'm working in thread main
 [Dispatchers.Unconfined] 是一个特殊的调度器且似乎也运行在 `main` 线程中，但实际上，
 它是一种不同的机制，这会在后文中讲到。
 
-该默认调度器，当协程在 [GlobalScope] 中启动的时候被使用，
+该默认调度器，当协程在 [GlobalScope] 中启动的时候使用，
 它代表 [Dispatchers.Default] 使用了共享的后台线程池，
 所以 `GlobalScope.launch { …… }` 也可以使用相同的调度器—— `launch(Dispatchers.Default) { …… }`。
   
 [newSingleThreadContext] 为协程的运行启动了一个线程。
 一个专用的线程是一种非常昂贵的资源。
 在真实的应用程序中两者都必须被释放，当不再需要的时候，使用 [close][ExecutorCoroutineDispatcher.close]
-函数，或存储在一个顶级变量中使它在整个应用程序中被重用。
+函数，或存储在一个顶层变量中使它在整个应用程序中被重用。
 
 ### 非受限调度器 vs 受限调度器
  
-The [Dispatchers.Unconfined] coroutine dispatcher starts a coroutine in the caller thread, but only until the
-first suspension point. After suspension it resumes the coroutine in the thread that is fully determined by the
-suspending function that was invoked. The unconfined dispatcher is appropriate for coroutines which neither
-consume CPU time nor update any shared data (like UI) confined to a specific thread. 
+[Dispatchers.Unconfined] 协程调度器在调用它的线程启动了一个协程，但它仅仅只是运行到<!--
+-->第一个挂起点。挂起后，它恢复线程中的协程，而这完全由<!--
+-->被调用的挂起函数来决定。非受限的调度器非常适用于执行不<!--
+-->消耗 CPU 时间的任务，以及不更新局限于特定线程的任何共享数据（如UI）的协程。
 
-On the other side, the dispatcher is inherited from the outer [CoroutineScope] by default. 
-The default dispatcher for the [runBlocking] coroutine, in particular,
-is confined to the invoker thread, so inheriting it has the effect of confining execution to
-this thread with predictable FIFO scheduling.
+另一方面，该调度器默认继承了外部的 [CoroutineScope]。
+[runBlocking] 协程的默认调度器，特别是，
+当它被限制在了调用者线程时，继承自它将会有效地限制协程<!--
+-->在该线程运行并且具有可预测的 FIFO 调度。
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -158,14 +158,14 @@ main runBlocking: After delay in thread main
 
 <!--- TEST LINES_START -->
  
-So, the coroutine with the context inherited from `runBlocking {...}` continues to execute
-in the `main` thread, while the unconfined one resumes in the default executor thread that the [delay]
-function is using.
+所以，该协程的上下文继承自 `runBlocking {...}` 协程并在
+`main` 线程中运行，当 [delay] 函数调用的时候，非受限的那个协程在<!--
+-->默认的执行者线程种恢复执行。
 
 > 非受限的调度器是一种高级机制，可以在某些极端情况下提供帮助<!--
 -->而不需要调度协程以便稍后执行或产生不希望的副作用，
 因为某些操作必须立即在协程中执行。
-非受限调度器不应该被用在通常的代码中。
+非受限调度器不应该在通常的代码中使用。
 
 ### 调试协程与线程
 
@@ -217,11 +217,11 @@ fun main() = runBlocking<Unit> {
 
 <!--- TEST FLEXIBLE_THREAD -->
 
-The `log` function prints the name of the thread in square brackets, and you can see that it is the `main`
-thread with the identifier of the currently executing coroutine appended to it. This identifier 
-is consecutively assigned to all created coroutines when the debugging mode is on.
+这个 `log` 函数在方括号种打印了线程的名字，并且你可以看到它是 `main`
+线程，并且附带了当前正在其上执行的协程的标识符。这个标识符<!--
+-->在调试模式开启时，将连续分配给所有创建的协程。
 
-> Debugging mode is also turned on when JVM is run with `-ea` option.
+> 当 JVM 以 `-ea` 参数配置运行时，调试模式也会开启。
 你可以在 [DEBUG_PROPERTY_NAME] 属性的文档中阅读有关调试工具的更多信息。
 
 ### 在不同线程间跳转
@@ -273,8 +273,8 @@ fun main() {
 
 ### 上下文中的作业
 
-The coroutine's [Job] is part of its context, and can be retrieved from it 
-using the `coroutineContext[Job]` expression:
+协程的 [Job] 是上下文的一部分，并且可以使用
+`coroutineContext [Job]` 表达式在上下文中检索它：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -292,7 +292,7 @@ fun main() = runBlocking<Unit> {
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-05.kt)获取完整代码。
 
-In the [debug mode](#debugging-coroutines-and-threads), it outputs something like this:
+在[调试模式](#debugging-coroutines-and-threads)下，它将输出如下这些信息：
 
 ```
 My job is "coroutine#1":BlockingCoroutine{Active}@6d311334
@@ -311,8 +311,8 @@ My job is "coroutine#1":BlockingCoroutine{Active}@6d311334
 -->父协程作业的 _子_ 作业。当一个父协程被取消的时候，所有它的子协程<!--
 -->也会被递归的取消。
 
-However, when [GlobalScope] is used to launch a coroutine, there is no parent for the job of the new coroutine.
-It is therefore not tied to the scope it was launched from and operates independently.
+然而，当使用 [GlobalScope] 来启动一个协程时，则新协程的作业没有父作业。
+因此它与这个启动的作用域无关且独立运作。
   
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
@@ -407,11 +407,11 @@ Now processing of the request is complete
 
 ### 命名协程以用于调试
 
-Automatically assigned ids are good when coroutines log often and you just need to correlate log records
-coming from the same coroutine. However, when a coroutine is tied to the processing of a specific request
-or doing some specific background task, it is better to name it explicitly for debugging purposes.
-The [CoroutineName] context element serves the same purpose as the thread name. It is included in the thread name that
-is executing this coroutine when the [debugging mode](#debugging-coroutines-and-threads) is turned on.
+当协程经常打印日志并且你只需要关联来自同一个协程的日志记录时，
+则自动分配的 id 是非常好的。然而，当一个协程与特定请求的处理相关联时<!--
+-->或做一些特定的后台任务，最好将其明确命名以用于调试目的。
+[CoroutineName] 上下文元素与线程名具有相同的目的。当[调试模式](#debugging-coroutines-and-threads)<!--
+-->开启时，它被包含在正在执行此协程的线程名中。
 
 下面的例子演示了这一概念：
 
@@ -490,13 +490,13 @@ I'm working in thread DefaultDispatcher-worker-1 @test#2
 
 ### 协程作用域
 
-Let us put our knowledge about contexts, children and jobs together. Assume that our application has
-an object with a lifecycle, but that object is not a coroutine. For example, we are writing an Android application
-and launch various coroutines in the context of an Android activity to perform asynchronous operations to fetch 
-and update data, do animations, etc. All of these coroutines must be cancelled when the activity is destroyed
-to avoid memory leaks. We, of course, can manipulate contexts and jobs manually to tie the lifecycles of the activity 
-and its coroutines, but `kotlinx.coroutines` provides an abstraction encapsulating that: [CoroutineScope].
-You should be already familiar with the coroutine scope as all coroutine builders are declared as extensions on it. 
+让我们将关于上下文，子协程以及作业的知识综合在一起。假设我们的应用程序拥有一个<!--
+-->具有生命周期的对象，但这个对象并不是一个协程。举例来说，我们编写了一个 Android 应用程序<!--
+-->并在 Android 的 activity 上下文中启动了一组协程来使用异步操作拉取<!--
+-->并更新数据以及执行动画等等。所有这些协程必须在这个 activity 销毁的时候取消<!--
+-->以避免内存泄漏。当然，我们也可以手动操作上下文与作业，以结合 activity 的生命周期<!--
+-->与它的协程，但是 `kotlinx.coroutines` 提供了一个封装：[CoroutineScope] 的抽象。
+你应该已经熟悉了协程作用域，因为所有的协程构建器都声明为在它之上的扩展。
 
 我们通过创建一个 [CoroutineScope] 实例来管理协程的生命周期，并使它与
 activit 的生命周期相关联。`CoroutineScope` 可以通过 [CoroutineScope()] 创建或者通过[MainScope()]
@@ -551,9 +551,9 @@ class Activity {
 
 </div>
 
-In our main function we create the activity, call our test `doSomething` function, and destroy the activity after 500ms.
-This cancels all the coroutines that were launched from `doSomething`. We can see that because after the destruction 
-of the activity no more messages are printed, even if we wait a little longer.  
+在 main 函数中我们创建 activity，调用测试函数 `doSomething`，并且在 500 毫秒后销毁这个 activity。
+这取消了从 `doSomething` 启动的所有协程。我们可以观察到这些是由于在销毁之后，
+即使我们再等一会儿，activity 也不再打印消息。
 
 <!--- CLEAR -->
 
@@ -611,12 +611,12 @@ Destroying activity!
 <!--- TEST -->
 
 你可以看到，只有前两个协程打印了消息，而另一个协程在
-`Activity.destroy()` 中被单次调用了 `job.cancel()`。
+`Activity.destroy()` 中单次调用了 `job.cancel()`。
 
 ### 线程局部数据
 
-Sometimes it is convenient to have an ability to pass some thread-local data to or between coroutines. 
-However, since they are not bound to any particular thread, this will likely lead to boilerplate if done manually.
+有时，能够将一些线程局部数据传递到协程与协程之间是很方便的。 
+然而，由于它们不受任何特定线程的约束，如果手动完成，可能会导致出现样板代码。
 
 [`ThreadLocal`](https://docs.oracle.com/javase/8/docs/api/java/lang/ThreadLocal.html)，
 [asContextElement] 扩展函数在这里会充当救兵。它创建了额外的上下文元素，
@@ -665,15 +665,15 @@ Post-main, current thread: Thread[main @coroutine#1,5,main], thread local value:
 
 <!--- TEST FLEXIBLE_THREAD -->
 
-It's easy to forget to set the corresponding context element. The thread-local variable accessed from the coroutine may
-then have an unexpected value, if the thread running the coroutine is different.
-To avoid such situations, it is recommended to use the [ensurePresent] method
-and fail-fast on improper usages.
+这很容易忘记去设置相应的上下文元素。如果运行协程的线程不同，
+在协程中访问的线程局部变量则可能会产生意外的值。
+为了避免这种情况，建议使用 [ensurePresent]
+方法并且在不正确的使用时快速失败。
 
-`ThreadLocal` has first-class support and can be used with any primitive `kotlinx.coroutines` provides.
-It has one key limitation, though: when a thread-local is mutated, a new value is not propagated to the coroutine caller 
-(because a context element cannot track all `ThreadLocal` object accesses), and the updated value is lost on the next suspension.
-Use [withContext] to update the value of the thread-local in a coroutine, see [asContextElement] for more details. 
+`ThreadLocal` 具有一流的支持，可以与任何 `kotlinx.coroutines` 提供的原语一起使用。
+但它有一个关键限制，即：当一个线程局部变量变化时，则这个新值不会传播给协程调用者<!--
+-->（因为上下文元素无法追踪所有 `ThreadLocal` 对象访问），并且下次挂起时更新的值将丢失。
+使用 [withContext] 在协程中更新线程局部变量，详见 [asContextElement]。
 
 另外，一个值可以存储在一个可变的域中，例如 `class Counter(var i: Int)`，是的，反过来，
 可以存储在线程局部的变量中。然而，在这个案例中你完全有责任来进行同步<!--
