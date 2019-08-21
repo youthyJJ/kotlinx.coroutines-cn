@@ -166,10 +166,10 @@ Completed in 1017 ms
 
 ### 惰性启动的 async
 
-Optionally, [async] can be made lazy by setting its `start` parameter to [CoroutineStart.LAZY]. 
-In this mode it only starts the coroutine when its result is required by 
-[await][Deferred.await], or if its `Job`'s [start][Job.start] function 
-is invoked. Run the following example:
+可选的，[async] 可以通过将 `start` 参数设置为 [CoroutineStart.LAZY] 而变为惰性的。
+在这个模式下，只有结果通过 [await][Deferred.await]
+获取的时候协程才会启动，或者在 `Job` 的 [start][Job.start]
+函数调用的时候。运行下面的示例：
 
 
 
@@ -215,15 +215,15 @@ Completed in 1017 ms
 
 <!--- TEST ARBITRARY_TIME -->
 
-因此，在先前的例子中这里定义的两个协程没有被执行，但是控制权在于<!--
+因此，在先前的例子中这里定义的两个协程没有执行，但是控制权在于<!--
 -->程序员准确的在开始执行时调用 [start][Job.start]。我们首先
 调用 `one`，然后调用 `two`，接下来等待这个协程执行完毕。
 
-Note that if we just call [await][Deferred.await] in `println` without first calling [start][Job.start] on individual 
-coroutines, this will lead to sequential behavior, since [await][Deferred.await] starts the coroutine 
-execution and waits for its finish, which is not the intended use-case for laziness. 
-The use-case for `async(start = CoroutineStart.LAZY)` is a replacement for the 
-standard `lazy` function in cases when computation of the value involves suspending functions.
+注意，如果我们只是在 `println` 中调用 [await][Deferred.await]，而没有在<!--
+-->单独的协程中调用 [start][Job.start]，这将会导致顺序行为，直到 [await][Deferred.await] 启动该协程
+执行并等待至它结束，这并不是惰性的预期用例。
+在计算一个值涉及挂起函数时，这个 `async(start = CoroutineStart.LAZY)` 的用例用于替代<!--
+-->标准库中的 `lazy` 函数。
 
 ### async 风格的函数
 
@@ -249,7 +249,7 @@ fun somethingUsefulTwoAsync() = GlobalScope.async {
 
 
 
-注意，这些 `xxxAsync` 函数**不是** _挂起_ 函数。它们可以在任何地方被使用。
+注意，这些 `xxxAsync` 函数**不是** _挂起_ 函数。它们可以在任何地方使用。
 然而，它们总是在调用它们的代码中意味着<!--
 -->异步（这里的意思是 _并发_ ）执行。
  
@@ -313,7 +313,7 @@ Completed in 1085 ms
 原因如下所述。
 
 考虑一下如果 `val one = somethingUsefulOneAsync()` 这一行和 `one.await()` 表达式这里在代码中有逻辑错误，
-并且程序抛出了异常以及程序在操作的过程中被中止，将会发生什么。
+并且程序抛出了异常以及程序在操作的过程中中止，将会发生什么。
 通常情况下，一个全局的异常处理者会捕获这个异常，将异常打印成日记并报告给开发者，但是反之<!--
 -->该程序将会继续执行其它操作。但是这里我们的 `somethingUsefulOneAsync` 仍然在后台执行，
 尽管如此，启动它的那次操作也会被终止。这个程序将不会进行结构化<!--
@@ -426,8 +426,8 @@ suspend fun failedConcurrentSum(): Int = coroutineScope {
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-compose-06.kt)获取完整代码。
 
-Note how both the first `async` and the awaiting parent are cancelled on failure of one of the children
-(namely, `two`):
+注意，当任意一个子协程失败的时候，第一个 `async` 以及等待中的父协程都会被取消
+（即 `two`）：
 ```text
 Second child throws an exception
 First child was cancelled
