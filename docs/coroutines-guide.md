@@ -19,7 +19,7 @@ future 与 promise 更安全、更不易出错的抽象。
 * [取消与超时](cancellation-and-timeouts.md)
 * [组合挂起函数](composing-suspending-functions.md)
 * [协程上下文与调度器](coroutine-context-and-dispatchers.md)
-* [Asynchronous Flow](flow.md)
+* [异步流](flow.md)
 * [通道](channels.md)
 * [异常处理与监督](exception-handling.md)
 * [共享的可变状态与并发](shared-mutable-state-and-concurrency.md)

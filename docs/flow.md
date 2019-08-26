@@ -16,57 +16,57 @@ import org.junit.Test
 class FlowGuideTest {
 --> 
 
-**Table of contents**
+**目录**
 
 <!--- TOC -->
 
-* [Asynchronous Flow](#asynchronous-flow)
-  * [Representing multiple values](#representing-multiple-values)
-    * [Sequences](#sequences)
-    * [Suspending functions](#suspending-functions)
-    * [Flows](#flows)
-  * [Flows are cold](#flows-are-cold)
-  * [Flow cancellation](#flow-cancellation)
-  * [Flow builders](#flow-builders)
-  * [Intermediate flow operators](#intermediate-flow-operators)
-    * [Transform operator](#transform-operator)
-    * [Size-limiting operators](#size-limiting-operators)
-  * [Terminal flow operators](#terminal-flow-operators)
-  * [Flows are sequential](#flows-are-sequential)
-  * [Flow context](#flow-context)
-    * [Wrong emission withContext](#wrong-emission-withcontext)
-    * [flowOn operator](#flowon-operator)
-  * [Buffering](#buffering)
-    * [Conflation](#conflation)
-    * [Processing the latest value](#processing-the-latest-value)
-  * [Composing multiple flows](#composing-multiple-flows)
+* [异步流](#异步流)
+  * [表示多个值](#表示多个值)
+    * [序列](#序列)
+    * [挂起函数](#挂起函数)
+    * [流](#流)
+  * [流是冷的](#流是冷的)
+  * [流取消](#流取消)
+  * [流构造器](#流构造器)
+  * [过渡流操作符](#过渡流操作符)
+    * [转换操作符](#转换操作符)
+    * [限长操作符](#限长操作符)
+  * [末端流操作符](#末端流操作符)
+  * [流是连续的](#流是连续的)
+  * [流上下文](#流上下文)
+    * [withContext 发出错误](#withcontext-发出错误)
+    * [flowOn 操作符](#flowon-操作符)
+  * [缓冲](#缓冲)
+    * [合并](#合并)
+    * [处理最新值](#处理最新值)
+  * [组合多个流](#组合多个流)
     * [Zip](#zip)
     * [Combine](#combine)
-  * [Flattening flows](#flattening-flows)
+  * [展平流](#展平流)
     * [flatMapConcat](#flatmapconcat)
     * [flatMapMerge](#flatmapmerge)
     * [flatMapLatest](#flatmaplatest)
-  * [Flow exceptions](#flow-exceptions)
-    * [Collector try and catch](#collector-try-and-catch)
-    * [Everything is caught](#everything-is-caught)
-  * [Exception transparency](#exception-transparency)
-    * [Transparent catch](#transparent-catch)
-    * [Catching declaratively](#catching-declaratively)
-  * [Flow completion](#flow-completion)
-    * [Imperative finally block](#imperative-finally-block)
-    * [Declarative handling](#declarative-handling)
-    * [Upstream exceptions only](#upstream-exceptions-only)
-  * [Imperative versus declarative](#imperative-versus-declarative)
-  * [Launching flow](#launching-flow)
+  * [流异常](#流异常)
+    * [收集器 try 与 catch](#收集器-try-与-catch)
+    * [一切都已捕获](#一切都已捕获)
+  * [异常透明性](#异常透明性)
+    * [透明捕获](#透明捕获)
+    * [声明式捕获](#声明式捕获)
+  * [流完成](#流完成)
+    * [命令式 finally 块](#命令式-finally-块)
+    * [声明式处理](#声明式处理)
+    * [仅限上游异常](#仅限上游异常)
+  * [命令式还是声明式](#命令式还是声明式)
+  * [启动流](#启动流)
 
 <!--- END_TOC -->
 
-## Asynchronous Flow
+## 异步流
 
 Suspending functions asynchronously return a single value, but how can you return
 multiple asynchronously computed values? That is what Kotlin Flows are for.
 
-### Representing multiple values
+### 表示多个值
 
 Multiple values can be represented in Kotlin using [collections]. 
 For example, we can have a function `foo()` that returns a [List] 
@@ -96,7 +96,7 @@ This code outputs:
 
 <!--- TEST -->
 
-#### Sequences
+#### 序列
 
 If the numbers are computed with some CPU-consuming blocking code 
 (each computation taking 100ms) then we can represent the numbers using a [Sequence]:
@@ -128,7 +128,7 @@ This code outputs the same numbers, but it waits 100ms before printing each one.
 3
 -->
 
-#### Suspending functions
+#### 挂起函数
 
 However, this computation blocks the main thread that is running the code. 
 When those values are computed by an asynchronous code we can mark function `foo` with a `suspend` modifier,
@@ -163,7 +163,7 @@ This code prints the numbers after waiting for a second.
 3
 -->
 
-#### Flows
+#### 流
 
 Using `List<Int>` result type we can only return all the values at once. To represent
 the stream of values that are being asynchronously computed we can use [`Flow<Int>`][Flow] type similarly
@@ -226,7 +226,7 @@ Notice the following differences of the code with the [Flow] from the earlier ex
 > You can replace [delay] with `Thread.sleep` in the body of `foo`'s `flow { ... }` and see that the main
 thread is blocked in this case. 
 
-### Flows are cold
+### 流是冷的
 
 Flows are _cold_ streams similarly to sequences &mdash; the code inside a [flow] builder does not
 run until the flow is collected. This becomes clear in the following example:
@@ -283,7 +283,7 @@ That is a key reason why the `foo()` function (which returns a flow) is not mark
 By itself, `foo()` returns quickly and does not wait for anything. The flow starts every time it is collected,
 that is why we see that when we call `collect` again, we get "Flow started" printed again.
 
-### Flow cancellation
+### 流取消
 
 Flow adheres to general cooperative cancellation of coroutines. However, flow infrastructure does not introduce
 additional cancellation points. It is fully transparent for cancellation. As usual, flow collection can be 
@@ -332,7 +332,7 @@ Done
 
 <!--- TEST -->
 
-### Flow builders
+### 流构造器
 
 The `flow { ... }` builder from the previous examples is the most basic one. There are other builders for
 convenient declaration of flows:
@@ -366,7 +366,7 @@ fun main() = runBlocking<Unit> {
 3
 -->
 
-### Intermediate flow operators
+### 过渡流操作符
 
 Flows can be transformed with operators similarly to collections and sequences. 
 Intermediate operators are applied to an upstream flow and return a downstream flow. 
@@ -415,7 +415,7 @@ response 3
 
 <!--- TEST -->
 
-#### Transform operator
+#### 转换操作符
 
 Among the flow transformation operators, the most general one is called [transform]. It can be used to imitate
 simple transformations like [map] and [filter] as well as implement more complex transformations. 
@@ -464,7 +464,7 @@ response 3
 
 <!--- TEST -->
 
-#### Size-limiting operators
+#### 限长操作符
 
 Size-limiting intermediate operators like [take] cancel the execution of the flow when the corresponding limit
 is reached. Cancellation in coroutines is always performed by throwing an exception so that all the resource-management
@@ -511,7 +511,7 @@ Finally in numbers
 
 <!--- TEST -->
 
-### Terminal flow operators
+### 末端流操作符
 
 Terminal operators on flows are _suspending functions_ that start a collection of the flow.
 The [collect] operator is the most basic one, but there are other terminal operators for 
@@ -551,7 +551,7 @@ Prints a single number:
 
 <!--- TEST -->
 
-### Flows are sequential
+### 流是连续的
 
 Each individual collection of a flow is performed sequentially unless special operators that operate
 on multiple flows are used. The collection works directly in the coroutine that calls a terminal operator. 
@@ -604,7 +604,7 @@ Filter 5
 
 <!--- TEST -->
 
-### Flow context
+### 流上下文
 
 Collection of a flow always happens in the context of the calling coroutine. For example, if there is 
 a `foo` flow, then the following code runs in the context specified
@@ -671,7 +671,7 @@ Since `foo().collect` is called from the main thread, the body of `foo`'s flow i
 This is a perfect default for fast-running or asynchronous code that does not care about the execution context and
 does not block the caller. 
 
-#### Wrong emission withContext
+#### withContext 发出错误
 
 However, the long-running CPU-consuming code might need to be executed in the context of [Dispatchers.Default] and UI-updating
 code might need to be executed in the context of [Dispatchers.Main]. Usually, [withContext] is used
@@ -721,7 +721,7 @@ Exception in thread "main" java.lang.IllegalStateException: Flow invariant is vi
 demonstrate this exception. A short name of `withContext` would have resolved to a special stub function that
 produces compilation error to prevent us from running into this problem.   
 
-#### flowOn operator
+#### flowOn 操作符
    
 The exception refers to [flowOn] function that shall be used to change the context of flow emission.
 The correct way of changing the context of a flow is shown in the below example, which also prints 
@@ -772,7 +772,7 @@ Now collection happens in one coroutine ("coroutine#1") and emission happens in 
 ("coroutine#2") that is running in another thread concurrently with collecting coroutine. The [flowOn] operator
 creates another coroutine for an upstream flow when it has to change the [CoroutineDispatcher] in its context. 
 
-### Buffering
+### 缓冲
 
 Running different parts of a flow in different coroutines can be helpful from the standpoint of overall time it takes 
 to collect the flow, especially when long-running asynchronous operations are involved. For example, consider a case when
@@ -873,7 +873,7 @@ Collected in 1071 ms
 > Note that [flowOn] operator uses the same buffering mechanism when it has to change [CoroutineDispatcher],
 but here we explicitly request buffering without changing execution context. 
 
-#### Conflation
+#### 合并
 
 When flow represents partial results of some operation or operation status updates, it may not be necessary
 to process each value, but only to process the most recent ones. In this case, [conflate] operator can be used to skip
@@ -923,7 +923,7 @@ Collected in 758 ms
 
 <!--- TEST ARBITRARY_TIME -->   
 
-#### Processing the latest value
+#### 处理最新值
 
 Conflation is one way to speed up processing when both emitter and collector are slow. It does that by dropping emitted values.
 The other way is to cancel slow collector and restart it every time a new value is emitted. There is
@@ -976,7 +976,7 @@ Collected in 741 ms
 
 <!--- TEST ARBITRARY_TIME -->
 
-### Composing multiple flows
+### 组合多个流
 
 There are several ways to compose multiple flows.
 
@@ -1018,7 +1018,7 @@ This example prints:
 #### Combine
 
 When flow represents the most recent value of some variable or operation (see also a related 
-section on [conflation](#conflation)) it might be needed to perform a computation that depends on
+section on [conflation](#合并)) it might be needed to perform a computation that depends on
 the most recent values of the corresponding flows and to recompute it whenever any of upstream
 flows emit a value. The corresponding family of operators is called [combine].
 
@@ -1095,7 +1095,7 @@ We get quite a different output, where a line is printed at each emission from e
 
 <!--- TEST ARBITRARY_TIME -->
 
-### Flattening flows
+### 展平流
 
 Flows represent asynchronously received sequences of values, so it is quite easy to get in a situation where 
 each value triggers a request for another sequence of values. For example, we can have the following
@@ -1235,7 +1235,7 @@ collects the resulting flows concurrently, so it is equivalent to performing a s
 #### flatMapLatest   
 
 In a similar way to [collectLatest] operator that was shown in 
-["Processing the latest value"](#processing-the-latest-value) section, there is the corresponding "Latest" 
+["Processing the latest value"](#处理最新值) section, there is the corresponding "Latest" 
 flattening mode where collection of the previous flow is cancelled as soon as new flow is emitted. 
 It is implemented by [flatMapLatest] operator.
 
@@ -1282,12 +1282,12 @@ The output of this example speaks for the way [flatMapLatest] works:
 It makes no difference in this particular example, because the call to `requestFlow` itself is fast, not-suspending,
 and cannot be cancelled. However, it would show up if we were to use suspending functions like `delay` in there.
 
-### Flow exceptions
+### 流异常
 
 Flow collection can complete with an exception when emitter or any code inside any of the operators throw an exception. 
 There are several ways to handle these exceptions.
 
-#### Collector try and catch
+#### 收集器 try 与 catch
 
 A collector can use Kotlin's [`try/catch`][exceptions] block to handle exceptions: 
 
@@ -1335,7 +1335,7 @@ Caught java.lang.IllegalStateException: Collected 2
 
 <!--- TEST -->
 
-#### Everything is caught
+#### 一切都已捕获
 
 The previous example actually catches any exception happening in emitter or in any intermediate or terminal operators.
 For example, let us change the code so that emitted values are [mapped][map] to strings,
@@ -1385,7 +1385,7 @@ Caught java.lang.IllegalStateException: Crashed on 2
 
 <!--- TEST -->
 
-### Exception transparency
+### 异常透明性
 
 But how can code of emitter encapsulate its exception handling behavior?  
 
@@ -1443,7 +1443,7 @@ Emitting 2
 Caught java.lang.IllegalStateException: Crashed on 2
 -->
 
-#### Transparent catch
+#### 透明捕获
 
 The [catch] intermediate operator, honoring exception transparency, catches only upstream exceptions
 (that is an exception from all the operators above `catch`, but not below it).
@@ -1488,7 +1488,7 @@ Exception in thread "main" java.lang.IllegalStateException: Collected 2
 	at ...
 -->
 
-#### Catching declaratively
+#### 声明式捕获
 
 We can combine a declarative nature of [catch] operator with a desire to handle all exceptions by moving the body
 of [collect] operator into [onEach] and putting it before the `catch` operator. Collection of this flow must
@@ -1534,12 +1534,12 @@ Emitting 2
 Caught java.lang.IllegalStateException: Collected 2
 -->
 
-### Flow completion
+### 流完成
 
 When flow collection completes (normally or exceptionally) it may be needed to execute some action. 
 As you might have already noticed, it also can be done in two ways: imperative and declarative.
 
-#### Imperative finally block
+#### 命令式 finally 块
 
 In addition to `try`/`catch`, a collector can also use `finally` block to execute an action 
 upon `collect` completion.
@@ -1578,7 +1578,7 @@ Done
 
 <!--- TEST  -->
 
-#### Declarative handling
+#### 声明式处理
 
 For declarative approach, flow has [onCompletion] intermediate operator that is invoked
 when the flow is completely collected.
@@ -1654,7 +1654,7 @@ Caught exception
 example code, the exception still flows downstream. It will be delivered to further `onCompletion` operators
 and can be handled with `catch` operator. 
 
-#### Upstream exceptions only
+#### 仅限上游异常
 
 Just like [catch] operator, [onCompletion] sees only exception coming from upstream and does not
 see downstream exceptions. For example, run the following code:
@@ -1693,14 +1693,14 @@ Exception in thread "main" java.lang.IllegalStateException: Collected 2
 
 <!--- TEST EXCEPTION -->
 
-### Imperative versus declarative
+### 命令式还是声明式
 
 Now we know how to collect flow, handle its completion and exceptions in both imperative and declarative ways.
 The natural question here is which approach should be preferred and why.
 As a library, we do not advocate for any particular approach and believe that both options
 are valid and should be selected according to your own preferences and code style. 
 
-### Launching flow
+### 启动流
 
 It is convenient to use flows to represent asynchronous events that are coming from some source.
 In this case, we need an analogue of `addEventListener` function that registers a piece of code with a reaction
