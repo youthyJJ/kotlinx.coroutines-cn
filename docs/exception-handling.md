@@ -24,10 +24,10 @@ class ExceptionsGuideTest {
   * [CoroutineExceptionHandler](#coroutineexceptionhandler)
   * [取消与异常](#取消与异常)
   * [异常聚合](#异常聚合)
-* [监督](#监督)
-  * [监督作业](#监督作业)
-  * [监督作用域](#监督作用域)
-  * [监督协程中的异常](#监督协程中的异常)
+  * [监督](#监督)
+    * [监督作业](#监督作业)
+    * [监督作用域](#监督作用域)
+    * [监督协程中的异常](#监督协程中的异常)
 
 <!--- END_TOC -->
 
@@ -355,7 +355,7 @@ Caught original java.io.IOException
 ```
 <!--- TEST-->
 
-## 监督
+### 监督
 
 正如我们之前研究的那样，取消是一种双向机制，在协程的整个层次结构<!--
 -->之间传播。但是如果需要单向取消怎么办？
@@ -367,7 +367,7 @@ Caught original java.io.IOException
 另一个例子是服务进程孵化了一些子作业并且需要 _监督_
 它们的执行，追踪它们的故障并在这些子作业执行失败的时候重启。
 
-### 监督作业
+#### 监督作业
 
 [SupervisorJob][SupervisorJob()] 可以被用于这些目的。它类似于常规的 [Job][Job()]，唯一的不同是：<!--
 -->SupervisorJob 的取消只会向下传播。这是非常容易从示例中观察到的：
@@ -421,7 +421,7 @@ Second child is cancelled because supervisor is cancelled
 <!--- TEST-->
 
 
-### 监督作用域
+#### 监督作用域
 
 对于*作用域*的并发，[supervisorScope] 可以被用来替代 [coroutineScope] 来实现相同的目的。它只会单向的传播<!--
 -->并且当子作业自身执行失败的时候将它们全部取消。它也会在所有的子作业执行结束前等待，
@@ -469,7 +469,7 @@ Caught assertion error
 ```
 <!--- TEST-->
 
-### 监督协程中的异常
+#### 监督协程中的异常
 
 常规的作业和监督作业之间的另一个重要区别是异常处理。
 每一个子作业应该通过异常处理机制处理自身的异常。

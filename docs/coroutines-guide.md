@@ -15,12 +15,13 @@ future 与 promise 更安全、更不易出错的抽象。
 
 ## 目录
 
-* [协程基础](basics.md)
+* [基础](basics.md)
 * [取消与超时](cancellation-and-timeouts.md)
 * [组合挂起函数](composing-suspending-functions.md)
 * [协程上下文与调度器](coroutine-context-and-dispatchers.md)
+* [Asynchronous Flow](flow.md)
+* [通道](channels.md)
 * [异常处理与监督](exception-handling.md)
-* [通道（实验性的）](channels.md)
 * [共享的可变状态与并发](shared-mutable-state-and-concurrency.md)
 * [Select 表达式（实验性的）](select-expression.md)
 
