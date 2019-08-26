@@ -38,7 +38,7 @@ class DispatchersGuideTest {
 ## 协程上下文与调度器
 
 协程总是运行在一些以
-[CoroutineContext](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/-coroutine-context/)
+[CoroutineContext](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/-coroutine-context/) 
 类型为代表的上下文中，它们被定义在了 Kotlin 的标准库里。
 
 协程上下文是各种不同元素的集合。其中主元素是协程中的 [Job]，
@@ -51,12 +51,12 @@ class DispatchersGuideTest {
 -->一个特定的线程执行，或将它分派到一个线程池，亦或是让它不受限地运行。
 
 所有的协程构建器诸如 [launch] 和 [async] 接收一个可选的
-[CoroutineContext](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/-coroutine-context/)
+[CoroutineContext](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/-coroutine-context/) 
 参数，它可以被用来显式的为一个新协程或其它上下文元素指定一个调度器。
 
 尝试下面的示例：
 
-
+<div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -75,11 +75,11 @@ fun main() = runBlocking<Unit> {
     launch(newSingleThreadContext("MyOwnThread")) { // 将使它获得一个新的线程
         println("newSingleThreadContext: I'm working in thread ${Thread.currentThread().name}")
     }
-//sampleEnd
+//sampleEnd    
 }
 ```
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-01.kt)获取完整代码。
 
@@ -122,7 +122,7 @@ main runBlocking      : I'm working in thread main
 当它被限制在了调用者线程时，继承自它将会有效地限制协程<!--
 -->在该线程运行并且具有可预测的 FIFO 调度。
 
-
+<div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -139,11 +139,11 @@ fun main() = runBlocking<Unit> {
         delay(1000)
         println("main runBlocking: After delay in thread ${Thread.currentThread().name}")
     }
-//sampleEnd
+//sampleEnd    
 }
 ```
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-02.kt)获取完整代码。
 
@@ -178,7 +178,7 @@ main runBlocking: After delay in thread main
 
 使用 `-Dkotlinx.coroutines.debug` JVM 参数运行下面的代码：
 
-
+<div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -196,11 +196,11 @@ fun main() = runBlocking<Unit> {
         7
     }
     log("The answer is ${a.await() * b.await()}")
-//sampleEnd
+//sampleEnd    
 }
 ```
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-03.kt)获取完整代码。
 
@@ -228,7 +228,7 @@ fun main() = runBlocking<Unit> {
 
 使用 `-Dkotlinx.coroutines.debug` JVM 参数运行下面的代码（参见[调试](#调试协程与线程)）：
 
-
+<div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -248,11 +248,11 @@ fun main() {
             }
         }
     }
-//sampleEnd
+//sampleEnd    
 }
 ```
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-04.kt)获取完整代码。
 
@@ -276,7 +276,7 @@ fun main() {
 协程的 [Job] 是上下文的一部分，并且可以使用
 `coroutineContext [Job]` 表达式在上下文中检索它：
 
-
+<div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -284,11 +284,11 @@ import kotlinx.coroutines.*
 fun main() = runBlocking<Unit> {
 //sampleStart
     println("My job is ${coroutineContext[Job]}")
-//sampleEnd
+//sampleEnd    
 }
 ```
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-05.kt)获取完整代码。
 
@@ -313,9 +313,9 @@ My job is "coroutine#1":BlockingCoroutine{Active}@6d311334
 
 然而，当使用 [GlobalScope] 来启动一个协程时，则新协程的作业没有父作业。
 因此它与这个启动的作用域无关且独立运作。
+  
 
-
-
+<div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -346,7 +346,7 @@ fun main() = runBlocking<Unit> {
 }
 ```
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-06.kt)获取完整代码。
 
@@ -366,7 +366,7 @@ main: Who has survived request cancellation?
 一个父协程总是等待所有的子协程执行结束。父协程并不显式的跟踪<!--
 -->所有子协程的启动，并且不必使用 [Job.join] 在最后的时候等待它们：
 
-
+<div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -389,7 +389,7 @@ fun main() = runBlocking<Unit> {
 }
 ```
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-07.kt)获取完整代码。
 
@@ -415,7 +415,7 @@ Now processing of the request is complete
 
 下面的例子演示了这一概念：
 
-
+<div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -437,11 +437,11 @@ fun main() = runBlocking(CoroutineName("main")) {
         6
     }
     log("The answer for v1 / v2 = ${v1.await() / v2.await()}")
-//sampleEnd
+//sampleEnd    
 }
 ```
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-08.kt)获取完整代码。
 
@@ -462,7 +462,7 @@ fun main() = runBlocking(CoroutineName("main")) {
 比如说，我们可以显式指定一个调度器来启动协程并且同时显式指定<!--
 -->一个命名：
 
-
+<div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -472,11 +472,11 @@ fun main() = runBlocking<Unit> {
     launch(Dispatchers.Default + CoroutineName("test")) {
         println("I'm working in thread ${Thread.currentThread().name}")
     }
-//sampleEnd
+//sampleEnd    
 }
 ```
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-09.kt)获取完整代码。
 
@@ -503,7 +503,7 @@ activit 的生命周期相关联。`CoroutineScope` 可以通过 [CoroutineScope
 工厂函数。前者创建了一个通用作用域，而后者为使用 [Dispatchers.Main] 作为默认调度器的 UI 应用程序
 创建作用域：
 
-
+<div class="sample" markdown="1" theme="idea" data-highlight-only>
 
 ```kotlin
 class Activity {
@@ -515,25 +515,25 @@ class Activity {
     // 继续运行……
 ```
 
-
+</div>
 
 或者，我们可以在这个 `Activity` 类中实现 [CoroutineScope] 接口。最好的方法是<!--
 -->使用具有默认工厂函数的委托。
 我们也可以将所需的调度器与作用域合并（我们在这个示例中使用 [Dispatchers.Default]）。
 
-
+<div class="sample" markdown="1" theme="idea" data-highlight-only>
 
 ```kotlin
     class Activity : CoroutineScope by CoroutineScope(Dispatchers.Default) {
     // 继续运行……
 ```
 
-
+</div>
 
 现在，在这个 `Activity` 的作用域中启动协程，且没有明确<!--
 -->指定它们的上下文。在示例中，我们启动了十个协程并延迟不同的时间：
 
-
+<div class="sample" markdown="1" theme="idea" data-highlight-only>
 
 ```kotlin
     // 在 Activity 类中
@@ -549,7 +549,7 @@ class Activity {
 } // Activity 类结束
 ``` 
 
-
+</div>
 
 在 main 函数中我们创建 activity，调用测试函数 `doSomething`，并且在 500 毫秒后销毁这个 activity。
 这取消了从 `doSomething` 启动的所有协程。我们可以观察到这些是由于在销毁之后，
@@ -557,7 +557,7 @@ class Activity {
 
 <!--- CLEAR -->
 
-
+<div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
 ```kotlin
 import kotlin.coroutines.*
@@ -591,11 +591,11 @@ fun main() = runBlocking<Unit> {
     println("Destroying activity!")
     activity.destroy() // 取消所有的协程
     delay(1000) // 为了在视觉上确认它们没有工作
-//sampleEnd
+//sampleEnd    
 }
 ```
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-10.kt)获取完整代码。
 
@@ -624,7 +624,7 @@ Destroying activity!
 
 它很容易在下面的代码中演示：
 
-
+<div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -642,11 +642,11 @@ fun main() = runBlocking<Unit> {
     }
     job.join()
     println("Post-main, current thread: ${Thread.currentThread()}, thread local value: '${threadLocal.get()}'")
-//sampleEnd
+//sampleEnd    
 }
 ```  
 
-
+</div>                                                                                       
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-11.kt)获取完整代码。
 

@@ -39,7 +39,7 @@ class ComposingGuideTest {
 -->挂起函数。我们只假设它们都是有用的，但是实际上它们在这个示例中只是<!--
 -->为了该目的而延迟了一秒钟：
 
-
+<div class="sample" markdown="1" theme="idea" data-highlight-only>
 
 ```kotlin
 suspend fun doSomethingUsefulOne(): Int {
@@ -53,7 +53,7 @@ suspend fun doSomethingUsefulTwo(): Int {
 }
 ```
 
-
+</div>
 
 
 如果需要按 _顺序_ 调用它们，我们接下来会做什么——首先调用 `doSomethingUsefulOne` _接下来_
@@ -67,7 +67,7 @@ suspend fun doSomethingUsefulTwo(): Int {
 
 <!--- CLEAR -->
 
-
+<div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -81,7 +81,7 @@ fun main() = runBlocking<Unit> {
         println("The answer is ${one + two}")
     }
     println("Completed in $time ms")
-//sampleEnd
+//sampleEnd    
 }
 
 suspend fun doSomethingUsefulOne(): Int {
@@ -95,7 +95,7 @@ suspend fun doSomethingUsefulTwo(): Int {
 }
 ```
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-compose-01.kt)获取完整代码。
 
@@ -120,7 +120,7 @@ Completed in 2017 ms
 但是 `Deferred` 也是一个 `Job`，所以如果需要的话，你可以取消它。
  
 
-
+<div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
  
 ```kotlin
 import kotlinx.coroutines.*
@@ -134,7 +134,7 @@ fun main() = runBlocking<Unit> {
         println("The answer is ${one.await() + two.await()}")
     }
     println("Completed in $time ms")
-//sampleEnd
+//sampleEnd    
 }
 
 suspend fun doSomethingUsefulOne(): Int {
@@ -148,7 +148,7 @@ suspend fun doSomethingUsefulTwo(): Int {
 }
 ```
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-compose-02.kt)获取完整代码。
 
@@ -171,7 +171,7 @@ Completed in 1017 ms
 获取的时候协程才会启动，或者在 `Job` 的 [start][Job.start]
 函数调用的时候。运行下面的示例：
 
-
+<div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -188,7 +188,7 @@ fun main() = runBlocking<Unit> {
         println("The answer is ${one.await() + two.await()}")
     }
     println("Completed in $time ms")
-//sampleEnd
+//sampleEnd    
 }
 
 suspend fun doSomethingUsefulOne(): Int {
@@ -202,7 +202,7 @@ suspend fun doSomethingUsefulTwo(): Int {
 }
 ```
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-compose-03.kt)获取完整代码。
 
@@ -233,7 +233,7 @@ Completed in 1017 ms
 -->“……Async”后缀来突出表明：事实上，它们只做异步计算并且需要<!--
 -->使用延期的值来获得结果。
 
-
+<div class="sample" markdown="1" theme="idea" data-highlight-only>
 
 ```kotlin
 // somethingUsefulOneAsync 函数的返回值类型是 Deferred<Int>
@@ -247,7 +247,7 @@ fun somethingUsefulTwoAsync() = GlobalScope.async {
 }
 ```
 
-
+</div>
 
 注意，这些 `xxxAsync` 函数**不是** _挂起_ 函数。它们可以在任何地方使用。
 然而，它们总是在调用它们的代码中意味着<!--
@@ -257,7 +257,7 @@ fun somethingUsefulTwoAsync() = GlobalScope.async {
 
 <!--- CLEAR -->
 
-
+<div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
  
 ```kotlin
 import kotlinx.coroutines.*
@@ -299,7 +299,7 @@ suspend fun doSomethingUsefulTwo(): Int {
 }
 ```
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-compose-04.kt)获取完整代码。
 
@@ -326,7 +326,7 @@ Completed in 1085 ms
 由于 [async] 被定义为了 [CoroutineScope] 上的扩展，我们需要将它写在<!--
 -->作用域内，并且这是 [coroutineScope] 函数所提供的：
 
-
+<div class="sample" markdown="1" theme="idea" data-highlight-only>
 
 ```kotlin
 suspend fun concurrentSum(): Int = coroutineScope {
@@ -336,14 +336,14 @@ suspend fun concurrentSum(): Int = coroutineScope {
 }
 ```
 
-
+</div>
 
 这种情况下，如果在 `concurrentSum` 函数内部发生了错误，并且它抛出了一个异常，
 所有在作用域中启动的协程都会被取消。
 
 <!--- CLEAR -->
 
-
+<div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
  
 ```kotlin
 import kotlinx.coroutines.*
@@ -355,7 +355,7 @@ fun main() = runBlocking<Unit> {
         println("The answer is ${concurrentSum()}")
     }
     println("Completed in $time ms")
-//sampleEnd
+//sampleEnd    
 }
 
 suspend fun concurrentSum(): Int = coroutineScope {
@@ -375,7 +375,7 @@ suspend fun doSomethingUsefulTwo(): Int {
 }
 ```
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-compose-05.kt)获取完整代码。
 
@@ -392,7 +392,7 @@ Completed in 1017 ms
 
 <!--- CLEAR -->
 
-
+<div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -422,7 +422,7 @@ suspend fun failedConcurrentSum(): Int = coroutineScope {
 }
 ```
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-compose-06.kt)获取完整代码。
 

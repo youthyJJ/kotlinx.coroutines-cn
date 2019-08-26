@@ -42,7 +42,7 @@ class SharedStateGuideTest {
 我们启动一百个协程，它们都做一千次相同的操作。<!--
 -->我们同时会测量它们的完成时间以便进一步的比较：
 
-
+<div class="sample" markdown="1" theme="idea" data-highlight-only>
 
 ```kotlin
 suspend fun massiveRun(action: suspend () -> Unit) {
@@ -61,18 +61,18 @@ suspend fun massiveRun(action: suspend () -> Unit) {
 }
 ```
 
-
+</div>
 
 我们从一个非常简单的动作开始：使用<!--
 -->多线程的 [Dispatchers.Default] 来递增一个共享的可变变量。
 
 <!--- CLEAR -->
 
-
+<div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
 ```kotlin
 import kotlinx.coroutines.*
-import kotlin.system.*
+import kotlin.system.*    
 
 suspend fun massiveRun(action: suspend () -> Unit) {
     val n = 100  // 启动的协程数量
@@ -86,7 +86,7 @@ suspend fun massiveRun(action: suspend () -> Unit) {
             }
         }
     }
-    println("Completed ${n * k} actions in $time ms")
+    println("Completed ${n * k} actions in $time ms")    
 }
 
 //sampleStart
@@ -103,7 +103,7 @@ fun main() = runBlocking {
 //sampleEnd
 ```
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-sync-01.kt)获取完整代码。
 
@@ -121,7 +121,7 @@ Counter =
 
 <!--- CLEAR -->
 
-
+<div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -139,7 +139,7 @@ suspend fun massiveRun(action: suspend () -> Unit) {
             }
         }
     }
-    println("Completed ${n * k} actions in $time ms")
+    println("Completed ${n * k} actions in $time ms")    
 }
 
 //sampleStart
@@ -157,7 +157,7 @@ fun main() = runBlocking {
 //sampleEnd
 ```
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-sync-02.kt)获取完整代码。
 
@@ -179,7 +179,7 @@ Counter =
 
 <!--- CLEAR -->
 
-
+<div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -198,7 +198,7 @@ suspend fun massiveRun(action: suspend () -> Unit) {
             }
         }
     }
-    println("Completed ${n * k} actions in $time ms")
+    println("Completed ${n * k} actions in $time ms")    
 }
 
 //sampleStart
@@ -215,7 +215,7 @@ fun main() = runBlocking {
 //sampleEnd
 ```
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-sync-03.kt)获取完整代码。
 
@@ -237,7 +237,7 @@ Counter = 100000
 
 <!--- CLEAR -->
 
-
+<div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -255,7 +255,7 @@ suspend fun massiveRun(action: suspend () -> Unit) {
             }
         }
     }
-    println("Completed ${n * k} actions in $time ms")
+    println("Completed ${n * k} actions in $time ms")    
 }
 
 //sampleStart
@@ -276,7 +276,7 @@ fun main() = runBlocking {
 //sampleEnd
 ```
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-sync-04.kt)获取完整代码。
 
@@ -297,7 +297,7 @@ Counter = 100000
 
 <!--- CLEAR -->
 
-
+<div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -315,7 +315,7 @@ suspend fun massiveRun(action: suspend () -> Unit) {
             }
         }
     }
-    println("Completed ${n * k} actions in $time ms")
+    println("Completed ${n * k} actions in $time ms")    
 }
 
 //sampleStart
@@ -334,7 +334,7 @@ fun main() = runBlocking {
 //sampleEnd
 ```
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-sync-05.kt)获取完整代码。
 
@@ -357,7 +357,7 @@ Counter = 100000
 
 <!--- CLEAR -->
 
-
+<div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -376,7 +376,7 @@ suspend fun massiveRun(action: suspend () -> Unit) {
             }
         }
     }
-    println("Completed ${n * k} actions in $time ms")
+    println("Completed ${n * k} actions in $time ms")    
 }
 
 //sampleStart
@@ -397,7 +397,7 @@ fun main() = runBlocking {
 //sampleEnd
 ```
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-sync-06.kt)获取完整代码。
 
@@ -428,7 +428,7 @@ Kotlin 的[密封类](https://kotlinlang.org/docs/reference/sealed-classes.html)
 -->原语表示未来可知（可传达）的单个值，
 这里被用于此目的。
 
-
+<div class="sample" markdown="1" theme="idea" data-highlight-only>
 
 ```kotlin
 // 计数器 Actor 的各种类型
@@ -437,11 +437,11 @@ object IncCounter : CounterMsg() // 递增计数器的单向消息
 class GetCounter(val response: CompletableDeferred<Int>) : CounterMsg() // 携带回复的请求
 ```
 
-
+</div>
 
 接下来我们定义一个函数，使用 [actor] 协程构建器来启动一个 actor：
 
-
+<div class="sample" markdown="1" theme="idea" data-highlight-only>
 
 ```kotlin
 // 这个函数启动一个新的计数器 actor
@@ -456,13 +456,13 @@ fun CoroutineScope.counterActor() = actor<CounterMsg> {
 }
 ```
 
-
+</div>
 
 main 函数代码很简单：
 
 <!--- CLEAR -->
 
-
+<div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -481,7 +481,7 @@ suspend fun massiveRun(action: suspend () -> Unit) {
             }
         }
     }
-    println("Completed ${n * k} actions in $time ms")
+    println("Completed ${n * k} actions in $time ms")    
 }
 
 // 计数器 Actor 的各种类型
@@ -517,7 +517,7 @@ fun main() = runBlocking {
 //sampleEnd
 ```
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-sync-07.kt)获取完整代码。
 

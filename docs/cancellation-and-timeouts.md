@@ -40,7 +40,7 @@ class CancellationTimeOutsGuideTest {
 -->已经不再被需要了，这时，它应该是可以被取消的。
 该 [launch] 函数返回了一个可以被用来取消运行中的协程的 [Job]：
  
-
+<div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
  
 ```kotlin
 import kotlinx.coroutines.*
@@ -62,7 +62,7 @@ fun main() = runBlocking {
 }
 ``` 
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-cancel-01.kt)获取完整代码。
 
@@ -90,7 +90,7 @@ main: Now I can quit.
 -->计算任务，并且没有检查取消的话，那么它是不能被取消的，就如如下示例<!--
 -->代码所示：
 
-
+<div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -117,7 +117,7 @@ fun main() = runBlocking {
 }
 ```
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-cancel-02.kt)获取完整代码。
 
@@ -142,7 +142,7 @@ main: Now I can quit.
 
 将前一个示例中的 `while (i < 5)` 替换为 `while (isActive)` 并重新运行它。
 
-
+<div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -169,7 +169,7 @@ fun main() = runBlocking {
 }
 ```
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-cancel-03.kt)获取完整代码。
 
@@ -191,7 +191,7 @@ main: Now I can quit.
 -->执行它们的终结动作：
  
  
-
+<div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
  
 ```kotlin
 import kotlinx.coroutines.*
@@ -216,7 +216,7 @@ fun main() = runBlocking {
 }
 ``` 
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-cancel-04.kt)获取完整代码。
 
@@ -243,7 +243,7 @@ main: Now I can quit.
 -->真实的案例中，当你需要挂起一个被取消的协程，你可以将相应的代码包装在
 `withContext(NonCancellable) {……}` 中，并使用 [withContext] 函数以及 [NonCancellable] 上下文，见如下示例所示：
  
-
+<div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
  
 ```kotlin
 import kotlinx.coroutines.*
@@ -272,7 +272,7 @@ fun main() = runBlocking {
 }
 ``` 
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-cancel-05.kt)获取完整代码。
 
@@ -294,7 +294,7 @@ main: Now I can quit.
 -->延迟后取消追踪，这里已经准备好使用 [withTimeout] 函数来做这件事。
 来看看示例代码：
 
-
+<div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -311,7 +311,7 @@ fun main() = runBlocking {
 }
 ```
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-cancel-06.kt)获取完整代码。
 
@@ -336,7 +336,7 @@ Exception in thread "main" kotlinx.coroutines.TimeoutCancellationException: Time
 的 [withTimeoutOrNull] 函数，并把这些会超时的代码包装在 `try {...} catch (e: TimeoutCancellationException) {...}`
 代码块中，而 [withTimeoutOrNull] 通过返回 `null` 来进行超时操作，从而替代抛出一个异常：
 
-
+<div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -355,7 +355,7 @@ fun main() = runBlocking {
 }
 ```
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-cancel-07.kt)获取完整代码。
 

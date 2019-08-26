@@ -50,7 +50,7 @@ class ExceptionsGuideTest {
 
 可以通过一个在 [GlobalScope] 中创建协程的简单示例来进行演示：
 
-
+<div class="sample" markdown="1" theme="idea" data-highlight-only>
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -75,7 +75,7 @@ fun main() = runBlocking {
 }
 ```
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-exceptions-01.kt)获取完整代码。
 
@@ -107,7 +107,7 @@ Caught ArithmeticException
 [CoroutineExceptionHandler] 仅在预计不会由用户处理的异常上调用，
 所以在 [async] 构建器中注册它没有任何效果。
 
-
+<div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -124,11 +124,11 @@ fun main() = runBlocking {
         throw ArithmeticException() // 没有打印任何东西，依赖用户去调用 deferred.await()
     }
     joinAll(job, deferred)
-//sampleEnd
+//sampleEnd    
 }
 ```
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-exceptions-02.kt)获取完整代码。
 
@@ -148,7 +148,7 @@ Caught java.lang.AssertionError
 当一个协程在没有任何理由的情况下使用 [Job.cancel] 取消的时候，它会被终止，但是它不会取消它的父协程。
 无理由取消是父协程取消其子协程而非取消其自身的机制。
 
-
+<div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -171,11 +171,11 @@ fun main() = runBlocking {
         println("Parent is not cancelled")
     }
     job.join()
-//sampleEnd
+//sampleEnd    
 }
 ```
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-exceptions-03.kt)获取完整代码。
 
@@ -200,7 +200,7 @@ Parent is not cancelled
 [runBlocking] 主作用域内启动的协程中是没有意义的，尽管子协程已经设置了异常处理者，
 但是主协程也总是会被取消的。
 
-
+<div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -229,11 +229,11 @@ fun main() = runBlocking {
         }
     }
     job.join()
-//sampleEnd
+//sampleEnd    
 }
 ```
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-exceptions-04.kt)获取完整代码。
 
@@ -265,7 +265,7 @@ Caught java.lang.ArithmeticException
 import kotlinx.coroutines.exceptions.*
 -->
 
-
+<div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -289,11 +289,11 @@ fun main() = runBlocking {
         }
         delay(Long.MAX_VALUE)
     }
-    job.join()
+    job.join()  
 }
 ```
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-exceptions-05.kt)获取完整代码。
 
@@ -312,7 +312,7 @@ Caught java.io.IOException with suppressed [java.lang.ArithmeticException]
 
 取消异常是透明的并且会在默认情况下解包：
 
-
+<div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -339,11 +339,11 @@ fun main() = runBlocking {
         }
     }
     job.join()
-//sampleEnd
+//sampleEnd    
 }
 ```
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-exceptions-06.kt)获取完整代码。
 
@@ -372,7 +372,7 @@ Caught original java.io.IOException
 [SupervisorJob][SupervisorJob()] 可以被用于这些目的。它类似于常规的 [Job][Job()]，唯一的不同是：<!--
 -->SupervisorJob 的取消只会向下传播。这是非常容易从示例中观察到的：
 
-
+<div class="sample" markdown="1" theme="idea" data-highlight-only>
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -406,7 +406,7 @@ fun main() = runBlocking {
 }
 ```
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-supervision-01.kt)获取完整代码。
 
@@ -427,7 +427,7 @@ Second child is cancelled because supervisor is cancelled
 -->并且当子作业自身执行失败的时候将它们全部取消。它也会在所有的子作业执行结束前等待，
 就像 [coroutineScope] 所做的那样。
 
-
+<div class="sample" markdown="1" theme="idea" data-highlight-only>
 
 ```kotlin
 import kotlin.coroutines.*
@@ -455,7 +455,7 @@ fun main() = runBlocking {
 }
 ```
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-supervision-02.kt)获取完整代码。
 
@@ -475,7 +475,7 @@ Caught assertion error
 每一个子作业应该通过异常处理机制处理自身的异常。
 这种差异来自于子作业的执行失败不会传播给它的父作业的事实。
 
-
+<div class="sample" markdown="1" theme="idea" data-highlight-only>
 
 ```kotlin
 import kotlin.coroutines.*
@@ -496,7 +496,7 @@ fun main() = runBlocking {
 }
 ```
 
-
+</div>
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-supervision-03.kt)获取完整代码。
 
