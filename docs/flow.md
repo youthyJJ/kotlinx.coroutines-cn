@@ -63,14 +63,14 @@ class FlowGuideTest {
 
 ## 异步流
 
-Suspending functions asynchronously return a single value, but how can you return
-multiple asynchronously computed values? That is what Kotlin Flows are for.
+挂起函数可以异步的返回单个值，但是该如何异步返回<!--
+-->多个计算好的值呢？这正是 Kotlin 流所做的。
 
 ### 表示多个值
 
-Multiple values can be represented in Kotlin using [collections]. 
-For example, we can have a function `foo()` that returns a [List] 
-of three numbers and print them all using [forEach]:
+在 Kotlin 中可以使用 [集合][collections] 来表示多个值。 
+比如说，我们可以拥有一个函数 `foo()`，它返回一个包含三个数字的 [List] 
+并使用 [forEach] 打印他们：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -84,9 +84,9 @@ fun main() {
 
 </div>
 
-> You can get full code [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-01.kt).
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-01.kt)获取完整代码。
 
-This code outputs:
+这段代码输出如下： 
 
 ```text
 1
@@ -98,16 +98,16 @@ This code outputs:
 
 #### 序列
 
-If the numbers are computed with some CPU-consuming blocking code 
-(each computation taking 100ms) then we can represent the numbers using a [Sequence]:
+如果使用一些消耗 CPU 资源的阻塞代码计算数字<!--
+-->（每次计算需要 100 毫秒）那么我们可以使用 [Sequence] 来表示数字：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
 ```kotlin
-fun foo(): Sequence<Int> = sequence { // sequence builder
+fun foo(): Sequence<Int> = sequence { // 序列构建器
     for (i in 1..3) {
-        Thread.sleep(100) // pretend we are computing it
-        yield(i) // yield next value
+        Thread.sleep(100) // 假装我们正在计算
+        yield(i) // 产生下一个值
     }
 }
 
@@ -118,9 +118,9 @@ fun main() {
 
 </div>
 
-> You can get full code [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-02.kt).
+> 你可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-02.kt)获取完整代码。
 
-This code outputs the same numbers, but it waits 100ms before printing each one.
+这段代码输出相同的数字，但在打印每个数字之前等待 100 毫秒。
 
 <!--- TEST 
 1
@@ -130,9 +130,9 @@ This code outputs the same numbers, but it waits 100ms before printing each one.
 
 #### 挂起函数
 
-However, this computation blocks the main thread that is running the code. 
-When those values are computed by an asynchronous code we can mark function `foo` with a `suspend` modifier,
-so that it can perform its work without blocking and return the result as a list:
+然而，阻塞运行该代码的主线程。
+当这些值由异步代码计算时，我们可以使用 `suspend` 修饰符标记函数 `foo`，
+这样它就可以在不阻塞的情况下执行其工作并将结果作为列表返回：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -141,7 +141,7 @@ import kotlinx.coroutines.*
                            
 //sampleStart
 suspend fun foo(): List<Int> {
-    delay(1000) // pretend we are doing something asynchronous here
+    delay(1000) // 假装我们在这里做了一些异步的事情
     return listOf(1, 2, 3)
 }
 
@@ -153,9 +153,9 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get full code [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-03.kt).
+> 你可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-03.kt)获取完整代码。
 
-This code prints the numbers after waiting for a second.
+这段代码将会在等待一秒之后打印数字。
 
 <!--- TEST 
 1
@@ -165,9 +165,9 @@ This code prints the numbers after waiting for a second.
 
 #### 流
 
-Using `List<Int>` result type we can only return all the values at once. To represent
-the stream of values that are being asynchronously computed we can use [`Flow<Int>`][Flow] type similarly
-to the `Sequence<Int>` type for synchronously computed values:
+使用 List<Int> 结果类型，我们只能一次返回所有值。
+为了表示异步计算的值流（stream），我们可以使用 Flow<Int>
+类型（相当于于同步计算值的 Sequence<Int> 类型）：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -176,22 +176,22 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
 //sampleStart               
-fun foo(): Flow<Int> = flow { // flow builder
+fun foo(): Flow<Int> = flow { // 流构建器
     for (i in 1..3) {
-        delay(100) // pretend we are doing something useful here
-        emit(i) // emit next value
+        delay(100) // 假装我们在这里做了一些有用的事情
+        emit(i) // 发送下一个值
     }
 }
 
 fun main() = runBlocking<Unit> {
-    // Launch a concurrent coroutine to see that the main thread is not blocked
+    // 启动并发的协程以查看主线程并未阻塞
     launch {
         for (k in 1..3) {
             println("I'm not blocked $k")
             delay(100)
         }
     }
-    // Collect the flow
+    // 收集这个流
     foo().collect { value -> println(value) } 
 }
 //sampleEnd
@@ -199,10 +199,10 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get full code [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-04.kt).
+> 你可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-04.kt)获取完整代码。
 
-This code waits 100ms before printing each number without blocking the main thread. This is verified
-by printing "I'm not blocked" every 100ms from a separate coroutine that is running in the main thread:
+这段代码在不阻塞主线程的情况下每等待 100 毫秒打印一个数字。在主线程中运行一个<!--
+-->单独的协程每 100 毫秒打印一次 “I'm not blocked” 已经经过了验证。
 
 ```text
 I'm not blocked 1
@@ -215,16 +215,16 @@ I'm not blocked 3
 
 <!--- TEST -->
 
-Notice the following differences of the code with the [Flow] from the earlier examples:
+注意下面使用 [Flow] 的代码与先前示例的区别：
 
-* A builder function for [Flow] type is called [flow].
-* Code inside the `flow { ... }` builder block can suspend.
-* The function `foo()` is no longer marked with `suspend` modifier.   
-* Values are _emitted_ from the flow using [emit][FlowCollector.emit] function.
-* Values are _collected_ from the flow using [collect][collect] function.  
+* 名为 [flow] 的 [Flow] 类型构建器函数。
+* `flow { ... }` 构建块中的代码可以挂起。
+* 函数 `foo()` 不再标有 `suspend` 修饰符。  
+* 流使用 [emit][FlowCollector.emit] 函数 _发射_ 值。 
+* 流使用 [collect][collect] 函数 _收集_ 值。
 
-> You can replace [delay] with `Thread.sleep` in the body of `foo`'s `flow { ... }` and see that the main
-thread is blocked in this case. 
+> 你可以在 `foo` 的 `flow { ... }` 函数体内使用 [delay] 代替 `Thread.sleep`
+以观察主线程在本案例中被阻塞了。
 
 ### 流是冷的
 
