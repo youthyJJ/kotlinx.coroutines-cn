@@ -130,7 +130,7 @@ fun main() {
 
 #### 挂起函数
 
-然而，阻塞运行该代码的主线程。
+然而，计算过程阻塞运行该代码的主线程。
 当这些值由异步代码计算时，我们可以使用 `suspend` 修饰符标记函数 `foo`，
 这样它就可以在不阻塞的情况下执行其工作并将结果作为列表返回：
 
@@ -167,7 +167,7 @@ fun main() = runBlocking<Unit> {
 
 使用 List<Int> 结果类型，我们只能一次返回所有值。
 为了表示异步计算的值流（stream），我们可以使用 Flow<Int>
-类型（相当于于同步计算值的 Sequence<Int> 类型）：
+类型（相当于同步计算值的 Sequence<Int> 类型）：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
