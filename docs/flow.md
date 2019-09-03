@@ -68,8 +68,8 @@ class FlowGuideTest {
 
 ### 表示多个值
 
-在 Kotlin 中可以使用 [collections] 来表示多个值。 
-比如说，你可以拥有一个函数 `foo()`，它返回一个包含三个数字的 [List] 
+在 Kotlin 中可以使用 [集合][collections] 来表示多个值。 
+比如说，我们可以拥有一个函数 `foo()`，它返回一个包含三个数字的 [List] 
 并使用 [forEach] 打印他们：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
@@ -99,7 +99,7 @@ fun main() {
 #### 序列
 
 如果使用一些消耗 CPU 资源的阻塞代码计算数字<!--
--->（每次计算需要 100 毫秒）然后我们可以使用 [Sequence] 来表示数字：
+-->（每次计算需要 100 毫秒）那么我们可以使用 [Sequence] 来表示数字：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -120,7 +120,7 @@ fun main() {
 
 > 你可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-02.kt)获取完整代码。
 
-这段代码输出相同的数字，但在打印每个代码之前等待 100 毫秒。
+这段代码输出相同的数字，但在打印每个数字之前等待 100 毫秒。
 
 <!--- TEST 
 1
@@ -130,7 +130,7 @@ fun main() {
 
 #### 挂起函数
 
-然而，这段计算代码运行后会阻塞主线程。
+然而，阻塞运行该代码的主线程。
 当这些值由异步代码计算时，我们可以使用 `suspend` 修饰符标记函数 `foo`，
 这样它就可以在不阻塞的情况下执行其工作并将结果作为列表返回：
 
@@ -165,9 +165,9 @@ fun main() = runBlocking<Unit> {
 
 #### 流
 
-使用 `List<Int>` 结果类型，我们只需返回所有的值一次。我们可以使用 [`Flow<Int>`][Flow]
-类型的值流来进行异步计算，同样我们也可以使用
-`Sequence<Int>` 类型来进行同步计算：
+使用 List<Int> 结果类型，我们只能一次返回所有值。
+为了表示异步计算的值流（stream），我们可以使用 Flow<Int>
+类型（相当于于同步计算值的 Sequence<Int> 类型）：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -215,13 +215,13 @@ I'm not blocked 3
 
 <!--- TEST -->
 
-注意在以下代码中 [Flow] 与先前示例中的区别：
+注意下面使用 [Flow] 的代码与先前示例的区别：
 
-* 叫做 [flow] 的 [Flow] 类型构建器函数。
+* 名为 [flow] 的 [Flow] 类型构建器函数。
 * `flow { ... }` 构建块中的代码可以挂起。
 * 函数 `foo()` 不再标有 `suspend` 修饰符。  
 * 流使用 [emit][FlowCollector.emit] 函数 _发射_ 值。 
-* 流使用 [collect][collect] 函数来 _收集_ 值。
+* 流使用 [collect][collect] 函数 _收集_ 值。
 
 > 你可以在 `foo` 的 `flow { ... }` 函数体内使用 [delay] 代替 `Thread.sleep`
 以观察主线程在本案例中被阻塞了。
