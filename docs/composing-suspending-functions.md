@@ -426,8 +426,8 @@ suspend fun failedConcurrentSum(): Int = coroutineScope {
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-compose-06.kt)获取完整代码。
 
-注意，当任意一个子协程失败的时候，第一个 `async` 以及等待中的父协程都会被取消
-（即 `two`）：
+请注意，如果其中一个子协程（即 `two`）失败，第一个 `async` 以及等待中的父协程都会被取消<!--
+-->：
 ```text
 Second child throws an exception
 First child was cancelled
