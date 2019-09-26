@@ -58,7 +58,7 @@ class FlowGuideTest {
     * [仅限上游异常](#仅限上游异常)
   * [命令式还是声明式](#命令式还是声明式)
   * [启动流](#启动流)
-  * [Flow and Reactive Streams](#flow-and-reactive-streams)
+  * [流（Flow）与响应式流（Reactive Streams）](#flow-and-reactive-streams)
 
 <!--- END_TOC -->
 
@@ -1794,8 +1794,10 @@ as cancellation and structured concurrency serve this purpose.
 
 Note that [launchIn] also returns a [Job], which can be used to [cancel][Job.cancel] the corresponding flow collection
 coroutine only without cancelling the whole scope or to [join][Job.join] it.
- 
-### Flow and Reactive Streams
+
+{:#flow-and-reactive-streams}
+
+### 流（Flow）与响应式流（Reactive Streams）
 
 For those who are familiar with [Reactive Streams](https://www.reactive-streams.org/) or reactive frameworks such as RxJava and project Reactor, 
 design of the Flow may look very familiar.
