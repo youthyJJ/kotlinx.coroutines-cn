@@ -27,7 +27,7 @@ class FlowGuideTest {
     * [流](#流)
   * [流是冷的](#流是冷的)
   * [流取消](#流取消)
-  * [流构造器](#流构造器)
+  * [流构建器](#流构建器)
   * [过渡流操作符](#过渡流操作符)
     * [转换操作符](#转换操作符)
     * [限长操作符](#限长操作符)
@@ -228,8 +228,8 @@ I'm not blocked 3
 
 ### 流是冷的
 
-Flows are _cold_ streams similar to sequences &mdash; the code inside a [flow] builder does not
-run until the flow is collected. This becomes clear in the following example:
+Flow 是一种类似于序列的冷流 &mdash; 这段 [flow] 构建器中的代码<!--
+-->直到流被收集的时候才运行。这在以下的示例中非常明显：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -259,9 +259,9 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-05.kt).
+> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-05.kt)获取完整代码。
 
-Which prints:
+打印如下：
 
 ```text
 Calling foo...
@@ -279,18 +279,18 @@ Flow started
 
 <!--- TEST -->
  
-This is a key reason the `foo()` function (which returns a flow) is not marked with `suspend` modifier.
-By itself, `foo()` returns quickly and does not wait for anything. The flow starts every time it is collected,
-that is why we see "Flow started" when we call `collect` again.
+这是返回一个流的 `foo()` 函数没有标记 `suspend` 修饰符的主要原因。
+通过它自己，`foo()` 会尽快返回且不会进行任何等待。该流在每次收集的时候启动，
+这就是为什么当我们再次调用 `collect` 时我们会看到“Flow started”。
 
 ### 流取消
 
-Flow adheres to the general cooperative cancellation of coroutines. However, flow infrastructure does not introduce
-additional cancellation points. It is fully transparent for cancellation. As usual, flow collection can be 
-cancelled when the flow is suspended in a cancellable suspending function (like [delay]), and cannot be cancelled otherwise.
+流采用与协程同样的协作取消。然而，流的基础设施未引入<!--
+-->其他取消点。取消完全透明。像往常一样，流的收集可以在<!--
+-->当流在一个可取消的挂起函数（例如 [delay]）中挂起的时候取消，否则不能取消。
 
-The following example shows how the flow gets cancelled on a timeout when running in a [withTimeoutOrNull] block 
-and stops executing its code:
+下面的示例展示了当 [withTimeoutOrNull] 块中代码在运行的时候流是如何在超时的情况下取消<!--
+-->并停止执行其代码的：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -308,7 +308,7 @@ fun foo(): Flow<Int> = flow {
 }
 
 fun main() = runBlocking<Unit> {
-    withTimeoutOrNull(250) { // Timeout after 250ms 
+    withTimeoutOrNull(250) { // 在 250 毫秒后超时
         foo().collect { value -> println(value) } 
     }
     println("Done")
@@ -318,9 +318,9 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-06.kt).
+> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-06.kt)获取完整代码。
 
-Notice how only two numbers get emitted by the flow in `foo()` function, producing the following output: 
+注意，在 `foo()` 函数中流仅发射两个数字，产生以下输出：
 
 ```text
 Emitting 1
@@ -332,15 +332,15 @@ Done
 
 <!--- TEST -->
 
-### 流构造器
+### 流构建器
 
-The `flow { ... }` builder from the previous examples is the most basic one. There are other builders for
-easier declaration of flows:
+先前示例中的 `flow { ... }` 构建器是最基础的一个。还有其它构建器<!--
+-->使流的声明更简单：
 
-* [flowOf] builder that defines a flow emitting a fixed set of values.
-* Various collections and sequences can be converted to flows using `.asFlow()` extension functions.
+* [flowOf] 构建器定义了一个发射固定值集的流。
+* 使用 `.asFlow()`  扩展函数，可以将各种集合与序列转换为流。
 
-So, the example that prints the numbers from 1 to 3 from a flow can be written as:
+因此，从流中打印从 1 到 3 的数字的示例可以写成：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -350,7 +350,7 @@ import kotlinx.coroutines.flow.*
 
 fun main() = runBlocking<Unit> {
 //sampleStart
-    // Convert an integer range to a flow
+    // 将一个整数区间转化为流
     (1..3).asFlow().collect { value -> println(value) }
 //sampleEnd 
 }
@@ -358,7 +358,7 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-07.kt).
+> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-07.kt)获取完整代码。
  
 <!--- TEST
 1
@@ -368,18 +368,18 @@ fun main() = runBlocking<Unit> {
 
 ### 过渡流操作符
 
-Flows can be transformed with operators, just as you would with collections and sequences. 
-Intermediate operators are applied to an upstream flow and return a downstream flow. 
-These operators are cold, just like flows are. A call to such an operator is not
-a suspending function itself. It works quickly, returning the definition of a new transformed flow. 
+可以使用操作符转换流，就像使用集合与序列一样。
+过渡操作符应用于上游流，并返回下游流。
+这些操作符也是冷操作符，就像流一样。这类操作符<!--
+-->本身不是挂起函数。它运行的速度很快，返回新的转换流的定义。
 
-The basic operators have familiar names like [map] and [filter]. 
-The important difference to sequences is that blocks of 
-code inside these operators can call suspending functions. 
+基础的操作符拥有相似的名字，比如 [map] 与 [filter]。
+流与序列的主要区别在于这些操作符中的代码<!--
+-->可以调用挂起函数。
 
-For example, a flow of incoming requests can be
-mapped to the results with the [map] operator, even when performing a request is a long-running
-operation that is implemented by a suspending function:   
+举例来说，一个请求中的流可以<!--
+-->使用 [map] 操作符映射出结果，即使执行一个长时间的请求<!--
+-->操作也可以使用挂起函数来实现： 
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -389,12 +389,12 @@ import kotlinx.coroutines.flow.*
 
 //sampleStart           
 suspend fun performRequest(request: Int): String {
-    delay(1000) // imitate long-running asynchronous work
+    delay(1000) // 模仿长时间运行的异步工作
     return "response $request"
 }
 
 fun main() = runBlocking<Unit> {
-    (1..3).asFlow() // a flow of requests
+    (1..3).asFlow() // 一个请求流
         .map { request -> performRequest(request) }
         .collect { response -> println(response) }
 }
@@ -403,9 +403,9 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-08.kt).
+> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-08.kt)获取完整代码。
 
-It produces the following three lines, each line appearing after each second:
+它产生以下三行，每一行每秒出现一次：
 
 ```text                                                                    
 response 1
@@ -417,12 +417,12 @@ response 3
 
 #### 转换操作符
 
-Among the flow transformation operators, the most general one is called [transform]. It can be used to imitate
-simple transformations like [map] and [filter], as well as implement more complex transformations. 
-Using the `transform` operator, we can [emit][FlowCollector.emit] arbitrary values an arbitrary number of times.
+在流转换操作符中，最通用的一种称为 [transform]。它可以用来模仿<!--
+-->简单的转换，例如 [map] 与 [filter]，以及实施更复杂的转换。
+使用 `transform` 操作符，我们可以 [发射][FlowCollector.emit] 任意值任意次。
 
-For example, using `transform` we can emit a string before performing a long-running asynchronous request 
-and follow it with a response:
+比如说，使用 `transform` 我们可以在执行长时间运行的异步请求之前发射一个字符串<!--
+-->并跟踪这个响应：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -431,13 +431,13 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
 suspend fun performRequest(request: Int): String {
-    delay(1000) // imitate long-running asynchronous work
+    delay(1000) // 模仿长时间运行的异步任务
     return "response $request"
 }
 
 fun main() = runBlocking<Unit> {
 //sampleStart
-    (1..3).asFlow() // a flow of requests
+    (1..3).asFlow() // 一个请求流
         .transform { request ->
             emit("Making request $request") 
             emit(performRequest(request)) 
@@ -449,9 +449,9 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-09.kt).
+> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-09.kt)获取完整代码。
 
-The output of this code is:
+这段代码的输出如下：
 
 ```text
 Making request 1
@@ -466,9 +466,9 @@ response 3
 
 #### 限长操作符
 
-Size-limiting intermediate operators like [take] cancel the execution of the flow when the corresponding limit
-is reached. Cancellation in coroutines is always performed by throwing an exception, so that all the resource-management
-functions (like `try { ... } finally { ... }` blocks) operate normally in case of cancellation:
+限长过渡操作符（例如 [take]）在流触及相应限制的时候会将它的<!--
+-->执行取消。协程中的取消操作总是通过抛出异常来执行，这样所有的资源管理<!--
+-->函数（如 `try {...} finally {...}` 块）会在取消的情况下正常运行：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -490,7 +490,7 @@ fun numbers(): Flow<Int> = flow {
 
 fun main() = runBlocking<Unit> {
     numbers() 
-        .take(2) // take only the first two
+        .take(2) // 只获取前两个
         .collect { value -> println(value) }
 }            
 //sampleEnd
@@ -498,10 +498,10 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-10.kt).
+> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-10.kt)获取完整代码。
 
-The output of this code clearly shows that the execution of the `flow { ... }` body in the `numbers()` function
-stopped after emitting the second number:
+这段代码的输出清楚地表明，`numbers()` 函数中对 `flow {...}` 函数体的执行在<!--
+-->发射出第二个数字后停止：
 
 ```text       
 1
@@ -531,8 +531,8 @@ import kotlinx.coroutines.flow.*
 fun main() = runBlocking<Unit> {
 //sampleStart         
     val sum = (1..5).asFlow()
-        .map { it * it } // squares of numbers from 1 to 5                           
-        .reduce { a, b -> a + b } // sum them (terminal operator)
+        .map { it * it } // 数字 1 至 5 的平方                        
+        .reduce { a, b -> a + b } // 求和（末端操作符）
     println(sum)
 //sampleEnd     
 }
@@ -540,9 +540,9 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-11.kt).
+> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-11.kt)获取完整代码。
 
-Prints a single number:
+打印单个数字：
 
 ```text
 55
