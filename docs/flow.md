@@ -513,14 +513,14 @@ Finally in numbers
 
 ### 末端流操作符
 
-Terminal operators on flows are _suspending functions_ that start a collection of the flow.
-The [collect] operator is the most basic one, but there are other terminal operators, which can make it easier:
+当开始收集流的时候，流中的末端操作符会将 _函数挂起_ 。
+[collect] 是最基础的末端操作符，但是还有另外一些更方便使用的末端操作符：
 
-* Conversion to various collections like [toList] and [toSet].
-* Operators to get the [first] value and to ensure that a flow emits a [single] value.
-* Reducing a flow to a value with [reduce] and [fold].
+* 转化为各种集合，例如 [toList] 与 [toSet]。
+* 操作符得到第一个（[first]）值并确保流发射单个（[single]）值。
+* 使用 [reduce] 与 [fold] 将流减少到单个值。
 
-For example:
+举例来说：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -552,13 +552,13 @@ fun main() = runBlocking<Unit> {
 
 ### 流是连续的
 
-Each individual collection of a flow is performed sequentially unless special operators that operate
-on multiple flows are used. The collection works directly in the coroutine that calls a terminal operator. 
-No new coroutines are launched by default. 
-Each emitted value is processed by all the intermediate operators from 
-upstream to downstream and is then delivered to the terminal operator after. 
+流的每次单独收集都是按顺序执行的，除非进行特殊操作的操作符<!--
+-->使用多个流。该收集过程直接在协程中运行，该协程调用末端操作符。
+默认情况下不启动新协程。
+从上游到下游每个过渡操作符都会处理每个发射出的值<!--
+-->然后再交给末端操作符。
 
-See the following example that filters the even integers and maps them to strings:
+请参见以下示例，该示例过滤偶数并将其映射到字符串：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -585,9 +585,9 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-12.kt).
+> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-12.kt)获取完整代码。
 
-Producing:
+执行：
 
 ```text
 Filter 1
@@ -605,16 +605,16 @@ Filter 5
 
 ### 流上下文
 
-Collection of a flow always happens in the context of the calling coroutine. For example, if there is 
-a `foo` flow, then the following code runs in the context specified
-by the author of this code, regardless of the implementation details of the `foo` flow:
+流的收集总是在调用协程的上下文中发生。例如，如果有一个流
+`foo`，然后以下代码在它的编写者指定的上下文中<!--
+-->运行，而无论流 `foo` 的实现细节如何：
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
 
 ```kotlin
 withContext(context) {
     foo.collect { value ->
-        println(value) // run in the specified context 
+        println(value) // 运行在指定上下文中
     }
 }
 ``` 
@@ -623,11 +623,11 @@ withContext(context) {
 
 <!--- CLEAR -->
 
-This property of a flow is called _context preservation_.
+流的该属性称为 _上下文保存_ 。
 
-So, by default, code in the `flow { ... }` builder runs in the context that is provided by a collector
-of the corresponding flow. For example, consider the implementation of `foo` that prints the thread
-it is called on and emits three numbers:
+所以默认的，`flow { ... }` 构建器中的代码运行在相应流的收集器<!--
+-->提供的上下文中。举例来说，考虑打印线程的 `foo` 的实现，
+它被调用并发射三个数字：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -653,9 +653,9 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-13.kt).
+> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-13.kt)获取完整代码。
 
-Running this code produces:
+运行这段代码：
 
 ```text  
 [main @coroutine#1] Started foo flow
@@ -666,18 +666,18 @@ Running this code produces:
 
 <!--- TEST FLEXIBLE_THREAD -->
 
-Since `foo().collect` is called from the main thread, the body of `foo`'s flow is also called in the main thread.
-This is the perfect default for fast-running or asynchronous code that does not care about the execution context and
-does not block the caller. 
+由于 `foo().collect` 是在主线程调用的，则 `foo` 的流主体也是在主线程调用的。
+这是快速运行或异步代码的理想默认形式，它不关心执行的上下文并且不会<!--
+-->阻塞调用者。
 
 #### withContext 发出错误
 
-However, the long-running CPU-consuming code might need to be executed in the context of [Dispatchers.Default] and UI-updating
-code might need to be executed in the context of [Dispatchers.Main]. Usually, [withContext] is used
-to change the context in the code using Kotlin coroutines, but code in the `flow { ... }` builder has to honor the context
-preservation property and is not allowed to [emit][FlowCollector.emit] from a different context. 
+然而，长时间运行的消耗 CPU 的代码也许需要在 [Dispatchers.Default] 上下文中执行，并且更新 UI
+的代码也许需要在 [Dispatchers.Main] 中执行。通常，[withContext] 用于在
+Kotlin 协程中改变代码的上下文，但是 `flow {...}` 构建器中的代码必须遵循上下文<!--
+-->保存属性，并且不允许从其他上下文中发射（[emit][FlowCollector.emit]）。
 
-Try running the following code:
+尝试运行下面的代码：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -687,11 +687,11 @@ import kotlinx.coroutines.flow.*
                       
 //sampleStart
 fun foo(): Flow<Int> = flow {
-    // The WRONG way to change context for CPU-consuming code in flow builder
+    // 在流构建器中更改消耗 CPU 代码的上下文的错误方式
     kotlinx.coroutines.withContext(Dispatchers.Default) {
         for (i in 1..3) {
-            Thread.sleep(100) // pretend we are computing it in CPU-consuming way
-            emit(i) // emit next value
+            Thread.sleep(100) // 假装我们以消耗 CPU 的方式进行计算
+            emit(i) // 发射下一个值
         }
     }
 }
@@ -704,9 +704,9 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-14.kt).
+> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-14.kt)获取完整代码。
 
-This code produces the following exception:
+这段代码产生如下的异常：
 
 ```text
 Exception in thread "main" java.lang.IllegalStateException: Flow invariant is violated:
@@ -718,15 +718,15 @@ Exception in thread "main" java.lang.IllegalStateException: Flow invariant is vi
 
 <!--- TEST EXCEPTION -->
    
-> Note that we had to use a fully qualified name of the [kotlinx.coroutines.withContext][withContext] function in this example to 
-demonstrate this exception. A short name of `withContext` would have resolved to a special stub function that
-produces a compilation error to prevent us from running into this problem.   
+> 请注意，在此示例中，我们必须使用 [kotlinx.coroutines.withContext][withContext] 函数的全限定名来<!--
+-->演示此异常。`withContext` 这个短名称将解析为一个特殊的存根函数<!--
+-->并产生编译错误，以防我们遇到此问题。  
 
 #### flowOn 操作符
    
-The exception refers to the [flowOn] function that shall be used to change the context of the flow emission.
-The correct way to change the context of a flow is shown in the example below, which also prints the 
-names of the corresponding threads to show how it all works:
+异常是指 [flowOn] 函数，该函数用于更改流发射的上下文。
+以下示例展示了更改流上下文的正确方法，该示例还通过<!--
+-->打印相应线程的名字以展示它们的工作方式：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -739,11 +739,11 @@ fun log(msg: String) = println("[${Thread.currentThread().name}] $msg")
 //sampleStart
 fun foo(): Flow<Int> = flow {
     for (i in 1..3) {
-        Thread.sleep(100) // pretend we are computing it in CPU-consuming way
+        Thread.sleep(100) // 假装我们以消耗 CPU 的方式进行计算
         log("Emitting $i")
-        emit(i) // emit next value
+        emit(i) // 发射下一个值
     }
-}.flowOn(Dispatchers.Default) // RIGHT way to change context for CPU-consuming code in flow builder
+}.flowOn(Dispatchers.Default) // 在流构建器中改变消耗 CPU 代码上下文的正确方式
 
 fun main() = runBlocking<Unit> {
     foo().collect { value ->
@@ -755,9 +755,9 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-15.kt).
+> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-15.kt)获取完整代码。
   
-Notice how `flow { ... }` works in the background thread, while collection happens in the main thread:   
+注意，当收集发生在主线程中，`flow { ... }` 是如何在后台线程中工作的：
   
 <!--- TEST FLEXIBLE_THREAD
 [DefaultDispatcher-worker-1 @coroutine#2] Emitting 1
@@ -768,10 +768,10 @@ Notice how `flow { ... }` works in the background thread, while collection happe
 [main @coroutine#1] Collected 3
 -->
 
-Another thing to observe here is that the [flowOn] operator has changed the default sequential nature of the flow.
-Now collection happens in one coroutine ("coroutine#1") and emission happens in another coroutine
-("coroutine#2") that is running in another thread concurrently with the collecting coroutine. The [flowOn] operator
-creates another coroutine for an upstream flow when it has to change the [CoroutineDispatcher] in its context. 
+这里要观察的另一件事是 [flowOn] 操作符已改变流的默认顺序性。
+现在收集发生在一个协程中（“coroutine#1”）而发射发生在另一个协程中<!--
+-->（“coroutine#2”），它与收集协程同时运行在另一个线程中。当上游流<!--
+-->必须改变其上下文中的 [CoroutineDispatcher] 的时候，[flowOn] 操作符创建了另一个协程。
 
 ### 缓冲
 
