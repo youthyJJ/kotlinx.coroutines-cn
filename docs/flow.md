@@ -517,7 +517,7 @@ Terminal operators on flows are _suspending functions_ that start a collection o
 [collect] 是最基础的末端操作符，但是还有另外一些更方便使用的末端操作符：
 
 * 转化为各种集合，例如 [toList] 与 [toSet]。
-* 操作符获取第一个（[first]）值与确保流发射单个（[single]）值。
+* 获取第一个（[first]）值与确保流发射单个（[single]）值的操作符。
 * 使用 [reduce] 与 [fold] 将流规约到单个值。
 
 举例来说：
