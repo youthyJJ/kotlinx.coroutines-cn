@@ -513,12 +513,12 @@ Finally in numbers
 
 ### 末端流操作符
 
-当开始收集流的时候，流中的末端操作符会将 _函数挂起_ 。
+Terminal operators on flows are _suspending functions_ that start a collection of the flow.（这句话原文有歧义，先保留英文）
 [collect] 是最基础的末端操作符，但是还有另外一些更方便使用的末端操作符：
 
 * 转化为各种集合，例如 [toList] 与 [toSet]。
-* 操作符得到第一个（[first]）值并确保流发射单个（[single]）值。
-* 使用 [reduce] 与 [fold] 将流减少到单个值。
+* 操作符获取第一个（[first]）值与确保流发射单个（[single]）值。
+* 使用 [reduce] 与 [fold] 将流规约到单个值。
 
 举例来说：
 
@@ -724,7 +724,7 @@ Exception in thread "main" java.lang.IllegalStateException: Flow invariant is vi
 
 #### flowOn 操作符
    
-异常是指 [flowOn] 函数，该函数用于更改流发射的上下文。
+例外的是 [flowOn] 函数，该函数用于更改流发射的上下文。
 以下示例展示了更改流上下文的正确方法，该示例还通过<!--
 -->打印相应线程的名字以展示它们的工作方式：
 
@@ -769,8 +769,8 @@ fun main() = runBlocking<Unit> {
 -->
 
 这里要观察的另一件事是 [flowOn] 操作符已改变流的默认顺序性。
-现在收集发生在一个协程中（“coroutine#1”）而发射发生在另一个协程中<!--
--->（“coroutine#2”），它与收集协程同时运行在另一个线程中。当上游流<!--
+现在收集发生在一个协程中（“coroutine#1”）而发射发生在运行于另一个线程中<!--
+-->与收集协程并发运行的另一个协程（“coroutine#2”）中。当上游流<!--
 -->必须改变其上下文中的 [CoroutineDispatcher] 的时候，[flowOn] 操作符创建了另一个协程。
 
 ### 缓冲
