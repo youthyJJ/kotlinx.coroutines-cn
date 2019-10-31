@@ -69,7 +69,7 @@ class FlowGuideTest {
 
 ### 表示多个值
 
-在 Kotlin 中可以使用 [集合][collections] 来表示多个值。 
+在 Kotlin 中可以使用[集合][collections]来表示多个值。 
 比如说，我们可以拥有一个函数 `foo()`，它返回一个包含三个数字的 [List]，
 然后使用 [forEach] 打印它们：
 
@@ -775,10 +775,10 @@ fun main() = runBlocking<Unit> {
 
 ### 缓冲
 
-Running different parts of a flow in different coroutines can be helpful from the standpoint of the overall time it takes 
-to collect the flow, especially when long-running asynchronous operations are involved. For example, consider a case when
-the emission by `foo()` flow is slow, taking 100 ms to produce an element; and collector is also slow, 
-taking 300 ms to process an element. Let's see how long it takes to collect such a flow with three numbers:
+从收集流所花费的时间来看，将流的不同部分运行在不同的协程中<!--
+-->将会很有帮助，特别是当涉及到长时间运行的异步操作时。例如，考虑一种情况，
+`foo()` 流的发射很慢，它每花费 100 毫秒才产生一个元素；而收集器也非常慢， 
+需要花费 300 毫秒来处理元素。让我们看看从该流收集三个数字要花费多长时间：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -790,15 +790,15 @@ import kotlin.system.*
 //sampleStart
 fun foo(): Flow<Int> = flow {
     for (i in 1..3) {
-        delay(100) // pretend we are asynchronously waiting 100 ms
-        emit(i) // emit next value
+        delay(100) // 假装我们异步等待了 100 毫秒
+        emit(i) // 发射下一个值
     }
 }
 
 fun main() = runBlocking<Unit> { 
     val time = measureTimeMillis {
         foo().collect { value -> 
-            delay(300) // pretend we are processing it for 300 ms
+            delay(300) // 假装我们花费 300 毫秒来处理它
             println(value) 
         } 
     }   
@@ -809,9 +809,9 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-16.kt).
+> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-16.kt)获取完整代码。
 
-It produces something like this, with the whole collection taking around 1200 ms (three numbers, 400 ms for each):
+它会产生这样的结果，整个收集过程大约需要 1200 毫秒（3 个数字，每个花费 400 毫秒）：
 
 ```text
 1
@@ -822,8 +822,8 @@ Collected in 1220 ms
 
 <!--- TEST ARBITRARY_TIME -->
 
-We can use a [buffer] operator on a flow to run emitting code of `foo()` concurrently with collecting code,
-as opposed to running them sequentially:
+我们可以在流上使用 [buffer] 操作符来同时运行 `foo()` 中发射元素的代码以及收集的代码，
+而不是顺序运行它们：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -834,8 +834,8 @@ import kotlin.system.*
 
 fun foo(): Flow<Int> = flow {
     for (i in 1..3) {
-        delay(100) // pretend we are asynchronously waiting 100 ms
-        emit(i) // emit next value
+        delay(100) // 假装我们异步等待了 100 毫秒
+        emit(i) // 发射下一个值
     }
 }
 
@@ -843,9 +843,9 @@ fun main() = runBlocking<Unit> {
 //sampleStart
     val time = measureTimeMillis {
         foo()
-            .buffer() // buffer emissions, don't wait
+            .buffer() // 缓冲排放，无需等待
             .collect { value -> 
-                delay(300) // pretend we are processing it for 300 ms
+                delay(300) // 假装我们花费 300 毫秒来处理它
                 println(value) 
             } 
     }   
@@ -856,11 +856,11 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-17.kt).
+> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-17.kt)获取完整代码。
 
-It produces the same numbers just faster, as we have effectively created a processing pipeline,
-having to only wait 100 ms for the first number and then spending only 300 ms to process
-each number. This way it takes around 1000 ms to run:
+它产生了相同的数字，只是更快了，由于我们有效地创建了处理管道，
+仅仅需要等待第一个数字产生的 100 毫秒以及处理每个数字各需<!--
+-->花费的 300 毫秒。这种方式大约花费了 1000 毫秒来运行：
 
 ```text
 1
@@ -871,14 +871,14 @@ Collected in 1071 ms
 
 <!--- TEST ARBITRARY_TIME -->
 
-> Note that the [flowOn] operator uses the same buffering mechanism when it has to change a [CoroutineDispatcher],
-but here we explicitly request buffering without changing the execution context. 
+> 注意，当必须更改 [CoroutineDispatcher] 时，[flowOn] 操作符使用了相同的缓冲机制，
+但是我们在这里必须显式地请求缓冲而不改变执行上下文。
 
 #### 合并
 
-When a flow represents partial results of the operation or operation status updates, it may not be necessary
-to process each value, but instead, only most recent ones. In this case, the [conflate] operator can be used to skip
-intermediate values when a collector is too slow to process them. Building on the previous example:
+当流代表部分操作结果或操作状态更新时，可能没有必要<!--
+-->处理每个值，而是只处理最新的那个。在本示例中，当收集器处理它们太慢的时候，
+[conflate] 操作符可以用于跳过中间值。构建前面的示例：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -889,8 +889,8 @@ import kotlin.system.*
 
 fun foo(): Flow<Int> = flow {
     for (i in 1..3) {
-        delay(100) // pretend we are asynchronously waiting 100 ms
-        emit(i) // emit next value
+        delay(100) // 假装我们异步等待了 100 毫秒
+        emit(i) // 发射下一个值
     }
 }
 
@@ -898,9 +898,9 @@ fun main() = runBlocking<Unit> {
 //sampleStart
     val time = measureTimeMillis {
         foo()
-            .conflate() // conflate emissions, don't process each one
+            .conflate() // 混合排放，不对每个值进行处理
             .collect { value -> 
-                delay(300) // pretend we are processing it for 300 ms
+                delay(300) // 假装我们花费 300 毫秒来处理它
                 println(value) 
             } 
     }   
@@ -911,10 +911,10 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-18.kt).
+> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-18.kt)获取完整代码。
 
-We see that while the first number was still being processed the second, and third were already produced, so
-the second one was _conflated_ and only the most recent (the third one) was delivered to the collector:
+我们看到，虽然第一个数字仍在处理中，但第二个和第三个数字已经产生，因此<!--
+-->第二个是 _conflated_ ，只有最新的（第三个）被交付给收集器：
 
 ```text
 1
@@ -926,10 +926,10 @@ Collected in 758 ms
 
 #### 处理最新值
 
-Conflation is one way to speed up processing when both the emitter and collector are slow. It does it by dropping emitted values.
-The other way is to cancel a slow collector and restart it every time a new value is emitted. There is
-a family of `xxxLatest` operators that perform the same essential logic of a `xxx` operator, but cancel the
-code in their block on a new value. Let's try changing [conflate] to [collectLatest] in the previous example:
+当发射器和收集器都很慢的时候，合并是加快处理速度的一种方式。它通过删除发射值来实现。
+另一种方式是取消缓慢的收集器，并在每次发射新值的时候重新启动它。有<!--
+-->一组与 `xxx` 操作符执行相同基本逻辑的 `xxxLatest` 操作符，但是在新值产生的时候<!-- but cancel the
+-->取消执行其块中的代码。让我们在先前的示例中尝试更换 [conflate] 为 [collectLatest]：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -940,8 +940,8 @@ import kotlin.system.*
 
 fun foo(): Flow<Int> = flow {
     for (i in 1..3) {
-        delay(100) // pretend we are asynchronously waiting 100 ms
-        emit(i) // emit next value
+        delay(100) // 假装我们异步等待了 100 毫秒
+        emit(i) // 发射下一个值
     }
 }
 
@@ -949,9 +949,9 @@ fun main() = runBlocking<Unit> {
 //sampleStart
     val time = measureTimeMillis {
         foo()
-            .collectLatest { value -> // cancel & restart on the latest value
+            .collectLatest { value -> // 取消或重新发射最后一个值
                 println("Collecting $value") 
-                delay(300) // pretend we are processing it for 300 ms
+                delay(300) // 假装我们花费 300 毫秒来处理它
                 println("Done $value") 
             } 
     }   
@@ -962,10 +962,10 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-19.kt).
+> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-19.kt)获取完整代码。
  
-Since the body of [collectLatest] takes 300 ms, but new values are emitted every 100 ms, we see that the block
-is run on every value, but completes only for the last value:
+由于 [collectLatest] 的函数体需要花费 300 毫秒，但是新值每 100 秒发射一次，我们看到该代码块<!-- 
+-->对每个值运行，但是只收集最后一个值：
 
 ```text 
 Collecting 1
@@ -979,12 +979,12 @@ Collected in 741 ms
 
 ### 组合多个流
 
-There are lots of ways to compose multiple flows.
+组合多个流有很多种方式。
 
 #### Zip
 
-Just like the [Sequence.zip] extension function in the Kotlin standard library, 
-flows have a [zip] operator that combines the corresponding values of two flows:
+就像 Kotlin 标准库中的 [Sequence.zip] 扩展函数一样，
+流拥有一个 [zip] 操作符用于组合两个流中的相关值：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -994,19 +994,19 @@ import kotlinx.coroutines.flow.*
 
 fun main() = runBlocking<Unit> { 
 //sampleStart                                                                           
-    val nums = (1..3).asFlow() // numbers 1..3
-    val strs = flowOf("one", "two", "three") // strings 
-    nums.zip(strs) { a, b -> "$a -> $b" } // compose a single string
-        .collect { println(it) } // collect and print
+    val nums = (1..3).asFlow() // 数字 1..3
+    val strs = flowOf("one", "two", "three") // 字符串
+    nums.zip(strs) { a, b -> "$a -> $b" } // 组合单个字符串
+        .collect { println(it) } // 收集并打印
 //sampleEnd
 }
 ```  
 
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-20.kt).
+> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-20.kt)获取完整代码。
 
-This example prints:
+示例打印如下：
 
 ```text
 1 -> one
@@ -1018,17 +1018,17 @@ This example prints:
 
 #### Combine
 
-When flow represents the most recent value of a variable or operation (see also the related 
-section on [conflation](#合并)), it might be needed to perform a computation that depends on
-the most recent values of the corresponding flows and to recompute it whenever any of the upstream
-flows emit a value. The corresponding family of operators is called [combine].
+当流表示最新值的变量或操作时（请参阅<!--
+-->相关小节 [conflation](#合并)），可能需要执行计算，这依赖于<!--
+-->相应流的最新值，并且每当上游流产生值的时候<!--
+-->都需要重新计算。这种相应的操作符家族称为 [combine]。
 
-For example, if the numbers in the previous example update every 300ms, but strings update every 400 ms, 
-then zipping them using the [zip] operator will still produce the same result, 
-albeit results that are printed every 400 ms:
+例如，先前示例中的数字如果每 300 毫秒更新一次，单字符串每 400 毫秒更新一次，
+然后使用 [zip] 操作符压缩它们，但仍会产生相同的结果，
+尽管每 400 毫秒打印一次结果：
 
-> We use a [onEach] intermediate operator in this example to delay each element and make the code 
-that emits sample flows more declarative and shorter.
+> 我们在本示例中使用 [onEach] 过渡操作符来延时每次元素发射并使<!--
+-->该流更具说明性以及更简洁。
  
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -1038,11 +1038,11 @@ import kotlinx.coroutines.flow.*
 
 fun main() = runBlocking<Unit> { 
 //sampleStart                                                                           
-    val nums = (1..3).asFlow().onEach { delay(300) } // numbers 1..3 every 300 ms
-    val strs = flowOf("one", "two", "three").onEach { delay(400) } // strings every 400 ms
-    val startTime = System.currentTimeMillis() // remember the start time 
-    nums.zip(strs) { a, b -> "$a -> $b" } // compose a single string with "zip"
-        .collect { value -> // collect and print 
+    val nums = (1..3).asFlow().onEach { delay(300) } // 发射数字 1..3，间隔 300 毫秒
+    val strs = flowOf("one", "two", "three").onEach { delay(400) } // 每 400 毫秒发射一次字符串
+    val startTime = System.currentTimeMillis() // 记录开始的时间
+    nums.zip(strs) { a, b -> "$a -> $b" } // 使用“zip”组合单个字符串
+        .collect { value -> // 收集并打印
             println("$value at ${System.currentTimeMillis() - startTime} ms from start") 
         } 
 //sampleEnd
@@ -1051,7 +1051,7 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-21.kt).
+> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-21.kt)获取完整代码。
 
 <!--- TEST ARBITRARY_TIME
 1 -> one at 437 ms from start
@@ -1059,7 +1059,7 @@ fun main() = runBlocking<Unit> {
 3 -> three at 1243 ms from start
 -->
 
-However, when using a [combine] operator here instead of a [zip]:
+然而，当在这里使用 [combine] 操作符来替换 [zip]：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -1069,11 +1069,11 @@ import kotlinx.coroutines.flow.*
 
 fun main() = runBlocking<Unit> { 
 //sampleStart                                                                           
-    val nums = (1..3).asFlow().onEach { delay(300) } // numbers 1..3 every 300 ms
-    val strs = flowOf("one", "two", "three").onEach { delay(400) } // strings every 400 ms          
-    val startTime = System.currentTimeMillis() // remember the start time 
-    nums.combine(strs) { a, b -> "$a -> $b" } // compose a single string with "combine"
-        .collect { value -> // collect and print 
+    val nums = (1..3).asFlow().onEach { delay(300) } // 发射数字 1..3，间隔 300 毫秒
+    val strs = flowOf("one", "two", "three").onEach { delay(400) } // 每 400 毫秒发射一次字符串
+    val startTime = System.currentTimeMillis() // 记录开始的时间
+    nums.combine(strs) { a, b -> "$a -> $b" } // 使用“combine”组合单个字符串
+        .collect { value -> // 收集并打印
             println("$value at ${System.currentTimeMillis() - startTime} ms from start") 
         } 
 //sampleEnd
@@ -1082,9 +1082,9 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-22.kt).
+> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-22.kt)获取完整代码。
 
-We get quite a different output, where a line is printed at each emission from either `nums` or `strs` flows:
+我们得到了完全不同的输出，其中，`nums` 或 `strs` 流中的每次发射都会打印一行：
 
 ```text 
 1 -> one at 452 ms from start
