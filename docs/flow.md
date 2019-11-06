@@ -822,7 +822,7 @@ Collected in 1220 ms
 
 <!--- TEST ARBITRARY_TIME -->
 
-我们可以在流上使用 [buffer] 操作符来同时运行 `foo()` 中发射元素的代码以及收集的代码，
+我们可以在流上使用 [buffer] 操作符来并发运行 `foo()` 中发射元素的代码以及收集的代码，
 而不是顺序运行它们：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
@@ -843,7 +843,7 @@ fun main() = runBlocking<Unit> {
 //sampleStart
     val time = measureTimeMillis {
         foo()
-            .buffer() // 缓冲排放，无需等待
+            .buffer() // 缓冲发射项，无需等待
             .collect { value -> 
                 delay(300) // 假装我们花费 300 毫秒来处理它
                 println(value) 
@@ -858,7 +858,7 @@ fun main() = runBlocking<Unit> {
 
 > 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-17.kt)获取完整代码。
 
-它产生了相同的数字，只是更快了，由于我们有效地创建了处理管道，
+它产生了相同的数字，只是更快了，由于我们高效地创建了处理流水线，
 仅仅需要等待第一个数字产生的 100 毫秒以及处理每个数字各需<!--
 -->花费的 300 毫秒。这种方式大约花费了 1000 毫秒来运行：
 
@@ -872,7 +872,7 @@ Collected in 1071 ms
 <!--- TEST ARBITRARY_TIME -->
 
 > 注意，当必须更改 [CoroutineDispatcher] 时，[flowOn] 操作符使用了相同的缓冲机制，
-但是我们在这里必须显式地请求缓冲而不改变执行上下文。
+但是我们在这里显式地请求缓冲而不改变执行上下文。
 
 #### 合并
 
@@ -898,7 +898,7 @@ fun main() = runBlocking<Unit> {
 //sampleStart
     val time = measureTimeMillis {
         foo()
-            .conflate() // 混合排放，不对每个值进行处理
+            .conflate() // 合并发射项，不对每个值进行处理
             .collect { value -> 
                 delay(300) // 假装我们花费 300 毫秒来处理它
                 println(value) 
@@ -949,7 +949,7 @@ fun main() = runBlocking<Unit> {
 //sampleStart
     val time = measureTimeMillis {
         foo()
-            .collectLatest { value -> // 取消或重新发射最后一个值
+            .collectLatest { value -> // 取消并重新发射最后一个值
                 println("Collecting $value") 
                 delay(300) // 假装我们花费 300 毫秒来处理它
                 println("Done $value") 
@@ -1018,13 +1018,13 @@ fun main() = runBlocking<Unit> {
 
 #### Combine
 
-当流表示最新值的变量或操作时（请参阅<!--
+当流表示一个变量或操作的最新值时（请参阅<!--
 -->相关小节 [conflation](#合并)），可能需要执行计算，这依赖于<!--
 -->相应流的最新值，并且每当上游流产生值的时候<!--
 -->都需要重新计算。这种相应的操作符家族称为 [combine]。
 
-例如，先前示例中的数字如果每 300 毫秒更新一次，单字符串每 400 毫秒更新一次，
-然后使用 [zip] 操作符压缩它们，但仍会产生相同的结果，
+例如，先前示例中的数字如果每 300 毫秒更新一次，但字符串每 400 毫秒更新一次，
+然后使用 [zip] 操作符合并它们，但仍会产生相同的结果，
 尽管每 400 毫秒打印一次结果：
 
 > 我们在本示例中使用 [onEach] 过渡操作符来延时每次元素发射并使<!--
