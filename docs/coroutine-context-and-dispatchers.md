@@ -292,7 +292,7 @@ fun main() = runBlocking<Unit> {
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-context-05.kt)获取完整代码。
 
-在[调试模式](#debugging-coroutines-and-threads)下，它将输出如下这些信息：
+在[调试模式](#调试协程与线程)下，它将输出如下这些信息：
 
 ```
 My job is "coroutine#1":BlockingCoroutine{Active}@6d311334
@@ -410,7 +410,7 @@ Now processing of the request is complete
 当协程经常打印日志并且你只需要关联来自同一个协程的日志记录时，
 则自动分配的 id 是非常好的。然而，当一个协程与特定请求的处理相关联时<!--
 -->或做一些特定的后台任务，最好将其明确命名以用于调试目的。
-[CoroutineName] 上下文元素与线程名具有相同的目的。当[调试模式](#debugging-coroutines-and-threads)<!--
+[CoroutineName] 上下文元素与线程名具有相同的目的。当[调试模式](#调试协程与线程)<!--
 -->开启时，它被包含在正在执行此协程的线程名中。
 
 下面的例子演示了这一概念：
