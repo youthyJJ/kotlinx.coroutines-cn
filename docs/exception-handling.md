@@ -79,7 +79,7 @@ fun main() = runBlocking {
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-exceptions-01.kt)获取完整代码。
 
-这段代码的输出如下（[调试](https://github.com/Kotlin/kotlinx.coroutines/blob/master/docs/coroutine-context-and-dispatchers.md#debugging-coroutines-and-threads)）：
+这段代码的输出如下（[调试](https://github.com/hltj/kotlinx.coroutines-cn/blob/master/docs/coroutine-context-and-dispatchers.md#调试协程与线程)）：
 
 ```text
 Throwing exception from launch
@@ -423,7 +423,7 @@ Second child is cancelled because supervisor is cancelled
 #### 监督作用域
 
 对于*作用域*的并发，[supervisorScope] 可以被用来替代 [coroutineScope] 来实现相同的目的。它只会单向的传播<!--
--->并且当子作业自身执行失败的时候将它们全部取消。它也会在所有的子作业执行结束前等待，
+-->并且当作业自身执行失败的时候将所有子作业全部取消。作业自身也会在所有的子作业执行结束前等待，
 就像 [coroutineScope] 所做的那样。
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
@@ -471,7 +471,7 @@ Caught assertion error
 #### 监督协程中的异常
 
 常规的作业和监督作业之间的另一个重要区别是异常处理。
-每一个子作业应该通过异常处理机制处理自身的异常。
+监督协程中的每一个子作业应该通过异常处理机制处理自身的异常。
 这种差异来自于子作业的执行失败不会传播给它的父作业的事实。
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
