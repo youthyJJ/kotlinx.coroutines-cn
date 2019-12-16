@@ -75,7 +75,8 @@ World!
 -->生命周期只受整个应用程序的生命周期限制。
 
 可以将
-`GlobalScope.launch { …… }` 替换为 `thread { …… }`，将 `delay(……)` 替换为 `Thread.sleep(……)` 达到同样目的。 尝试一下。
+`GlobalScope.launch { …… }` 替换为 `thread { …… }`，将 `delay(……)` 替换为 `Thread.sleep(……)` 达到同样目的。
+试一下 (don't forget to import `kotlin.concurrent.thread`)。
 
 如果你首先将 `GlobalScope.launch` 替换为 `thread`，编译器会报以下错误：
 
@@ -251,8 +252,14 @@ World!
 ### 作用域构建器
 除了由不同的构建器提供协程作用域之外，还可以使用
 [coroutineScope] 构建器声明自己的作用域。它会创建一个协程作用域并且在所有已启动子协程执行完毕之前不会<!--
--->结束。[runBlocking] 与 [coroutineScope] 的主要区别在于后者<!--
--->在等待所有子协程执行完毕时不会阻塞当前线程。
+-->结束。
+
+[runBlocking] and [coroutineScope] may look similar because they both wait for its body and all its children to complete.
+The main difference between these two is that the [runBlocking] method _blocks_ the current thread for waiting,
+while [coroutineScope] just suspends, releasing the underlying thread for other usages.
+Because of that difference, [runBlocking] is a regular function and [coroutineScope] is a suspending function.
+
+It can be demonstrated by the following example:
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -289,6 +296,9 @@ Task from runBlocking
 Task from nested launch
 Coroutine scope is over
 -->
+
+Note that right after "Task from coroutine scope" message, while waiting for nested launch,
+ "Task from runBlocking" is executed and printed, though coroutineScope is not completed yet. 
 
 ### 提取函数重构
 

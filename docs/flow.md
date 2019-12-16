@@ -717,10 +717,6 @@ Exception in thread "main" java.lang.IllegalStateException: Flow invariant is vi
 ``` 
 
 <!--- TEST EXCEPTION -->
-   
-> 请注意，在此示例中，我们必须使用 [kotlinx.coroutines.withContext][withContext] 函数的全限定名来<!--
--->演示此异常。`withContext` 这个短名称将解析为一个特殊的存根函数<!--
--->并产生编译错误，以防我们遇到此问题。  
 
 #### flowOn 操作符
    
