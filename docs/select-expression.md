@@ -189,9 +189,9 @@ suspend fun selectAorB(a: ReceiveChannel<String>, b: ReceiveChannel<String>): St
 
 </div>
 
-Note that [onReceiveOrNull][onReceiveOrNull] is an extension function defined only
-for channels with non-nullable elements so that there is no accidental confusion between a closed channel
-and a null value.
+注意，[onReceiveOrNull][onReceiveOrNull] 是一个仅在用于不可空元素的通道上<!--
+-->定义的扩展函数，以使关闭的通道与空值之间<!--
+-->不会出现意外的混乱。
 
 现在有一个生成四次“Hello”字符串的 `a` 通道，
 和一个生成四次“World”字符串的 `b` 通道，我们在这两个通道上使用它：
