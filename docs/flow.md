@@ -154,7 +154,7 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> 你可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-03.kt)获取完整代码。
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-03.kt)获取完整代码。
 
 这段代码将会在等待一秒之后打印数字。
 
@@ -199,7 +199,7 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> 你可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-04.kt)获取完整代码。
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-04.kt)获取完整代码。
 
 这段代码在不阻塞主线程的情况下每等待 100 毫秒打印一个数字。在主线程中运行一个<!--
 -->单独的协程每 100 毫秒打印一次 “I'm not blocked” 已经经过了验证。
@@ -259,7 +259,7 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-05.kt)获取完整代码。
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-05.kt)获取完整代码。
 
 打印如下：
 
@@ -318,7 +318,7 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-06.kt)获取完整代码。
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-06.kt)获取完整代码。
 
 注意，在 `foo()` 函数中流仅发射两个数字，产生以下输出：
 
@@ -358,7 +358,7 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-07.kt)获取完整代码。
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-07.kt)获取完整代码。
  
 <!--- TEST
 1
@@ -403,7 +403,7 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-08.kt)获取完整代码。
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-08.kt)获取完整代码。
 
 它产生以下三行，每一行每秒出现一次：
 
@@ -449,7 +449,7 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-09.kt)获取完整代码。
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-09.kt)获取完整代码。
 
 这段代码的输出如下：
 
@@ -498,7 +498,7 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-10.kt)获取完整代码。
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-10.kt)获取完整代码。
 
 这段代码的输出清楚地表明，`numbers()` 函数中对 `flow {...}` 函数体的执行在<!--
 -->发射出第二个数字后停止：
@@ -540,7 +540,7 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-11.kt)获取完整代码。
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-11.kt)获取完整代码。
 
 打印单个数字：
 
@@ -585,7 +585,7 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-12.kt)获取完整代码。
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-12.kt)获取完整代码。
 
 执行：
 
@@ -653,7 +653,7 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-13.kt)获取完整代码。
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-13.kt)获取完整代码。
 
 运行这段代码：
 
@@ -704,7 +704,7 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-14.kt)获取完整代码。
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-14.kt)获取完整代码。
 
 这段代码产生如下的异常：
 
@@ -751,7 +751,7 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-15.kt)获取完整代码。
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-15.kt)获取完整代码。
   
 注意，当收集发生在主线程中，`flow { ... }` 是如何在后台线程中工作的：
   
@@ -805,7 +805,7 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-16.kt)获取完整代码。
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-16.kt)获取完整代码。
 
 它会产生这样的结果，整个收集过程大约需要 1200 毫秒（3 个数字，每个花费 400 毫秒）：
 
@@ -852,7 +852,7 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-17.kt)获取完整代码。
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-17.kt)获取完整代码。
 
 它产生了相同的数字，只是更快了，由于我们高效地创建了处理流水线，
 仅仅需要等待第一个数字产生的 100 毫秒以及处理每个数字各需<!--
@@ -907,7 +907,7 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-18.kt)获取完整代码。
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-18.kt)获取完整代码。
 
 我们看到，虽然第一个数字仍在处理中，但第二个和第三个数字已经产生，因此<!--
 -->第二个是 _conflated_ ，只有最新的（第三个）被交付给收集器：
@@ -958,7 +958,7 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-19.kt)获取完整代码。
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-19.kt)获取完整代码。
  
 由于 [collectLatest] 的函数体需要花费 300 毫秒，但是新值每 100 秒发射一次，我们看到该代码块<!-- 
 -->对每个值运行，但是只收集最后一个值：
@@ -1000,7 +1000,7 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-20.kt)获取完整代码。
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-20.kt)获取完整代码。
 
 示例打印如下：
 
@@ -1047,7 +1047,7 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-21.kt)获取完整代码。
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-21.kt)获取完整代码。
 
 <!--- TEST ARBITRARY_TIME
 1 -> one at 437 ms from start
@@ -1078,7 +1078,7 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-22.kt)获取完整代码。
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-22.kt)获取完整代码。
 
 我们得到了完全不同的输出，其中，`nums` 或 `strs` 流中的每次发射都会打印一行：
 
