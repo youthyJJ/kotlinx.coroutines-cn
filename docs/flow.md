@@ -1801,11 +1801,11 @@ coroutine only without cancelling the whole scope or to [join][Job.join] it.
 Flow 的设计也许看起来会非常熟悉。
 
 确实，其设计灵感来源于响应式流以及其各种实现。但是 Flow 的主要目标是拥有尽可能简单的设计，
-在 Kotlin 中对挂起友好且遵从结构化并发。没有积极的开拓者及其大量的工作，就不可能实现这一目标。您可以阅读 [Reactive Streams and Kotlin Flows](https://medium.com/@elizarov/reactive-streams-and-kotlin-flows-bfd12772cda4) 这篇文章来了解完成 Flow 的故事。
+对 Kotlin 以及挂起友好且遵从结构化并发。没有响应式的先驱及他们大量的工作，就不可能实现这一目标。您可以阅读 [Reactive Streams and Kotlin Flows](https://medium.com/@elizarov/reactive-streams-and-kotlin-flows-bfd12772cda4) 这篇文章来了解完成 Flow 的故事。
 
-虽然有所不同，但从概念上讲，Flow *依然是*响应式流，并且它可以被转换为响应式（符合 TCK 规范）的发布者（Publisher），反之亦然。
+虽然有所不同，但从概念上讲，Flow *依然是*响应式流，并且可以将它转换为响应式（规范及符合 TCK）的发布者（Publisher），反之亦然。
 这些开箱即用的转换器可以在 `kotlinx.coroutines` 提供的相关响应式模块（`kotlinx-coroutines-reactive` 用于 Reactive Streams，`kotlinx-coroutines-reactor` 用于 Project Reactor，以及 `kotlinx-coroutines-rx2` 用于 RxJava2）中找到。
-集成模块包含 `Flow` 与 `Flow` 之间的转换，与 Reactor 的 `Context` 集成以及与一系列响应式实体配合使用的挂起友好的使用方式。
+集成模块包含 `Flow` 与其他实现之间的转换，与 Reactor 的 `Context` 集成以及与一系列响应式实体配合使用的挂起友好的使用方式。
  
 <!-- stdlib references -->
 
