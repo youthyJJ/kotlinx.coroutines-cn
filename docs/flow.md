@@ -513,7 +513,7 @@ Finally in numbers
 
 ### 末端流操作符
 
-Terminal operators on flows are _suspending functions_ that start a collection of the flow.（这句话原文有歧义，先保留英文）
+末端操作符是在流上用于启动流收集的*挂起函数*。
 [collect] 是最基础的末端操作符，但是还有另外一些更方便使用的末端操作符：
 
 * 转化为各种集合，例如 [toList] 与 [toSet]。
@@ -1797,15 +1797,15 @@ coroutine only without cancelling the whole scope or to [join][Job.join] it.
 
 ### 流（Flow）与响应式流（Reactive Streams）
 
-For those who are familiar with [Reactive Streams](https://www.reactive-streams.org/) or reactive frameworks such as RxJava and project Reactor, 
-design of the Flow may look very familiar.
+对于熟悉响应式流（[Reactive Streams](https://www.reactive-streams.org/)）或诸如 RxJava 与 Project Reactor 这样的响应式框架的人来说，
+Flow 的设计也许看起来会非常熟悉。
 
-Indeed, its design was inspired by Reactive Streams and its various implementations. But Flow main goal is to have as simple design as possible, 
-be Kotlin and suspension friendly and respect structured concurrency. Achieving this goal would be impossible without reactive pioneers and their tremendous work. You can read the complete story in [Reactive Streams and Kotlin Flows](https://medium.com/@elizarov/reactive-streams-and-kotlin-flows-bfd12772cda4) article.
+确实，其设计灵感来源于响应式流以及其各种实现。但是 Flow 的主要目标是拥有尽可能简单的设计，
+对 Kotlin 以及挂起友好且遵从结构化并发。没有响应式的先驱及他们大量的工作，就不可能实现这一目标。您可以阅读 [Reactive Streams and Kotlin Flows](https://medium.com/@elizarov/reactive-streams-and-kotlin-flows-bfd12772cda4) 这篇文章来了解完成 Flow 的故事。
 
-While being different, conceptually, Flow *is* a reactive stream and it is possible to convert it to the reactive (spec and TCK compliant) Publisher and vice versa.
-Such converters are provided by `kotlinx.coroutines` out-of-the-box and can be found in corresponding reactive modules (`kotlinx-coroutines-reactive` for Reactive Streams, `kotlinx-coroutines-reactor` for Project Reactor and `kotlinx-coroutines-rx2` for RxJava2).
-Integration modules include conversions from and to `Flow`, integration with Reactor's `Context` and suspension-friendly ways to work with various reactive entities.
+虽然有所不同，但从概念上讲，Flow *依然是*响应式流，并且可以将它转换为响应式（规范及符合 TCK）的发布者（Publisher），反之亦然。
+这些开箱即用的转换器可以在 `kotlinx.coroutines` 提供的相关响应式模块（`kotlinx-coroutines-reactive` 用于 Reactive Streams，`kotlinx-coroutines-reactor` 用于 Project Reactor，以及 `kotlinx-coroutines-rx2` 用于 RxJava2）中找到。
+集成模块包含 `Flow` 与其他实现之间的转换，与 Reactor 的 `Context` 集成以及与一系列响应式实体配合使用的挂起友好的使用方式。
  
 <!-- stdlib references -->
 
