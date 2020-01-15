@@ -1797,7 +1797,7 @@ coroutine only without cancelling the whole scope or to [join][Job.join] it.
 
 ### 流（Flow）与响应式流（Reactive Streams）
 
-对于熟悉[响应式流](https://www.reactive-streams.org/)或诸如 RxJava 与 Project Reactor 这样的响应式框架的人来说，
+对于熟悉响应式流（[Reactive Streams](https://www.reactive-streams.org/)）或诸如 RxJava 与 Project Reactor 这样的响应式框架的人来说，
 Flow 的设计也许看起来会非常熟悉。
 
 确实，其设计灵感来源于响应式流以及其各种实现。但是 Flow 的主要目标是拥有尽可能简单的设计，
