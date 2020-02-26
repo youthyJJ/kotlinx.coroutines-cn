@@ -372,7 +372,7 @@ fun CoroutineScope.produceNumbers() = produce<Int> {
 
 </div>
 
-接下来我们可以得到几个生产者协程。在这个示例中，它们只是打印它们的 id 和<!--
+接下来我们可以得到几个处理器协程。在这个示例中，它们只是打印它们的 id 和<!--
 -->接收到的数字：
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
@@ -387,7 +387,7 @@ fun CoroutineScope.launchProcessor(id: Int, channel: ReceiveChannel<Int>) = laun
 
 </div>
 
-现在让我们启动五个生产者协程并让它们工作将近一秒。看看发生了什么：
+现在让我们启动五个处理器协程并让它们工作将近一秒。看看发生了什么：
 
 <!--- CLEAR -->
 
@@ -425,8 +425,8 @@ fun CoroutineScope.launchProcessor(id: Int, channel: ReceiveChannel<Int>) = laun
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-channel-06.kt)获取完整代码。
 
-该输出将类似于如下所示，尽管接收的是生产者的 id
-但每个整数也许会不同：
+该输出将类似于如下所示，尽管接收<!--
+-->每个特定整数的处理器 id 可能会不同：
 
 ```
 Processor #2 received 1
@@ -443,13 +443,13 @@ Processor #3 received 10
 
 <!--- TEST lines.size == 10 && lines.withIndex().all { (i, line) -> line.startsWith("Processor #") && line.endsWith(" received ${i + 1}") } -->
 
-注意，取消生产者协程并关闭它的通道，因此通过正在执行的生产者协程通道来<!--
--->终止迭代。
+注意，取消生产者协程将关闭它的通道，从而最终终止<!--
+-->处理器协程正在执行的此通道上的迭代。
 
 还有，注意我们如何使用 `for` 循环显式迭代通道以在 `launchProcessor` 代码中执行扇出。
-与 `consumeEach` 不同，这个 `for` 循环是安全完美地使用多个协程的。如果其中一个生产者<!--
--->协程执行失败，其它的生产者协程仍然会继续处理通道，而通过 `consumeEach`
-编写的生产者始终在正常或非正常完成时消耗（取消）底层通道。
+与 `consumeEach` 不同，这个 `for` 循环是安全完美地使用多个协程的。如果其中一个处理器<!--
+-->协程执行失败，其它的处理器协程仍然会继续处理通道，而通过 `consumeEach`
+编写的处理器始终在正常或非正常完成时消耗（取消）底层通道。
 
 ### 扇入
 
