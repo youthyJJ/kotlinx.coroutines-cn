@@ -254,7 +254,7 @@ World!
 [coroutineScope] 构建器声明自己的作用域。它会创建一个协程作用域并且在所有已启动子协程执行完毕之前不会<!--
 -->结束。
 
-[runBlocking] 与 [coroutineScope] 可能看起来很类似，因为它们都会等待其协程体以及所有自协程结束。
+[runBlocking] 与 [coroutineScope] 可能看起来很类似，因为它们都会等待其协程体以及所有子协程结束。
 这两者的主要区别在于，[runBlocking] 方法会*阻塞*当前线程来等待，
 而 [coroutineScope] 只是挂起，会释放底层线程用于其他用途。
 由于存在这点差异，[runBlocking] 是常规函数，而 [coroutineScope] 是挂起函数。
