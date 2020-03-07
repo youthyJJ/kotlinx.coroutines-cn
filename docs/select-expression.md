@@ -1,21 +1,4 @@
-<!--- INCLUDE .*/example-([a-z]+)-([0-9a-z]+)\.kt 
-/*
- * Copyright 2016-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license.
- */
-
-// This file was automatically generated from coroutines-guide.md by Knit tool. Do not edit.
-package kotlinx.coroutines.guide.$$1$$2
--->
-<!--- KNIT     ../kotlinx-coroutines-core/jvm/test/guide/.*\.kt -->
-<!--- TEST_OUT ../kotlinx-coroutines-core/jvm/test/guide/test/SelectGuideTest.kt
-// This file was automatically generated from coroutines-guide.md by Knit tool. Do not edit.
-package kotlinx.coroutines.guide.test
-
-import org.junit.Test
-
-class SelectGuideTest {
---> 
-
+<!--- TEST_NAME SelectGuideTest --> 
 
 **目录**
 
@@ -28,8 +11,7 @@ class SelectGuideTest {
   * [Select 延迟值](#select-延迟值)
   * [在延迟值通道上切换](#在延迟值通道上切换)
 
-<!--- END_TOC -->
-
+<!--- END -->
 
 {:#select}
 ## select 表达式（实验性的）

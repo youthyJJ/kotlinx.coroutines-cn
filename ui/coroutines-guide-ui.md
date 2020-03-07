@@ -1,58 +1,3 @@
-<!--- INCLUDE .*/example-ui-([a-z]+)-([0-9]+)\.kt 
-/*
- * Copyright 2016-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license.
- */
-
-// This file was automatically generated from coroutines-guide-ui.md by Knit tool. Do not edit.
-package kotlinx.coroutines.javafx.guide.$$1$$2
-
-import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.*
-import kotlinx.coroutines.javafx.JavaFx as Main
-import javafx.application.Application
-import javafx.event.EventHandler
-import javafx.geometry.*
-import javafx.scene.*
-import javafx.scene.input.MouseEvent
-import javafx.scene.layout.StackPane
-import javafx.scene.paint.Color
-import javafx.scene.shape.Circle
-import javafx.scene.text.Text
-import javafx.stage.Stage
-
-fun main(args: Array<String>) {
-    Application.launch(ExampleApp::class.java, *args)
-}
-
-class ExampleApp : Application() {
-    val hello = Text("Hello World!").apply {
-        fill = Color.valueOf("#C0C0C0")
-    }
-
-    val fab = Circle(20.0, Color.valueOf("#FF4081"))
-
-    val root = StackPane().apply {
-        children += hello
-        children += fab
-        StackPane.setAlignment(hello, Pos.CENTER)
-        StackPane.setAlignment(fab, Pos.BOTTOM_RIGHT)
-        StackPane.setMargin(fab, Insets(15.0))
-    }
-
-    val scene = Scene(root, 240.0, 380.0).apply {
-        fill = Color.valueOf("#303030")
-    }
-
-    override fun start(stage: Stage) {
-        stage.title = "Example"
-        stage.scene = scene
-        stage.show()
-        setup(hello, fab)
-    }
-}
--->
-<!--- KNIT     kotlinx-coroutines-javafx/test/guide/.*\.kt -->
-
 # 使用协程进行 UI 编程指南
 
 本教程假定你已经熟悉了<!--
@@ -100,7 +45,7 @@ class ExampleApp : Application() {
 * [高级主题](#高级主题)
   * [没有调度器时在 UI 事件处理器中启动协程](#没有调度器时在-ui-事件处理器中启动协程)
 
-<!--- END_TOC -->
+<!--- END -->
 
 ## 体系
 
@@ -165,7 +110,7 @@ fun setup(hello: TextView, fab: FloatingActionButton) {
 部分中添加 `kotlinx-coroutines-android` 模块的依赖：
 
 ```groovy
-implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.3"
+implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.4"
 ```
 
 可以在 Github 上 clone [kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines) 这个项目到你的<!--
@@ -409,7 +354,6 @@ fun Node.onClick(action: suspend (MouseEvent) -> Unit) {
 -->阻塞 UI 主线程并冻结 UI。
 
 <!--- INCLUDE .*/example-ui-blocking-([0-9]+).kt
-
 fun Node.onClick(action: suspend (MouseEvent) -> Unit) {
     val eventActor = GlobalScope.actor<MouseEvent>(Dispatchers.Main, capacity = Channel.CONFLATED) {
         for (event in channel) action(event) // 将事件传递给 action

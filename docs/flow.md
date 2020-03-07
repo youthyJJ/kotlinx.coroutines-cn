@@ -1,20 +1,4 @@
-<!--- INCLUDE .*/example-([a-z]+)-([0-9a-z]+)\.kt 
-/*
- * Copyright 2016-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license.
- */
-
-// This file was automatically generated from coroutines-guide.md by Knit tool. Do not edit.
-package kotlinx.coroutines.guide.$$1$$2
--->
-<!--- KNIT     ../kotlinx-coroutines-core/jvm/test/guide/.*-##\.kt -->
-<!--- TEST_OUT ../kotlinx-coroutines-core/jvm/test/guide/test/FlowGuideTest.kt
-// This file was automatically generated from flow.md by Knit tool. Do not edit.
-package kotlinx.coroutines.guide.test
-
-import org.junit.Test
-
-class FlowGuideTest {
---> 
+<!--- TEST_NAME FlowGuideTest --> 
 
 **目录**
 
@@ -60,7 +44,7 @@ class FlowGuideTest {
   * [启动流](#启动流)
   * [流（Flow）与响应式流（Reactive Streams）](#flow-and-reactive-streams)
 
-<!--- END_TOC -->
+<!--- END -->
 
 ## 异步流
 
