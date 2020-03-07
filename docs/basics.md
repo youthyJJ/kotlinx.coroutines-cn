@@ -1,20 +1,4 @@
-<!--- INCLUDE .*/example-([a-z]+)-([0-9a-z]+)\.kt 
-/*
- * Copyright 2016-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license.
- */
-
-// This file was automatically generated from coroutines-guide.md by Knit tool. Do not edit.
-package kotlinx.coroutines.guide.$$1$$2
--->
-<!--- KNIT     ../kotlinx-coroutines-core/jvm/test/guide/.*\.kt -->
-<!--- TEST_OUT ../kotlinx-coroutines-core/jvm/test/guide/test/BasicsGuideTest.kt
-// This file was automatically generated from coroutines-guide.md by Knit tool. Do not edit.
-package kotlinx.coroutines.guide.test
-
-import org.junit.Test
-
-class BasicsGuideTest {
---> 
+<!--- TEST_NAME BasicsGuideTest -->
 
 **目录**
 
@@ -30,8 +14,7 @@ class BasicsGuideTest {
   * [协程很轻量](#协程很轻量)
   * [全局协程像守护线程](#全局协程像守护线程)
 
-<!--- END_TOC -->
-
+<!--- END -->
 
 ## 协程基础
 
@@ -142,7 +125,7 @@ fun main() = runBlocking<Unit> { // 开始执行主协程
 
 </div>
 
-> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-basic-02b.kt)获取完整代码。
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-basic-03.kt)获取完整代码。
 
 <!--- TEST
 Hello,
@@ -197,7 +180,7 @@ fun main() = runBlocking {
 
 </div>
 
-> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-basic-03.kt)获取完整代码。
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-basic-04.kt)获取完整代码。
 
 <!--- TEST
 Hello,
@@ -242,7 +225,7 @@ fun main() = runBlocking { // this: CoroutineScope
 
 </div>
 
-> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-basic-03s.kt)获取完整代码。
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-basic-05.kt)获取完整代码。
 
 <!--- TEST
 Hello,
@@ -288,7 +271,7 @@ fun main() = runBlocking { // this: CoroutineScope
 
 </div>
 
-> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-basic-04.kt)获取完整代码。
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-basic-06.kt)获取完整代码。
 
 <!--- TEST
 Task from coroutine scope
@@ -327,7 +310,7 @@ suspend fun doWorld() {
 
 </div>
 
-> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-basic-05.kt)获取完整代码。
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-basic-07.kt)获取完整代码。
 
 <!--- TEST
 Hello,
@@ -364,7 +347,7 @@ fun main() = runBlocking {
 
 </div>
 
-> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-basic-06.kt)获取完整代码。
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-basic-08.kt)获取完整代码。
 
 <!--- TEST lines.size == 1 && lines[0] == ".".repeat(100_000) -->
 
@@ -396,7 +379,7 @@ fun main() = runBlocking {
 
 </div>
 
-> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-basic-07.kt)获取完整代码。
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-basic-09.kt)获取完整代码。
 
 你可以运行这个程序并看到它输出了以下三行后终止：
 

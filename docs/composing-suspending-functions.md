@@ -1,20 +1,4 @@
-<!--- INCLUDE .*/example-([a-z]+)-([0-9a-z]+)\.kt 
-/*
- * Copyright 2016-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license.
- */
-
-// This file was automatically generated from coroutines-guide.md by Knit tool. Do not edit.
-package kotlinx.coroutines.guide.$$1$$2
--->
-<!--- KNIT     ../kotlinx-coroutines-core/jvm/test/guide/.*\.kt -->
-<!--- TEST_OUT ../kotlinx-coroutines-core/jvm/test/guide/test/ComposingGuideTest.kt
-// This file was automatically generated from coroutines-guide.md by Knit tool. Do not edit.
-package kotlinx.coroutines.guide.test
-
-import org.junit.Test
-
-class ComposingGuideTest {
---> 
+<!--- TEST_NAME ComposingGuideTest -->
 
 **目录**
 
@@ -27,7 +11,7 @@ class ComposingGuideTest {
   * [async 风格的函数](#async-风格的函数)
   * [使用 async 的结构化并发](#使用-async-的结构化并发)
 
-<!--- END_TOC -->
+<!--- END -->
 
 ## 组合挂起函数
 

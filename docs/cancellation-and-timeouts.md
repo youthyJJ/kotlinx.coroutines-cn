@@ -1,20 +1,5 @@
-<!--- INCLUDE .*/example-([a-z]+)-([0-9a-z]+)\.kt 
-/*
- * Copyright 2016-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license.
- */
+<!--- TEST_NAME CancellationGuideTest -->
 
-// This file was automatically generated from coroutines-guide.md by Knit tool. Do not edit.
-package kotlinx.coroutines.guide.$$1$$2
--->
-<!--- KNIT     ../kotlinx-coroutines-core/jvm/test/guide/.*\.kt -->
-<!--- TEST_OUT ../kotlinx-coroutines-core/jvm/test/guide/test/CancellationTimeOutsGuideTest.kt
-// This file was automatically generated from coroutines-guide.md by Knit tool. Do not edit.
-package kotlinx.coroutines.guide.test
-
-import org.junit.Test
-
-class CancellationTimeOutsGuideTest {
---> 
 **目录**
 
 <!--- TOC -->
@@ -27,7 +12,7 @@ class CancellationTimeOutsGuideTest {
   * [运行不能取消的代码块](#运行不能取消的代码块)
   * [超时](#超时)
 
-<!--- END_TOC -->
+<!--- END -->
 
 ## 取消与超时
 
