@@ -1194,7 +1194,7 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-24.kt)获取完整代码。
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-24.kt)获取完整代码。
 
 [flatMapMerge] 的并发性质很明显：
 
@@ -1246,7 +1246,7 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> 你可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-25.kt)获取完整代码。
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-25.kt)获取完整代码。
 
 该示例的输出很好的展示了 [flatMapLatest] 的工作方式：
 
@@ -1265,12 +1265,12 @@ fun main() = runBlocking<Unit> {
 
 ### 流异常
 
-Flow collection can complete with an exception when an emitter or code inside the operators throw an exception. 
-There are several ways to handle these exceptions.
+当运算符中的发射器或代码抛出异常时，流收集可以带有异常的完成。
+有几种处理异常的方法。
 
 #### 收集器 try 与 catch
 
-A collector can use Kotlin's [`try/catch`][exceptions] block to handle exceptions: 
+收集者可以使用 Kotlin 的 [`try/catch`][exceptions] 块来处理异常：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -1282,7 +1282,7 @@ import kotlinx.coroutines.flow.*
 fun foo(): Flow<Int> = flow {
     for (i in 1..3) {
         println("Emitting $i")
-        emit(i) // emit next value
+        emit(i) // 发射下一个值
     }
 }
 
@@ -1301,10 +1301,10 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-26.kt).
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-26.kt)获取完整代码。
 
-This code successfully catches an exception in [collect] terminal operator and, 
-as we see, no more values are emitted after that:
+这段代码成功的在末端操作符 [collect] 中捕获了异常，并且， 
+如我们所见，在这之后不再发出任何值：
 
 ```text 
 Emitting 1
@@ -1318,9 +1318,9 @@ Caught java.lang.IllegalStateException: Collected 2
 
 #### 一切都已捕获
 
-The previous example actually catches any exception happening in the emitter or in any intermediate or terminal operators.
-For example, let's change the code so that emitted values are [mapped][map] to strings,
-but the corresponding code produces an exception:
+前面的示例实际上捕获了在发射器或任何过渡或末端操作符中发生的任何异常。
+例如，让我们修改代码以便将发出的值[映射][map]为字符串，
+但是相应的代码会产生一个异常：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -1333,7 +1333,7 @@ fun foo(): Flow<String> =
     flow {
         for (i in 1..3) {
             println("Emitting $i")
-            emit(i) // emit next value
+            emit(i) // 发射下一个值
         }
     }
     .map { value ->
@@ -1353,9 +1353,9 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-27.kt).
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-27.kt)获取完整代码。
 
-This exception is still caught and collection is stopped:
+仍然会捕获该异常并停止收集：
 
 ```text 
 Emitting 1
@@ -1413,7 +1413,7 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-28.kt). 
+> 可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-28.kt)获取完整代码。
  
 The output of the example is the same, even though we do not have `try/catch` around the code anymore. 
 
