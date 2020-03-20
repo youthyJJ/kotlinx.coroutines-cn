@@ -110,7 +110,7 @@ fun setup(hello: TextView, fab: FloatingActionButton) {
 部分中添加 `kotlinx-coroutines-android` 模块的依赖：
 
 ```groovy
-implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.4"
+implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.5"
 ```
 
 可以在 Github 上 clone [kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines) 这个项目到你的<!--
