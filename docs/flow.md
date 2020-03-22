@@ -1078,16 +1078,16 @@ fun main() = runBlocking<Unit> {
 
 ### 展平流
 
-Flows represent asynchronously received sequences of values, so it is quite easy to get in a situation where 
-each value triggers a request for another sequence of values. For example, we can have the following
-function that returns a flow of two strings 500 ms apart:
+流表示异步接收的值序列，所以很容易遇到这样的情况：
+每个值都会触发对另一个值序列的请求。比如说，我们可以拥有下面这样一个返回间隔 500
+毫秒的两个字符串流的函数：
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
 
 ```kotlin
 fun requestFlow(i: Int): Flow<String> = flow {
     emit("$i: First") 
-    delay(500) // wait 500 ms
+    delay(500) // 等待 500 毫秒
     emit("$i: Second")    
 }
 ```
@@ -1096,7 +1096,7 @@ fun requestFlow(i: Int): Flow<String> = flow {
 
 <!--- CLEAR -->
 
-Now if we have a flow of three integers and call `requestFlow` for each of them like this:
+现在，如果我们有一个包含三个整数的流，并为每个整数调用 `requestFlow`，如下所示：
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
 
@@ -1108,16 +1108,16 @@ Now if we have a flow of three integers and call `requestFlow` for each of them 
 
 <!--- CLEAR -->
 
-Then we end up with a flow of flows (`Flow<Flow<String>>`) that needs to be _flattened_ into a single flow for 
-further processing. Collections and sequences have [flatten][Sequence.flatten] and [flatMap][Sequence.flatMap]
-operators for this. However, due the asynchronous nature of flows they call for different _modes_ of flattening, 
-as such, there is a family of flattening operators on flows.
+然后我们得到了一个包含流的流（`Flow<Flow<String>>`），需要将其进行*展平*为单个流以进行<!--
+-->下一步处理。集合与序列都拥有 [flatten][Sequence.flatten] 与 [flatMap][Sequence.flatMap]
+操作符来做这件事。然而，由于流具有异步的性质，因此需要不同的展平*模式*，
+为此，存在一系列的流展平操作符。
 
 #### flatMapConcat
 
-Concatenating mode is implemented by [flatMapConcat] and [flattenConcat] operators. They are the most direct
-analogues of the corresponding sequence operators. They wait for the inner flow to complete before
-starting to collect the next one as the following example shows:
+连接模式由 [flatMapConcat] 与 [flattenConcat] 操作符实现。它们<!--
+-->是相应序列操作符最相近的类似物。它们在等待内部流完成之前<!--
+-->开始收集下一个值，如下面的示例所示：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -1127,16 +1127,16 @@ import kotlinx.coroutines.flow.*
 
 fun requestFlow(i: Int): Flow<String> = flow {
     emit("$i: First") 
-    delay(500) // wait 500 ms
+    delay(500) // 等待 500 毫秒
     emit("$i: Second")    
 }
 
 fun main() = runBlocking<Unit> { 
 //sampleStart
-    val startTime = System.currentTimeMillis() // remember the start time 
-    (1..3).asFlow().onEach { delay(100) } // a number every 100 ms 
+    val startTime = System.currentTimeMillis() // 记录开始时间
+    (1..3).asFlow().onEach { delay(100) } // 每 100 毫秒发射一个数字 
         .flatMapConcat { requestFlow(it) }                                                                           
-        .collect { value -> // collect and print 
+        .collect { value -> // 收集并打印
             println("$value at ${System.currentTimeMillis() - startTime} ms from start") 
         } 
 //sampleEnd
@@ -1145,9 +1145,9 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-23.kt).            
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-23.kt)获取完整代码。     
 
-The sequential nature of [flatMapConcat] is clearly seen in the output:
+在输出中可以清楚地看到 [flatMapConcat] 的顺序性质：
 
 ```text                      
 1: First at 121 ms from start
@@ -1162,11 +1162,11 @@ The sequential nature of [flatMapConcat] is clearly seen in the output:
 
 #### flatMapMerge
 
-Another flattening mode is to concurrently collect all the incoming flows and merge their values into
-a single flow so that values are emitted as soon as possible.
-It is implemented by [flatMapMerge] and [flattenMerge] operators. They both accept an optional 
-`concurrency` parameter that limits the number of concurrent flows that are collected at the same time
-(it is equal to [DEFAULT_CONCURRENCY] by default). 
+另一种展平模式是并发收集所有传入的流，并将它们的值合并到<!--
+-->一个单独的流，以便尽快的发射值。
+它由 [flatMapMerge] 与 [flattenMerge] 操作符实现。他们都接收可选的<!--
+-->用于限制并发收集的流的个数的 `concurrency` 参数<!--
+-->（默认情况下，它等于 [DEFAULT_CONCURRENCY]）。
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -1176,16 +1176,16 @@ import kotlinx.coroutines.flow.*
 
 fun requestFlow(i: Int): Flow<String> = flow {
     emit("$i: First") 
-    delay(500) // wait 500 ms
+    delay(500) // 等待 500 毫秒
     emit("$i: Second")    
 }
 
 fun main() = runBlocking<Unit> { 
 //sampleStart
-    val startTime = System.currentTimeMillis() // remember the start time 
-    (1..3).asFlow().onEach { delay(100) } // a number every 100 ms 
+    val startTime = System.currentTimeMillis() // 记录开始时间
+    (1..3).asFlow().onEach { delay(100) } // 每 100 毫秒发射一个数字 
         .flatMapMerge { requestFlow(it) }                                                                           
-        .collect { value -> // collect and print 
+        .collect { value -> // 收集并打印
             println("$value at ${System.currentTimeMillis() - startTime} ms from start") 
         } 
 //sampleEnd
@@ -1194,9 +1194,9 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-24.kt).            
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-24.kt)获取完整代码。
 
-The concurrent nature of [flatMapMerge] is obvious:
+[flatMapMerge] 的并发性质很明显：
 
 ```text                      
 1: First at 136 ms from start
@@ -1209,16 +1209,16 @@ The concurrent nature of [flatMapMerge] is obvious:
 
 <!--- TEST ARBITRARY_TIME -->
 
-> Note that the [flatMapMerge] calls its block of code (`{ requestFlow(it) }` in this example) sequentially, but 
-collects the resulting flows concurrently, it is the equivalent of performing a sequential 
-`map { requestFlow(it) }` first and then calling [flattenMerge] on the result.   
+> 注意，[flatMapMerge] 会顺序调用代码块（本示例中的 `{ requestFlow(it) }`），但是<!--
+-->并发收集结果流，相当于执行顺序是首先执行
+`map { requestFlow(it) }` 然后在其返回结果上调用 [flattenMerge]。
 
 #### flatMapLatest   
 
-In a similar way to the [collectLatest] operator, that was shown in 
-["Processing the latest value"](#处理最新值) section, there is the corresponding "Latest" 
-flattening mode where a collection of the previous flow is cancelled as soon as new flow is emitted. 
-It is implemented by the [flatMapLatest] operator.
+与 [collectLatest] 操作符类似（在<!--
+-->["处理最新值"](#处理最新值) 小节中已经讨论过），也有相对应的“最新”<!--
+-->展平模式，在发出新流后立即取消先前流的收集。
+这由 [flatMapLatest] 操作符来实现。
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -1228,16 +1228,16 @@ import kotlinx.coroutines.flow.*
 
 fun requestFlow(i: Int): Flow<String> = flow {
     emit("$i: First") 
-    delay(500) // wait 500 ms
+    delay(500) // 等待 500 毫秒
     emit("$i: Second")    
 }
 
 fun main() = runBlocking<Unit> { 
 //sampleStart
-    val startTime = System.currentTimeMillis() // remember the start time 
-    (1..3).asFlow().onEach { delay(100) } // a number every 100 ms 
+    val startTime = System.currentTimeMillis() // 记录开始时间
+    (1..3).asFlow().onEach { delay(100) } // 每 100 毫秒发射一个数字 
         .flatMapLatest { requestFlow(it) }                                                                           
-        .collect { value -> // collect and print 
+        .collect { value -> // 收集并打印
             println("$value at ${System.currentTimeMillis() - startTime} ms from start") 
         } 
 //sampleEnd
@@ -1246,9 +1246,9 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-25.kt).            
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-25.kt)获取完整代码。
 
-The output here in this example is a good demonstration of how [flatMapLatest] works:
+该示例的输出很好的展示了 [flatMapLatest] 的工作方式：
 
 ```text                      
 1: First at 142 ms from start
@@ -1259,18 +1259,18 @@ The output here in this example is a good demonstration of how [flatMapLatest] w
 
 <!--- TEST ARBITRARY_TIME -->
   
-> Note that [flatMapLatest] cancels all the code in its block (`{ requestFlow(it) }` in this example) on a new value. 
-It makes no difference in this particular example, because the call to `requestFlow` itself is fast, not-suspending,
-and cannot be cancelled. However, it would show up if we were to use suspending functions like `delay` in there.
+> 注意，[flatMapLatest] 在一个新值上取消了块中的所有代码 (本示例中的 `{ requestFlow(it) }`）。 
+这在该特定示例中不会有什么区别，由于调用 `requestFlow` 自身的速度是很快的，不会发生挂起，
+所以不会被取消。然而，如果我们要在块中调用诸如 `delay` 之类的挂起函数，这将会被表现出来。
 
 ### 流异常
 
-Flow collection can complete with an exception when an emitter or code inside the operators throw an exception. 
-There are several ways to handle these exceptions.
+当运算符中的发射器或代码抛出异常时，流收集可以带有异常的完成。
+有几种处理异常的方法。
 
 #### 收集器 try 与 catch
 
-A collector can use Kotlin's [`try/catch`][exceptions] block to handle exceptions: 
+收集者可以使用 Kotlin 的 [`try/catch`][exceptions] 块来处理异常：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -1282,7 +1282,7 @@ import kotlinx.coroutines.flow.*
 fun foo(): Flow<Int> = flow {
     for (i in 1..3) {
         println("Emitting $i")
-        emit(i) // emit next value
+        emit(i) // 发射下一个值
     }
 }
 
@@ -1301,10 +1301,10 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-26.kt).
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-26.kt)获取完整代码。
 
-This code successfully catches an exception in [collect] terminal operator and, 
-as we see, no more values are emitted after that:
+这段代码成功的在末端操作符 [collect] 中捕获了异常，并且， 
+如我们所见，在这之后不再发出任何值：
 
 ```text 
 Emitting 1
@@ -1318,9 +1318,9 @@ Caught java.lang.IllegalStateException: Collected 2
 
 #### 一切都已捕获
 
-The previous example actually catches any exception happening in the emitter or in any intermediate or terminal operators.
-For example, let's change the code so that emitted values are [mapped][map] to strings,
-but the corresponding code produces an exception:
+前面的示例实际上捕获了在发射器或任何过渡或末端操作符中发生的任何异常。
+例如，让我们修改代码以便将发出的值[映射][map]为字符串，
+但是相应的代码会产生一个异常：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -1333,7 +1333,7 @@ fun foo(): Flow<String> =
     flow {
         for (i in 1..3) {
             println("Emitting $i")
-            emit(i) // emit next value
+            emit(i) // 发射下一个值
         }
     }
     .map { value ->
@@ -1353,9 +1353,9 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-27.kt).
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-27.kt)获取完整代码。
 
-This exception is still caught and collection is stopped:
+仍然会捕获该异常并停止收集：
 
 ```text 
 Emitting 1
@@ -1413,7 +1413,7 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-28.kt). 
+> 可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-28.kt)获取完整代码。
  
 The output of the example is the same, even though we do not have `try/catch` around the code anymore. 
 
