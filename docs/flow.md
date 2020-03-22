@@ -1259,7 +1259,7 @@ fun main() = runBlocking<Unit> {
 
 <!--- TEST ARBITRARY_TIME -->
   
-> 注意，[flatMapLatest] 在一个新值上取消了块中的所有代码 (本示例中的 `{ requestFlow(it) }`）。 
+> 注意，[flatMapLatest] 在一个新值到来时取消了块中的所有代码 (本示例中的 `{ requestFlow(it) }`）。 
 这在该特定示例中不会有什么区别，由于调用 `requestFlow` 自身的速度是很快的，不会发生挂起，
 所以不会被取消。然而，如果我们要在块中调用诸如 `delay` 之类的挂起函数，这将会被表现出来。
 
