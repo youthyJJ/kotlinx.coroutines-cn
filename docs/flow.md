@@ -318,7 +318,7 @@ Done
 
 ### 流构建器
 
-先前示例中的 `flow { ... }` 构建器是最基础的一个。还有其它构建器<!--
+先前示例中的 `flow { ... }` 构建器是最基础的一个。还有其他构建器<!--
 -->使流的声明更简单：
 
 * [flowOf] 构建器定义了一个发射固定值集的流。
@@ -1368,21 +1368,21 @@ Caught java.lang.IllegalStateException: Crashed on 2
 
 ### 异常透明性
 
-But how can code of the emitter encapsulate its exception handling behavior?  
+但是，发射器的代码如何封装其异常处理行为？
 
-Flows must be _transparent to exceptions_ and it is a violation of the exception transparency to [emit][FlowCollector.emit] values in the 
-`flow { ... }` builder from inside of a `try/catch` block. This guarantees that a collector throwing an exception
-can always catch it using `try/catch` as in the previous example.
+流必须*对异常透明*，即在 `flow { ... }` 构建器内部的 `try/catch`
+块中[发射][FlowCollector.emit]值是违反异常透明性的。这样可以保证收集器抛出的一个异常<!--
+-->能被像先前示例中那样的 `try/catch` 块捕获。
 
-The emitter can use a [catch] operator that preserves this exception transparency and allows encapsulation
-of its exception handling. The body of the `catch` operator can analyze an exception
-and react to it in different ways depending on which exception was caught:
+发射器可以使用 [catch] 操作符来保留此异常的透明性并允许封装<!--
+-->它的异常处理。catch 操作符的代码块可以分析异常<!--
+-->并根据捕获到的异常以不同的方式对其做出反应：
 
-* Exceptions can be rethrown using `throw`.
-* Exceptions can be turned into emission of values using [emit][FlowCollector.emit] from the body of [catch].
-* Exceptions can be ignored, logged, or processed by some other code.
+* 可以使用 `throw` 重新抛出异常。
+* 可以使用 [catch] 代码块中的 [emit][FlowCollector.emit] 将异常转换为值发射出去。
+* 可以将异常忽略，或用日志打印，或使用一些其他代码处理它。
 
-For example, let us emit the text on catching an exception:
+例如，让我们在捕获异常的时候发射文本：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -1394,18 +1394,18 @@ fun foo(): Flow<String> =
     flow {
         for (i in 1..3) {
             println("Emitting $i")
-            emit(i) // emit next value
+            emit(i) // 发射下一个值
         }
     }
     .map { value ->
-        check(value <= 1) { "Crashed on $value" }                 
+        check(value <= 1) { "Crashed on $value" }
         "string $value"
     }
 
 fun main() = runBlocking<Unit> {
 //sampleStart
     foo()
-        .catch { e -> emit("Caught $e") } // emit on exception
+        .catch { e -> emit("Caught $e") } // 发射一个异常
         .collect { value -> println(value) }
 //sampleEnd
 }            
@@ -1413,9 +1413,9 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> 可以从[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-28.kt)获取完整代码。
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-28.kt)获取完整代码。
  
-The output of the example is the same, even though we do not have `try/catch` around the code anymore. 
+即使我们不再在代码的外层使用 `try/catch`，示例的输出也是相同的。
 
 <!--- TEST  
 Emitting 1
@@ -1426,9 +1426,9 @@ Caught java.lang.IllegalStateException: Crashed on 2
 
 #### 透明捕获
 
-The [catch] intermediate operator, honoring exception transparency, catches only upstream exceptions
-(that is an exception from all the operators above `catch`, but not below it).
-If the block in `collect { ... }` (placed below `catch`) throws an exception then it escapes:  
+[catch] 过渡操作符尊重异常透明性，仅捕获上游异常<!--
+-->（`catch` 操作符上游的异常，但是它下面的不是）。
+如果 `collect { ... }` 块（位于 `catch` 之下）抛出一个异常，那么它会逃逸：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -1446,7 +1446,7 @@ fun foo(): Flow<Int> = flow {
 
 fun main() = runBlocking<Unit> {
     foo()
-        .catch { e -> println("Caught $e") } // does not catch downstream exceptions
+        .catch { e -> println("Caught $e") } // 不会捕获下游异常
         .collect { value ->
             check(value <= 1) { "Collected $value" }                 
             println(value) 
@@ -1457,9 +1457,9 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-29.kt). 
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-29.kt)获取完整代码。
  
-A "Caught ..." message is not printed despite there being a `catch` operator: 
+尽管有 `catch` 操作符，但不会打印“Caught ...”消息：
 
 <!--- TEST EXCEPTION  
 Emitting 1
@@ -1471,9 +1471,9 @@ Exception in thread "main" java.lang.IllegalStateException: Collected 2
 
 #### 声明式捕获
 
-We can combine the declarative nature of the [catch] operator with a desire to handle all the exceptions, by moving the body
-of the [collect] operator into [onEach] and putting it before the `catch` operator. Collection of this flow must
-be triggered by a call to `collect()` without parameters:
+我们可以将 [catch] 操作符的声明性与处理所有异常的期望相结合，将 [collect]
+操作符的代码块移动到 [onEach] 中，并将其放到 `catch` 操作符之前。收集该流必须由调用<!--
+-->无参的 `collect()` 来触发：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -1503,10 +1503,10 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-30.kt). 
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-30.kt)获取完整代码。
  
-Now we can see that a "Caught ..." message is printed and so we can catch all the exceptions without explicitly
-using a `try/catch` block: 
+现在我们可以看到已经打印了“Caught ...”消息，并且我们可以在没有显式使用
+`try/catch` 块的情况下捕获所有异常： 
 
 <!--- TEST EXCEPTION  
 Emitting 1
