@@ -1518,7 +1518,7 @@ Caught java.lang.IllegalStateException: Collected 2
 ### 流完成
 
 当流收集完成时（普通情况或异常情况），它可能需要执行一个动作。
-您可能已经注意到，它可以通过两种方式完成：命令式或声明式。
+你可能已经注意到，它可以通过两种方式完成：命令式或声明式。
 
 #### 命令式 finally 块
 
@@ -1664,7 +1664,7 @@ fun main() = runBlocking<Unit> {
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-34.kt)获取完整代码。
 
-我们可以看到以 null 完成，但收集失败并发生了异常：
+我们可以看到完成的 cause 是 null，但收集失败并发生了异常：
 
 ```text 
 1
@@ -1785,7 +1785,7 @@ coroutine only without cancelling the whole scope or to [join][Job.join] it.
 Flow 的设计也许看起来会非常熟悉。
 
 确实，其设计灵感来源于响应式流以及其各种实现。但是 Flow 的主要目标是拥有尽可能简单的设计，
-对 Kotlin 以及挂起友好且遵从结构化并发。没有响应式的先驱及他们大量的工作，就不可能实现这一目标。您可以阅读 [Reactive Streams and Kotlin Flows](https://medium.com/@elizarov/reactive-streams-and-kotlin-flows-bfd12772cda4) 这篇文章来了解完成 Flow 的故事。
+对 Kotlin 以及挂起友好且遵从结构化并发。没有响应式的先驱及他们大量的工作，就不可能实现这一目标。你可以阅读 [Reactive Streams and Kotlin Flows](https://medium.com/@elizarov/reactive-streams-and-kotlin-flows-bfd12772cda4) 这篇文章来了解完成 Flow 的故事。
 
 虽然有所不同，但从概念上讲，Flow *依然是*响应式流，并且可以将它转换为响应式（规范及符合 TCK）的发布者（Publisher），反之亦然。
 这些开箱即用的转换器可以在 `kotlinx.coroutines` 提供的相关响应式模块（`kotlinx-coroutines-reactive` 用于 Reactive Streams，`kotlinx-coroutines-reactor` 用于 Project Reactor，以及 `kotlinx-coroutines-rx2` 用于 RxJava2）中找到。
