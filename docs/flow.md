@@ -1426,9 +1426,9 @@ Caught java.lang.IllegalStateException: Crashed on 2
 
 #### 透明捕获
 
-[catch] 过渡操作符尊重异常透明性，仅捕获上游异常<!--
+[catch] 过渡操作符遵循异常透明性，仅捕获上游异常<!--
 -->（`catch` 操作符上游的异常，但是它下面的不是）。
-如果 `collect { ... }` 块（位于 `catch` 之下）抛出一个异常，那么它会逃逸：
+如果 `collect { ... }` 块（位于 `catch` 之下）抛出一个异常，那么异常会逃逸：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -1517,13 +1517,13 @@ Caught java.lang.IllegalStateException: Collected 2
 
 ### 流完成
 
-When flow collection completes (normally or exceptionally) it may need to execute an action. 
-As you may have already noticed, it can be done in two ways: imperative or declarative.
+当流收集完成时（普通情况或异常情况），它可能需要执行一个动作。
+您可能已经注意到，它可以通过两种方式完成：命令式或声明式。
 
 #### 命令式 finally 块
 
-In addition to `try`/`catch`, a collector can also use a `finally` block to execute an action 
-upon `collect` completion.
+除了 `try`/`catch` 之外，收集器还能使用 `finally` 块在 `collect`
+完成时执行一个动作。
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -1546,9 +1546,9 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-31.kt). 
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-31.kt)获取完整代码。
 
-This code prints three numbers produced by the `foo()` flow followed by a "Done" string:
+这段代码打印出 `foo()` 流产生的三个数字，后面跟一个“Done”字符串：
 
 ```text
 1
@@ -1561,10 +1561,10 @@ Done
 
 #### 声明式处理
 
-For the declarative approach, flow has [onCompletion] intermediate operator that is invoked
-when the flow has completely collected.
+对于声明式，流拥有 [onCompletion] 过渡操作符，它在流完全收集<!--
+-->时调用。
 
-The previous example can be rewritten using an [onCompletion] operator and produces the same output:
+可以使用 [onCompletion] 操作符重写前面的示例，并产生相同的输出：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -1584,7 +1584,7 @@ fun main() = runBlocking<Unit> {
 ```
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-32.kt). 
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-32.kt)获取完整代码。
 
 <!--- TEST 
 1
@@ -1593,9 +1593,9 @@ fun main() = runBlocking<Unit> {
 Done
 -->
 
-The key advantage of [onCompletion] is a nullable `Throwable` parameter of the lambda that can be used
-to determine whether the flow collection was completed normally or exceptionally. In the following
-example the `foo()` flow throws an exception after emitting the number 1:
+[onCompletion] 的主要优点是其 lambda 表达式的可空参数
+`Throwable` 可以用于确定流收集是正常完成还是有异常发生。在下面的<!--
+-->示例中 `foo()` 流在发射数字 1 之后抛出了一个异常：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -1619,9 +1619,9 @@ fun main() = runBlocking<Unit> {
 ```
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-33.kt). 
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-33.kt)获取完整代码。
 
-As you may expect, it prints:
+如你所期望的，它打印了：
 
 ```text
 1
@@ -1631,14 +1631,14 @@ Caught exception
 
 <!--- TEST -->
 
-The [onCompletion] operator, unlike [catch], does not handle the exception. As we can see from the above
-example code, the exception still flows downstream. It will be delivered to further `onCompletion` operators
-and can be handled with a `catch` operator. 
+[onCompletion] 操作符与 [catch] 不同，它不处理异常。我们可以看到前面的<!--
+-->示例代码，异常仍然流向下游。它将被提供给后面的 `onCompletion`
+操作符，并可以由 `catch` 操作符处理。
 
 #### 仅限上游异常
 
-Just like the [catch] operator, [onCompletion] only sees exceptions coming from upstream and does not
-see downstream exceptions. For example, run the following code:
+与 [catch] 操作符一样，[onCompletion] 仅能观察到来自上游的异常<!--
+-->而不能观察到下游的异常。例如，运行下面的代码：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -1662,9 +1662,9 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-34.kt). 
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-34.kt)获取完整代码。
 
-We can see the completion cause is null, yet collection failed with exception:
+我们可以看到以 null 完成，但收集失败并发生了异常：
 
 ```text 
 1
@@ -1676,10 +1676,10 @@ Exception in thread "main" java.lang.IllegalStateException: Collected 2
 
 ### 命令式还是声明式
 
-Now we know how to collect flow, and handle its completion and exceptions in both imperative and declarative ways.
-The natural question here is, which approach is preferred and why?
-As a library, we do not advocate for any particular approach and believe that both options
-are valid and should be selected according to your own preferences and code style. 
+现在我们知道如何收集流，并以命令式与声明式的方式处理其完成及异常情况。
+这里有一个很自然的问题是，哪种方式应该是首选的？为什么？
+作为一个库，我们不主张采用任何特定的方式，并且相信这两种选择都是有效的，
+应该根据自己的喜好与代码风格进行选择。
 
 ### 启动流
 
