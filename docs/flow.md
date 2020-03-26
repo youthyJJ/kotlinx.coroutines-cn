@@ -1683,13 +1683,13 @@ Exception in thread "main" java.lang.IllegalStateException: Collected 2
 
 ### 启动流
 
-It is easy to use flows to represent asynchronous events that are coming from some source.
-In this case, we need an analogue of the `addEventListener` function that registers a piece of code with a reaction
-for incoming events and continues further work. The [onEach] operator can serve this role. 
-However, `onEach` is an intermediate operator. We also need a terminal operator to collect the flow. 
-Otherwise, just calling `onEach` has no effect.
+使用流表示来自一些源的异步事件是很简单的。
+在这个案例中，我们需要一个类似 `addEventListener` 的函数，该函数注册一段响应的代码<!--
+-->处理即将到来的事件，并继续进行进一步的处理。[onEach] 操作符可以担任该角色。
+然而，`onEach` 是一个过渡操作符。我们也需要一个末端操作符来收集流。
+否则仅调用 `onEach` 是无效的。
  
-If we use the [collect] terminal operator after `onEach`, then the code after it will wait until the flow is collected:
+如果我们在 `onEach` 之后使用 [collect] 末端操作符，那么后面的代码会一直等待直至流被收集：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -1698,13 +1698,13 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
 //sampleStart
-// Imitate a flow of events
+// 模仿事件流
 fun events(): Flow<Int> = (1..3).asFlow().onEach { delay(100) }
 
 fun main() = runBlocking<Unit> {
     events()
         .onEach { event -> println("Event: $event") }
-        .collect() // <--- Collecting the flow waits
+        .collect() // <--- 等待流收集
     println("Done")
 }            
 //sampleEnd
@@ -1712,9 +1712,9 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-35.kt). 
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-35.kt)获取完整代码。
   
-As you can see, it prints:
+你可以看到它的输出：
 
 ```text 
 Event: 1
@@ -1725,9 +1725,9 @@ Done
 
 <!--- TEST -->
  
-The [launchIn] terminal operator comes in handy here. By replacing `collect` with `launchIn` we can
-launch a collection of the flow in a separate coroutine, so that execution of further code 
-immediately continues:
+[launchIn] 末端操作符可以在这里派上用场。使用 `launchIn` 替换 `collect` 我们可以<!--
+-->在单独的协程中启动流的收集，这样就可以立即继续<!--
+-->进一步执行代码：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -1735,14 +1735,14 @@ immediately continues:
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
-// Imitate a flow of events
+// 模仿事件流
 fun events(): Flow<Int> = (1..3).asFlow().onEach { delay(100) }
 
 //sampleStart
 fun main() = runBlocking<Unit> {
     events()
         .onEach { event -> println("Event: $event") }
-        .launchIn(this) // <--- Launching the flow in a separate coroutine
+        .launchIn(this) // <--- 在单独的协程中执行流
     println("Done")
 }            
 //sampleEnd
@@ -1750,9 +1750,9 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-36.kt). 
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-36.kt)获取完整代码。
   
-It prints:
+它打印了：
 
 ```text          
 Done
@@ -1763,19 +1763,19 @@ Event: 3
 
 <!--- TEST -->
 
-The required parameter to `launchIn` must specify a [CoroutineScope] in which the coroutine to collect the flow is 
-launched. In the above example this scope comes from the [runBlocking]
-coroutine builder, so while the flow is running, this [runBlocking] scope waits for completion of its child coroutine
-and keeps the main function from returning and terminating this example. 
+`launchIn` 必要的参数 [CoroutineScope] 指定了用哪一个协程来启动流的<!--
+-->收集。在先前的示例中这个作用域来自 [runBlocking]
+协程构建器，在这个流运行的时候，[runBlocking] 作用域等待它的子协程执行完毕<!--
+-->并防止 main 函数返回并终止此示例。
 
-In actual applications a scope will come from an entity with a limited 
-lifetime. As soon as the lifetime of this entity is terminated the corresponding scope is cancelled, cancelling
-the collection of the corresponding flow. This way the pair of `onEach { ... }.launchIn(scope)` works
-like the `addEventListener`. However, there is no need for the corresponding `removeEventListener` function, 
-as cancellation and structured concurrency serve this purpose.
+在实际的应用中，作用域来自于一个寿命有限的<!--
+-->实体。在该实体的寿命终止后，相应的作用域就会被取消，即取消<!--
+-->相应流的收集。这种成对的 `onEach { ... }.launchIn(scope)` 工作方式<!--
+-->就像 `addEventListener` 一样。而且，这不需要相应的 `removeEventListener` 函数，
+因为取消与结构化并发可以达成这个目的。
 
-Note that [launchIn] also returns a [Job], which can be used to [cancel][Job.cancel] the corresponding flow collection
-coroutine only without cancelling the whole scope or to [join][Job.join] it.
+注意，[launchIn] 也会返回一个 [Job]，可以在不取消整个作用域的情况下仅[取消][Job.cancel]相应的流收集<!--
+-->或对其进行 [join][Job.join]。
 
 {:#flow-and-reactive-streams}
 
