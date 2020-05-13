@@ -103,7 +103,7 @@ fun main() {
 
 </div>
 
-> 你可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-02.kt)获取完整代码。
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-02.kt)获取完整代码。
 
 这段代码输出相同的数字，但在打印每个数字之前等待 100 毫秒。
 
