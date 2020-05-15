@@ -501,21 +501,8 @@ class Activity {
 
 </div>
 
-或者，我们可以在这个 `Activity` 类中实现 [CoroutineScope] 接口。最好的方法是<!--
--->使用具有默认工厂函数的委托。
-我们也可以将所需的调度器与作用域合并（我们在这个示例中使用 [Dispatchers.Default]）。
-
-<div class="sample" markdown="1" theme="idea" data-highlight-only>
-
-```kotlin
-    class Activity : CoroutineScope by CoroutineScope(Dispatchers.Default) {
-    // 继续运行……
-```
-
-</div>
-
-现在，在这个 `Activity` 的作用域中启动协程，且没有明确<!--
--->指定它们的上下文。在示例中，我们启动了十个协程并延迟不同的时间：
+Now, we can launch coroutines in the scope of this `Activity` using the defined `scope`.
+For the demo, we launch ten coroutines that delay for a different time:
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
 
@@ -524,7 +511,7 @@ class Activity {
     fun doSomething() {
         // 在示例中启动了 10 个协程，且每个都工作了不同的时长
         repeat(10) { i ->
-            launch {
+            mainScope.launch {
                 delay((i + 1) * 200L) // 延迟 200 毫秒、400 毫秒、600 毫秒等等不同的时间
                 println("Coroutine $i is done")
             }
@@ -544,21 +531,19 @@ class Activity {
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
 ```kotlin
-import kotlin.coroutines.*
 import kotlinx.coroutines.*
 
-class Activity : CoroutineScope by CoroutineScope(Dispatchers.Default) {
-
+class Activity {
+    private val mainScope = CoroutineScope(Dispatchers.Default) // use Default for test purposes
+    
     fun destroy() {
-        cancel() // Extension on CoroutineScope
+        mainScope.cancel()
     }
-    // 继续运行……
 
-    // class Activity continues
     fun doSomething() {
         // 在示例中启动了 10 个协程，且每个都工作了不同的时长
         repeat(10) { i ->
-            launch {
+            mainScope.launch {
                 delay((i + 1) * 200L) // 延迟 200 毫秒、400 毫秒、600 毫秒等等不同的时间
                 println("Coroutine $i is done")
             }
@@ -596,6 +581,9 @@ Destroying activity!
 
 你可以看到，只有前两个协程打印了消息，而另一个协程在
 `Activity.destroy()` 中单次调用了 `job.cancel()`。
+
+> Note, that Android has first-party support for coroutine scope in all entities with the lifecycle.
+See [the corresponding documentation](https://developer.android.com/topic/libraries/architecture/coroutines#lifecyclescope).
 
 ### 线程局部数据
 
