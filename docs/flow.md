@@ -1637,8 +1637,8 @@ Caught exception
 
 #### 成功完成
 
-与 [catch] 操作符的另一个不同点是 [onCompletion] 仅在上游流成功完成<!--
--->（没有取消或失败）的情况下才能观察到所有异常并接收一个 `null` 异常。
+与 [catch] 操作符的另一个不同点是 [onCompletion] 能观察到所有异常并且<!--
+-->仅在上游流成功完成（没有取消或失败）的情况下接收一个 `null` 异常。
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
