@@ -39,7 +39,7 @@
   * [流完成](#流完成)
     * [命令式 finally 块](#命令式-finally-块)
     * [声明式处理](#声明式处理)
-    * [Successful completion](#successful-completion)
+    * [成功完成](#成功完成)
   * [命令式还是声明式](#命令式还是声明式)
   * [启动流](#启动流)
   * [流（Flow）与响应式流（Reactive Streams）](#flow-and-reactive-streams)
@@ -1635,10 +1635,10 @@ Caught exception
 -->示例代码，异常仍然流向下游。它将被提供给后面的 `onCompletion`
 操作符，并可以由 `catch` 操作符处理。
 
-#### Successful completion
+#### 成功完成
 
-Another difference with [catch] operator is that [onCompletion] sees all exceptions and receives
-a `null` exception only on successful completion of the upstream flow (without cancellation or failure).
+与 [catch] 操作符的另一个不同点是 [onCompletion] 能观察到所有异常并且<!--
+-->仅在上游流成功完成（没有取消或失败）的情况下接收一个 `null` 异常。
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -1664,7 +1664,7 @@ fun main() = runBlocking<Unit> {
 
 > 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-34.kt)获取完整代码。
 
-We can see the completion cause is not null, because the flow was aborted due to downstream exception:
+我们可以看到完成时 cause 不为空，因为流由于下游异常而中止：
 
 ```text 
 1
