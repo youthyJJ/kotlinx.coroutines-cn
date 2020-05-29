@@ -19,19 +19,19 @@
 ## 异常处理
 
 本节内容涵盖了异常处理与在异常上取消。
-我们已经知道取消协程会在挂起点抛出 [CancellationException]<!--
--->并且它会被协程的机制所忽略。在这里我们会看看在取消过程中抛出异常或同一个协程的<!--
+我们已经知道取消协程会在挂起点抛出 [CancellationException]
+并且它会被协程的机制所忽略。在这里我们会看看在取消过程中抛出异常或同一个协程的<!--
 -->多个子协程抛出异常时会发生什么。
 
 ### 异常的传播
 
-Coroutine builders come in two flavors: propagating exceptions automatically ([launch] and [actor]) or
-exposing them to users ([async] and [produce]).
-When these builders are used to create a _root_ coroutine, that is not a _child_ of another coroutine,
-the former builder treat exceptions as **uncaught** exceptions, similar to Java's `Thread.uncaughtExceptionHandler`,
-while the latter are relying on the user to consume the final
-exception, for example via [await][Deferred.await] or [receive][ReceiveChannel.receive] 
-([produce] and [receive][ReceiveChannel.receive] are covered later in [Channels](https://github.com/Kotlin/kotlinx.coroutines/blob/master/docs/channels.md) section).
+协程构建器有两种形式：自动传播异常（[launch] 与 [actor]）或<!--
+-->向用户展示异常（[async] 与 [produce]）。
+当这些构建器用于创建一个*父*协程时，即该协程不是另一个协程的*子*协程，
+前者这类构建器将异常视为**未捕获**异常，类似 Java 的 `Thread.uncaughtExceptionHandler`，
+而后者则依赖用户来最终消费<!--
+-->异常，例如通过 [await][Deferred.await] 或 [receive][ReceiveChannel.receive]<!--
+-->（[produce] 与 [receive][ReceiveChannel.receive] 的相关内容包含于[通道](https://github.com/Kotlin/kotlinx.coroutines/blob/master/docs/channels.md)章节）。
 
 可以通过一个使用 [GlobalScope] 创建根协程的简单示例来进行演示：
 
@@ -41,13 +41,13 @@ exception, for example via [await][Deferred.await] or [receive][ReceiveChannel.r
 import kotlinx.coroutines.*
 
 fun main() = runBlocking {
-    val job = GlobalScope.launch { // root coroutine with launch
+    val job = GlobalScope.launch { // launch 父协程
         println("Throwing exception from launch")
         throw IndexOutOfBoundsException() // 我们将在控制台打印 Thread.defaultUncaughtExceptionHandler
     }
     job.join()
     println("Joined failed job")
-    val deferred = GlobalScope.async { // root coroutine with async
+    val deferred = GlobalScope.async { // async 父协程
         println("Throwing exception from async")
         throw ArithmeticException() // 没有打印任何东西，依赖用户去调用等待
     }
@@ -246,9 +246,9 @@ CoroutineExceptionHandler got java.lang.ArithmeticException
 
 ### 异常聚合
 
-When multiple children of a coroutine fail with an exception the
-general rule is "the first exception wins", so the first exception gets handled.
-All additional exceptions that happen after the first one are attached to the first exception as suppressed ones. 
+当协程的多个子协程因异常而失败时，<!--
+-->一般规则是“第一个异常获胜”，因此将处理第一个异常。<!--
+-->在第一个异常之后发生的所有其他异常都作为被抑制的异常绑定至第一个异常。
 
 <!--- INCLUDE
 import kotlinx.coroutines.exceptions.*
@@ -267,14 +267,14 @@ fun main() = runBlocking {
     val job = GlobalScope.launch(handler) {
         launch {
             try {
-                delay(Long.MAX_VALUE) // it gets cancelled when another sibling fails with IOException
+                delay(Long.MAX_VALUE) // 当另一个同级的协程因 IOException  失败时，它将被取消
             } finally {
-                throw ArithmeticException() // the second exception
+                throw ArithmeticException() // 第二个异常
             }
         }
         launch {
             delay(100)
-            throw IOException() // the first exception
+            throw IOException() // 首个异常
         }
         delay(Long.MAX_VALUE)
     }
@@ -299,7 +299,7 @@ CoroutineExceptionHandler got java.io.IOException with suppressed [java.lang.Ari
 > 注意，这个机制当前只能在 Java 1.7 以上的版本中使用。
 在 JS 和原生环境下暂时会受到限制，但将来会被修复。
 
-Cancellation exceptions are transparent and are unwrapped by default:
+取消异常是透明的，默认情况下是未包装的：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -313,10 +313,10 @@ fun main() = runBlocking {
         println("CoroutineExceptionHandler got $exception")
     }
     val job = GlobalScope.launch(handler) {
-        val inner = launch { // all this stack of coroutines will get cancelled
+        val inner = launch { // 该栈内的协程都将被取消
             launch {
                 launch {
-                    throw IOException() // the original exception
+                    throw IOException() // 原始异常
                 }
             }
         }
@@ -324,7 +324,7 @@ fun main() = runBlocking {
             inner.join()
         } catch (e: CancellationException) {
             println("Rethrowing CancellationException with original cause")
-            throw e // cancellation exception is rethrown, yet the original IOException gets to the handler  
+            throw e // 取消异常被重新抛出，但原始 IOException 得到了处理
         }
     }
     job.join()
