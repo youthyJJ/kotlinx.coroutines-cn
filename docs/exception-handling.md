@@ -18,10 +18,10 @@
 
 ## 异常处理
 
-This section covers exception handling and cancellation on exceptions.
-We already know that cancelled coroutine throws [CancellationException] in suspension points and that it
-is ignored by the coroutines' machinery. Here we look at what happens if an exception is thrown during cancellation or multiple children of the same
-coroutine throw an exception.
+本节内容涵盖了异常处理与在异常上取消。
+我们已经知道取消协程会在挂起点抛出 [CancellationException]<!--
+-->并且它会被协程的机制所忽略。在这里我们会看看在取消过程中抛出异常或同一个协程的<!--
+-->多个子协程抛出异常时会发生什么。
 
 ### 异常的传播
 
@@ -346,8 +346,8 @@ CoroutineExceptionHandler got java.io.IOException
 
 ### 监督
 
-As we have studied before, cancellation is a bidirectional relationship propagating through the whole
-hierarchy of coroutines. Let us take a look at the case when unidirectional cancellation is required. 
+正如我们之前研究的那样，取消是在协程的整个层次结构中传播的双<!--
+-->向关系。让我们看一下需要单向取消的情况。
 
 此类需求的一个良好示例是在其作用域内定义作业的 UI 组件。如果任何一个 UI 的子作业<!--
 -->执行失败了，它并不总是有必要取消（有效地杀死）整个 UI 组件，
@@ -464,9 +464,9 @@ Caught assertion error
 常规的作业和监督作业之间的另一个重要区别是异常处理。
 监督协程中的每一个子作业应该通过异常处理机制处理自身的异常。
 这种差异来自于子作业的执行失败不会传播给它的父作业的事实。
-It means that coroutines launched directly inside [supervisorScope] _do_ use the [CoroutineExceptionHandler]
-that is installed in their scope in the same way as root coroutines do
-(see [CoroutineExceptionHandler](#coroutineexceptionhandler) section for details). 
+这意味着在 [supervisorScope] 内部直接启动的协程*确实*使用了<!--
+-->设置在它们作用域内的 [CoroutineExceptionHandler]，与父协程的方式相同<!--
+-->（查看 [CoroutineExceptionHandler](#coroutineexceptionhandler) 小节以获知更多细节）。
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
 
