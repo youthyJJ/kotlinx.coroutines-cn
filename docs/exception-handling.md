@@ -26,8 +26,8 @@
 ### 异常的传播
 
 协程构建器有两种形式：自动传播异常（[launch] 与 [actor]）或<!--
--->向用户展示异常（[async] 与 [produce]）。
-当这些构建器用于创建一个*父*协程时，即该协程不是另一个协程的*子*协程，
+-->向用户暴露异常（[async] 与 [produce]）。
+当这些构建器用于创建一个*根*协程时，即该协程不是另一个协程的*子*协程，
 前者这类构建器将异常视为**未捕获**异常，类似 Java 的 `Thread.uncaughtExceptionHandler`，
 而后者则依赖用户来最终消费<!--
 -->异常，例如通过 [await][Deferred.await] 或 [receive][ReceiveChannel.receive]<!--
@@ -41,13 +41,13 @@
 import kotlinx.coroutines.*
 
 fun main() = runBlocking {
-    val job = GlobalScope.launch { // launch 父协程
+    val job = GlobalScope.launch { // launch 根协程
         println("Throwing exception from launch")
         throw IndexOutOfBoundsException() // 我们将在控制台打印 Thread.defaultUncaughtExceptionHandler
     }
     job.join()
     println("Joined failed job")
-    val deferred = GlobalScope.async { // async 父协程
+    val deferred = GlobalScope.async { // async 根协程
         println("Throwing exception from async")
         throw ArithmeticException() // 没有打印任何东西，依赖用户去调用等待
     }
@@ -247,7 +247,7 @@ CoroutineExceptionHandler got java.lang.ArithmeticException
 ### 异常聚合
 
 当协程的多个子协程因异常而失败时，<!--
--->一般规则是“第一个异常获胜”，因此将处理第一个异常。<!--
+-->一般规则是“取第一个异常”，因此将处理第一个异常。<!--
 -->在第一个异常之后发生的所有其他异常都作为被抑制的异常绑定至第一个异常。
 
 <!--- INCLUDE
