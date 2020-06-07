@@ -185,7 +185,8 @@ Parent is not cancelled
 <!--- TEST-->
 
 如果一个协程遇到了 `CancellationException` 以外的异常，它将使用该异常取消它的父协程。
-这个行为无法被覆写，并且被用于为[结构化的并发 (structured concurrency)](https://github.com/Kotlin/kotlinx.coroutines/blob/master/docs/composing-suspending-functions.md#structured-concurrency-with-async) 提供稳定的协程层级结构。
+这个行为无法被覆写，并且被用于为<!--
+-->[结构化的并发 (structured concurrency)](https://github.com/Kotlin/kotlinx.coroutines/blob/master/docs/composing-suspending-functions.md#structured-concurrency-with-async) 提供稳定的协程层级结构。
 [CoroutineExceptionHandler] 的实现并不是用于子协程。
 
 > 在本例中，[CoroutineExceptionHandler] 总是被设置在由 [GlobalScope]
@@ -193,7 +194,8 @@ Parent is not cancelled
 [runBlocking] 主作用域内启动的协程中是没有意义的，尽管子协程已经设置了异常处理者，
 但是主协程也总是会被取消的。
 
-当父协程的所有子协程都结束后，原始的异常才会被父协程处理，见下面这个例子。
+当父协程的所有子协程都结束后，原始的异常才会被父协程处理，
+见下面这个例子。
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
