@@ -184,18 +184,18 @@ Parent is not cancelled
 
 <!--- TEST-->
 
-If a coroutine encounters an exception other than `CancellationException`, it cancels its parent with that exception. 
-This behaviour cannot be overridden and is used to provide stable coroutines hierarchies for
-[structured concurrency](https://github.com/Kotlin/kotlinx.coroutines/blob/master/docs/composing-suspending-functions.md#structured-concurrency-with-async).
-[CoroutineExceptionHandler] implementation is not used for child coroutines.
+如果一个协程遇到了 `CancellationException` 以外的异常，它将使用该异常取消它的父协程。
+这个行为无法被覆盖，并且用于为<!--
+-->[结构化的并发（structured concurrency）](https://github.com/Kotlin/kotlinx.coroutines/blob/master/docs/composing-suspending-functions.md#structured-concurrency-with-async) 提供稳定的协程层级结构。
+[CoroutineExceptionHandler] 的实现并不是用于子协程。
 
 > 在本例中，[CoroutineExceptionHandler] 总是被设置在由 [GlobalScope]
 启动的协程中。将异常处理者设置在
 [runBlocking] 主作用域内启动的协程中是没有意义的，尽管子协程已经设置了异常处理者，
 但是主协程也总是会被取消的。
 
-The original exception is handled by the parent only when all its children terminate,
-which is demonstrated by the following example.
+当父协程的所有子协程都结束后，原始的异常才会被父协程处理，
+见下面这个例子。
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
