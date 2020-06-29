@@ -483,7 +483,7 @@ I'm working in thread DefaultDispatcher-worker-1 @test#2
 你应该已经熟悉了协程作用域，因为所有的协程构建器都声明为在它之上的扩展。
 
 我们通过创建一个 [CoroutineScope] 实例来管理协程的生命周期，并使它与
-activit 的生命周期相关联。`CoroutineScope` 可以通过 [CoroutineScope()] 创建或者通过[MainScope()]
+activity 的生命周期相关联。`CoroutineScope` 可以通过 [CoroutineScope()] 创建或者通过[MainScope()]
 工厂函数。前者创建了一个通用作用域，而后者为使用 [Dispatchers.Main] 作为默认调度器的 UI 应用程序
 创建作用域：
 
