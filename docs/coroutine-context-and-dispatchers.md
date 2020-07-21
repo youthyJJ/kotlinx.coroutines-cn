@@ -625,7 +625,7 @@ fun main() = runBlocking<Unit> {
 在这个例子中我们使用 [Dispatchers.Default] 在后台线程池中启动了一个新的协程，所以<!--
 -->它工作在线程池中的不同线程中，但它仍然具有线程局部变量的值，
 我们指定使用 `threadLocal.asContextElement(value = "launch")`，
-无论协程执行在什么线程中都是没有问题的。
+无论协程执行在哪个线程中都是没有问题的。
 因此，其输出如（[调试](#调试协程与线程)）所示：
 
 ```text

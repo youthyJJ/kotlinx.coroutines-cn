@@ -246,9 +246,9 @@ CoroutineExceptionHandler got java.lang.ArithmeticException
 
 ### 异常聚合
 
-当协程的多个子协程因异常而失败时，<!--
--->一般规则是“取第一个异常”，因此将处理第一个异常。<!--
--->在第一个异常之后发生的所有其他异常都作为被抑制的异常绑定至第一个异常。
+当协程的多个子协程因异常而失败时，
+一般规则是“取第一个异常”，因此将处理第一个异常。
+在第一个异常之后发生的所有其他异常都作为被抑制的异常绑定至第一个异常。
 
 <!--- INCLUDE
 import kotlinx.coroutines.exceptions.*
@@ -297,7 +297,7 @@ CoroutineExceptionHandler got java.io.IOException with suppressed [java.lang.Ari
 <!--- TEST-->
 
 > 注意，这个机制当前只能在 Java 1.7 以上的版本中使用。
-在 JS 和原生环境下暂时会受到限制，但将来会被修复。
+在 JS 和原生环境下暂时会受到限制，但将来会取消。
 
 取消异常是透明的，默认情况下是未包装的：
 
@@ -358,9 +358,9 @@ CoroutineExceptionHandler got java.io.IOException
 
 #### 监督作业
 
-[SupervisorJob][SupervisorJob()] 可以被用于这些目的。
+[SupervisorJob][SupervisorJob()] 可以用于这些目的。
 它类似于常规的 [Job][Job()]，唯一的不同是：<!--
--->SupervisorJob 的取消只会向下传播。这是非常容易从示例中观察到的：
+-->SupervisorJob 的取消只会向下传播。这是很容易用以下示例演示：
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
 
@@ -372,24 +372,24 @@ fun main() = runBlocking {
     with(CoroutineScope(coroutineContext + supervisor)) {
         // 启动第一个子作业——这个示例将会忽略它的异常（不要在实践中这么做！）
         val firstChild = launch(CoroutineExceptionHandler { _, _ ->  }) {
-            println("First child is failing")
-            throw AssertionError("First child is cancelled")
+            println("The first child is failing")
+            throw AssertionError("The first child is cancelled")
         }
         // 启动第二个子作业
         val secondChild = launch {
             firstChild.join()
             // 取消了第一个子作业且没有传播给第二个子作业
-            println("First child is cancelled: ${firstChild.isCancelled}, but second one is still active")
+            println("The first child is cancelled: ${firstChild.isCancelled}, but the second one is still active")
             try {
                 delay(Long.MAX_VALUE)
             } finally {
                 // 但是取消了监督的传播
-                println("Second child is cancelled because supervisor is cancelled")
+                println("The second child is cancelled because the supervisor was cancelled")
             }
         }
         // 等待直到第一个子作业失败且执行完成
         firstChild.join()
-        println("Cancelling supervisor")
+        println("Cancelling the supervisor")
         supervisor.cancel()
         secondChild.join()
     }
@@ -403,17 +403,17 @@ fun main() = runBlocking {
 这段代码的输出如下：
 
 ```text
-First child is failing
-First child is cancelled: true, but second one is still active
-Cancelling supervisor
-Second child is cancelled because supervisor is cancelled
+The first child is failing
+The first child is cancelled: true, but the second one is still active
+Cancelling the supervisor
+The second child is cancelled because the supervisor was cancelled
 ```
 <!--- TEST-->
 
 
 #### 监督作用域
 
-对于*作用域*的并发，[supervisorScope] 可以被用来替代 [coroutineScope] 来实现相同的目的。它只会单向的传播<!--
+对于*作用域*的并发，可以用 [supervisorScope] 来替代 [coroutineScope] 来实现相同的目的。它只会单向的传播<!--
 -->并且当作业自身执行失败的时候将所有子作业全部取消。作业自身也会在所有的子作业执行结束前等待，
 就像 [coroutineScope] 所做的那样。
 
@@ -428,19 +428,19 @@ fun main() = runBlocking {
         supervisorScope {
             val child = launch {
                 try {
-                    println("Child is sleeping")
+                    println("The child is sleeping")
                     delay(Long.MAX_VALUE)
                 } finally {
-                    println("Child is cancelled")
+                    println("The child is cancelled")
                 }
             }
             // 使用 yield 来给我们的子作业一个机会来执行打印
             yield()
-            println("Throwing exception from scope")
+            println("Throwing an exception from the scope")
             throw AssertionError()
         }
     } catch(e: AssertionError) {
-        println("Caught assertion error")
+        println("Caught an assertion error")
     }
 }
 ```
@@ -452,10 +452,10 @@ fun main() = runBlocking {
 这段代码的输出如下：
 
 ```text
-Child is sleeping
-Throwing exception from scope
-Child is cancelled
-Caught assertion error
+The child is sleeping
+Throwing an exception from the scope
+The child is cancelled
+Caught an assertion error
 ```
 <!--- TEST-->
 
@@ -465,8 +465,8 @@ Caught assertion error
 监督协程中的每一个子作业应该通过异常处理机制处理自身的异常。
 这种差异来自于子作业的执行失败不会传播给它的父作业的事实。
 这意味着在 [supervisorScope] 内部直接启动的协程*确实*使用了<!--
--->设置在它们作用域内的 [CoroutineExceptionHandler]，与父协程的方式相同<!--
--->（查看 [CoroutineExceptionHandler](#coroutineexceptionhandler) 小节以获知更多细节）。
+-->设置在它们作用域内的 [CoroutineExceptionHandler]，与父协程的方式相同
+（参见 [CoroutineExceptionHandler](#coroutineexceptionhandler) 小节以获知更多细节）。
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
 
@@ -480,12 +480,12 @@ fun main() = runBlocking {
     }
     supervisorScope {
         val child = launch(handler) {
-            println("Child throws an exception")
+            println("The child throws an exception")
             throw AssertionError()
         }
-        println("Scope is completing")
+        println("The scope is completing")
     }
-    println("Scope is completed")
+    println("The scope is completed")
 }
 ```
 
@@ -496,10 +496,10 @@ fun main() = runBlocking {
 这段代码的输出如下：
 
 ```text
-Scope is completing
-Child throws an exception
+The scope is completing
+The child throws an exception
 CoroutineExceptionHandler got java.lang.AssertionError
-Scope is completed
+The scope is completed
 ```
 <!--- TEST-->
 
@@ -517,8 +517,8 @@ Scope is completed
 [runBlocking]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/run-blocking.html
 [SupervisorJob()]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-supervisor-job.html
 [Job()]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-job.html
-[supervisorScope]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/supervisor-scope.html
 [coroutineScope]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/coroutine-scope.html
+[supervisorScope]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/supervisor-scope.html
 <!--- INDEX kotlinx.coroutines.channels -->
 [actor]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/actor.html
 [produce]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/produce.html

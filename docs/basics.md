@@ -338,7 +338,7 @@ import kotlinx.coroutines.*
 fun main() = runBlocking {
     repeat(100_000) { // 启动大量的协程
         launch {
-            delay(1000L)
+            delay(5000L)
             print(".")
         }
     }
@@ -351,7 +351,7 @@ fun main() = runBlocking {
 
 <!--- TEST lines.size == 1 && lines[0] == ".".repeat(100_000) -->
 
-它启动了 10 万个协程，并且在一秒钟后，每个协程都输出一个点。
+它启动了 10 万个协程，并且在 5 秒钟后，每个协程都输出一个点。
 
 现在，尝试使用线程来实现。会发生什么？（很可能你的代码会产生某种内存不足的错误）
 
