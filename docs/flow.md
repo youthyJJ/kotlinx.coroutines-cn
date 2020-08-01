@@ -42,8 +42,8 @@
     * [成功完成](#成功完成)
   * [命令式还是声明式](#命令式还是声明式)
   * [启动流](#启动流)
-  * [Flow cancellation checks](#flow-cancellation-checks)
-    * [Making busy flow cancellable](#making-busy-flow-cancellable)
+  * [流取消检查](#流取消检查)
+    * [消除繁忙流量](#消除繁忙流量)
   * [流（Flow）与响应式流（Reactive Streams）](#flow-and-reactive-streams)
 
 <!--- END -->
@@ -1779,7 +1779,7 @@ Event: 3
 注意，[launchIn] 也会返回一个 [Job]，可以在不取消整个作用域的情况下仅[取消][Job.cancel]相应的流收集<!--
 -->或对其进行 [join][Job.join]。
  
-### Flow cancellation checks
+### 流取消检查
 
 For convenience, the [flow] builder performs additional [ensureActive] checks for cancellation on each emitted value. 
 It means that a busy loop emitting from a `flow { ... }` is cancellable:
@@ -1863,7 +1863,7 @@ Exception in thread "main" kotlinx.coroutines.JobCancellationException: Blocking
 
 <!--- TEST EXCEPTION -->
 
-#### Making busy flow cancellable 
+#### 消除繁忙流量
 
 In the case where you have a busy loop with coroutines you must explicitly check for cancellation.
 You can add `.onEach { currentCoroutineContext().ensureActive() }`, but there is a ready-to-use
