@@ -42,8 +42,8 @@
     * [成功完成](#成功完成)
   * [命令式还是声明式](#命令式还是声明式)
   * [启动流](#启动流)
-  * [Flow cancellation checks](#flow-cancellation-checks)
-    * [Making busy flow cancellable](#making-busy-flow-cancellable)
+  * [流取消检测](#流取消检测)
+    * [让繁忙的流可取消](#让繁忙的流可取消)
   * [流（Flow）与响应式流（Reactive Streams）](#flow-and-reactive-streams)
 
 <!--- END -->
@@ -652,7 +652,7 @@ fun main() = runBlocking<Unit> {
 
 <!--- TEST FLEXIBLE_THREAD -->
 
-由于 `simple().collect` 是在主线程调用的，则 `simple` 的流主体也是在主线程调用的。
+由于 `simple().collect` 是在主线程调用的，那么 `simple` 的流主体也是在主线程调用的。
 这是快速运行或异步代码的理想默认形式，它不关心执行的上下文并且不会<!--
 -->阻塞调用者。
 
@@ -1779,10 +1779,10 @@ Event: 3
 注意，[launchIn] 也会返回一个 [Job]，可以在不取消整个作用域的情况下仅[取消][Job.cancel]相应的流收集<!--
 -->或对其进行 [join][Job.join]。
  
-### Flow cancellation checks
+### 流取消检测
 
-For convenience, the [flow] builder performs additional [ensureActive] checks for cancellation on each emitted value. 
-It means that a busy loop emitting from a `flow { ... }` is cancellable:
+为方便起见，[流][flow]构建器对每个发射值执行附加的 [ensureActive] 检测以进行取消。
+这意味着从 `flow { ... }` 发出的繁忙循环是可以取消的：
  
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -1809,9 +1809,9 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-37.kt).
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-37.kt)获取完整的代码。
 
-We get only numbers up to 3 and a [CancellationException] after trying to emit number 4:
+仅得到不超过 3 的数字，在尝试发出 4 之后抛出 [CancellationException]；
 
 ```text 
 Emitting 1
@@ -1826,9 +1826,9 @@ Exception in thread "main" kotlinx.coroutines.JobCancellationException: Blocking
 
 <!--- TEST EXCEPTION -->
 
-However, most other flow operators do not do additional cancellation checks on their own for performance reasons. 
-For example, if you use [IntRange.asFlow] extension to write the same busy loop and don't suspend anywhere, 
-then there are no checks for cancellation:
+但是，出于性能原因，大多数其他流操作不会自行执行其他取消检测。
+例如，如果使用 [IntRange.asFlow] 扩展来编写相同的繁忙循环，
+并且没有在任何地方暂停，那么就没有取消的检测；
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -1848,9 +1848,9 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-38.kt).
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-38.kt)获取完整的代码。
 
-All numbers from 1 to 5 are collected and cancellation gets detected only before return from `runBlocking`:
+收集从 1 到 5 的所有数字，并且仅在从 `runBlocking` 返回之前检测到取消：
 
 ```text
 1
@@ -1863,11 +1863,11 @@ Exception in thread "main" kotlinx.coroutines.JobCancellationException: Blocking
 
 <!--- TEST EXCEPTION -->
 
-#### Making busy flow cancellable 
+#### 让繁忙的流可取消
 
-In the case where you have a busy loop with coroutines you must explicitly check for cancellation.
-You can add `.onEach { currentCoroutineContext().ensureActive() }`, but there is a ready-to-use
-[cancellable] operator provided to do that:
+在协程处于繁忙循环的情况下，必须明确检测是否取消。
+可以添加 `.onEach { currentCoroutineContext().ensureActive() }`，
+但是这里提供了一个现成的 [cancellable] 操作符来执行此操作：
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -1887,9 +1887,9 @@ fun main() = runBlocking<Unit> {
 
 </div>
 
-> You can get the full code from [here](../kotlinx-coroutines-core/jvm/test/guide/example-flow-39.kt).
+> 可以在[这里](../kotlinx-coroutines-core/jvm/test/guide/example-flow-39.kt)获取完整的代码。
 
-With the `cancellable` operator only the numbers from 1 to 3 are collected:
+使用 `cancellable` 操作符，仅收集从 1 到 3 的数字：
 
 ```text
 1
