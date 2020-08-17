@@ -8,8 +8,8 @@
   * [调度器与线程](#调度器与线程)
   * [非受限调度器 vs 受限调度器](#非受限调度器-vs-受限调度器)
   * [调试协程与线程](#调试协程与线程)
-    * [Debugging with IDEA](#debugging-with-idea)
-    * [Debugging using logging](#debugging-using-logging)
+    * [用 IDEA 调试](#用-idea-调试)
+    * [用日志调试](#用日志调试)
   * [在不同线程间跳转](#在不同线程间跳转)
   * [上下文中的作业](#上下文中的作业)
   * [子协程](#子协程)
@@ -156,10 +156,10 @@ main runBlocking: After delay in thread main
 ### 调试协程与线程
 
 协程可以在一个线程上挂起并在其它线程上恢复。
-甚至一个单线程的调度器也是难以<!--
--->弄清楚协程在何时何地正在做什么事情 if you don't have special tooling. 
+如果没有特殊工具，甚至对于一个单线程的调度器也是难以<!--
+-->弄清楚协程在何时何地正在做什么事情。 
 
-#### Debugging with IDEA
+#### 用 IDEA 调试
 
 The Coroutine Debugger of the Kotlin plugin simplifies debugging coroutines in IntelliJ IDEA.
 
@@ -182,10 +182,10 @@ click **Get Coroutines Dump**.
 Learn more about debugging coroutines in [this blog post](https://blog.jetbrains.com/kotlin/2020/07/kotlin-1-4-rc-debugging-coroutines/)
 and [IntelliJ IDEA documentation](https://www.jetbrains.com/help/idea/debug-kotlin-coroutines.html).
 
-#### Debugging using logging
+#### 用日志调试
 
 另一种调试线程应用程序<!--
---> without Coroutine Debugger 的方法是让线程在每一个日志文件的日志声明中打印线程的名字。这种特性在日志框架中是<!--
+-->而不使用协程调试器的方法是让线程在每一个日志文件的日志声明中打印线程的名字。这种特性在日志框架中是<!--
 -->普遍受支持的。但是在使用协程时，单独的线程名称不会给出很多协程上下文信息，所以
 `kotlinx.coroutines` 包含了调试工具来让它更简单。
 
