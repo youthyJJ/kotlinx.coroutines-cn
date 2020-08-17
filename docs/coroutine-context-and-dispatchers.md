@@ -8,6 +8,8 @@
   * [调度器与线程](#调度器与线程)
   * [非受限调度器 vs 受限调度器](#非受限调度器-vs-受限调度器)
   * [调试协程与线程](#调试协程与线程)
+    * [Debugging with IDEA](#debugging-with-idea)
+    * [Debugging using logging](#debugging-using-logging)
   * [在不同线程间跳转](#在不同线程间跳转)
   * [上下文中的作业](#上下文中的作业)
   * [子协程](#子协程)
@@ -155,8 +157,35 @@ main runBlocking: After delay in thread main
 
 协程可以在一个线程上挂起并在其它线程上恢复。
 甚至一个单线程的调度器也是难以<!--
--->弄清楚协程在何时何地正在做什么事情。使用通常调试应用程序的方法是让<!--
--->线程在每一个日志文件的日志声明中打印线程的名字。这种特性在日志框架中是<!--
+-->弄清楚协程在何时何地正在做什么事情 if you don't have special tooling. 
+
+#### Debugging with IDEA
+
+The Coroutine Debugger of the Kotlin plugin simplifies debugging coroutines in IntelliJ IDEA.
+
+> Debugging works for versions 1.3.8 or later of `kotlinx-coroutines-core`.
+
+The **Debug Tool Window** contains a **Coroutines** tab. In this tab, you can find information about both currently 
+running and suspended coroutines. The coroutines are grouped by the dispatcher they are running on. 
+
+![Debugging coroutines](images/coroutine-debugger.png)
+
+You can:
+* Easily check the state of each coroutine.
+* See the values of local and captured variables for both running and suspended coroutines.
+* See a full coroutine creation stack, as well as a call stack inside the coroutine. The stack includes all frames with 
+variable values, even those that would be lost during standard debugging.
+
+If you need a full report containing the state of each coroutine and its stack, right-click inside the **Coroutines** tab, and then
+click **Get Coroutines Dump**.
+
+Learn more about debugging coroutines in [this blog post](https://blog.jetbrains.com/kotlin/2020/07/kotlin-1-4-rc-debugging-coroutines/)
+and [IntelliJ IDEA documentation](https://www.jetbrains.com/help/idea/debug-kotlin-coroutines.html).
+
+#### Debugging using logging
+
+另一种调试线程应用程序<!--
+--> without Coroutine Debugger 的方法是让线程在每一个日志文件的日志声明中打印线程的名字。这种特性在日志框架中是<!--
 -->普遍受支持的。但是在使用协程时，单独的线程名称不会给出很多协程上下文信息，所以
 `kotlinx.coroutines` 包含了调试工具来让它更简单。
 
