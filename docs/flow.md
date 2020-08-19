@@ -1463,13 +1463,15 @@ fun main() = runBlocking<Unit> {
  
 尽管有 `catch` 操作符，但不会打印“Caught ...”消息：
 
-<!--- TEST EXCEPTION  
+```text  
 Emitting 1
 1
 Emitting 2
 Exception in thread "main" java.lang.IllegalStateException: Collected 2
 	at ...
--->
+```
+
+<!--- TEST EXCEPTION -->
 
 #### 声明式捕获
 
@@ -1510,12 +1512,14 @@ fun main() = runBlocking<Unit> {
 现在我们可以看到已经打印了“Caught ...”消息，并且我们可以在没有显式使用
 `try/catch` 块的情况下捕获所有异常： 
 
-<!--- TEST EXCEPTION  
+```text 
 Emitting 1
 1
 Emitting 2
 Caught java.lang.IllegalStateException: Collected 2
--->
+```
+
+<!--- TEST EXCEPTION -->
 
 ### 流完成
 
