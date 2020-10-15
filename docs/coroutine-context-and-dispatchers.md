@@ -170,14 +170,14 @@ Kotlin 插件的协程调试器简化了 IntelliJ IDEA 中的协程调试.
 
 ![Debugging coroutines](images/coroutine-idea-debugging-1.png)
 
-使用协程调试器，您可以：
+使用协程调试器，你可以：
 * 检查每个协程的状态。
 * 查看正在运行的与挂起的的协程的局部变量以及捕获变量的值。
 * 查看完整的协程创建栈以及协程内部的调用栈。栈包含所有<!--
--->带有变量的栈帧, 甚至包含那些在标准调试期间会丢失的栈帧。
+-->带有变量的栈帧，甚至包含那些在标准调试期间会丢失的栈帧。
 * 获取包含每个协程的状态以及栈信息的完整报告。要获取它，请右键单击 **Coroutines** 选项卡，然后点击 **Get Coroutines Dump**。
 
-要开始协程调试，您只需要设置断点并在调试模式下运行应用程序即可。
+要开始协程调试，你只需要设置断点并在调试模式下运行应用程序即可。
 
 在这篇[教程](https://kotlinlang.org/docs/tutorials/coroutines/debug-coroutines-with-idea.html)中学习更多的协程调试知识。
 
@@ -529,8 +529,8 @@ class Activity {
 
 </div>
 
-Now, we can launch coroutines in the scope of this `Activity` using the defined `scope`.
-For the demo, we launch ten coroutines that delay for a different time:
+现在，我们可以使用定义的 `scope` 在这个 `Activity` 的作用域内启动协程。
+对于该示例，我们启动了十个协程，它们会延迟不同的时间：
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
 
