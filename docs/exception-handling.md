@@ -78,30 +78,30 @@ Caught ArithmeticException
 
 ### CoroutineExceptionHandler
 
-It is possible to customize the default behavior of printing **uncaught** exceptions to the console.
-[CoroutineExceptionHandler] context element on a _root_ coroutine can be used as generic `catch` block for
-this root coroutine and all its children where custom exception handling may take place.
-It is similar to [`Thread.uncaughtExceptionHandler`](https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html#setUncaughtExceptionHandler(java.lang.Thread.UncaughtExceptionHandler)).
-You cannot recover from the exception in the `CoroutineExceptionHandler`. The coroutine had already completed
-with the corresponding exception when the handler is called. Normally, the handler is used to
-log the exception, show some kind of error message, terminate, and/or restart the application.
+将**未捕获**异常打印到控制台的默认行为是可自定义的。
+*根*协程中的 [CoroutineExceptionHandler] 上下文元素可以被用于这个根协程<!--
+-->通用的 `catch` 块，及其所有可能自定义了异常处理的子协程。
+它类似于 [`Thread.uncaughtExceptionHandler`](https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html#setUncaughtExceptionHandler(java.lang.Thread.UncaughtExceptionHandler)) 。
+你无法从 `CoroutineExceptionHandler` 的异常中恢复。当调用处理者的时候，协程已经完成<!--
+-->并带有相应的异常。通常，该处理者用于<!--
+-->记录异常，显示某种错误消息，终止和（或）重新启动应用程序。
 
 在 JVM 中可以重定义一个全局的异常处理者来将所有的协程通过
 [`ServiceLoader`](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html) 注册到 [CoroutineExceptionHandler]。
 全局异常处理者就如同
 [`Thread.defaultUncaughtExceptionHandler`](https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html#setDefaultUncaughtExceptionHandler(java.lang.Thread.UncaughtExceptionHandler)) 
 一样，在没有更多的指定的异常处理者被注册的时候被使用。
-在 Android 中， `uncaughtExceptionPreHandler` 被设置在全局协程异常处理者中。
+在 Android 中，`uncaughtExceptionPreHandler` 被设置在全局协程异常处理者中。
 
-`CoroutineExceptionHandler` is invoked only on **uncaught** exceptions &mdash; exceptions that were not handled in any other way.
-In particular, all _children_ coroutines (coroutines created in the context of another [Job]) delegate handling of
-their exceptions to their parent coroutine, which also delegates to the parent, and so on until the root,
-so the `CoroutineExceptionHandler` installed in their context is never used. 
-In addition to that, [async] builder always catches all exceptions and represents them in the resulting [Deferred] object, 
-so its `CoroutineExceptionHandler` has no effect either.
+`CoroutineExceptionHandler` 仅在**未捕获**的异常上调用 &mdash; 没有以其他任何方式处理的异常。
+特别是，所有*子*协程（在另一个 [Job] 上下文中创建的协程）委托<!--
+它们的父协程处理它们的异常，然后它们也委托给其父协程，以此类推直到根协程，
+因此永远不会使用在其上下文中设置的 `CoroutineExceptionHandler`。
+除此之外，[async] 构建器始终会捕获所有异常并将其表示在结果 [Deferred] 对象中，
+因此它的 `CoroutineExceptionHandler` 也无效。
 
-> Coroutines running in supervision scope do not propagate exceptions to their parent and are
-excluded from this rule. A further [Supervision](#supervision) section of this document gives more details.  
+> 在监督作用域内运行的协程不会将异常传播到其父协程，并且<!--
+-->会从此规则中排除。本文档的另一个小节——[监督](#监督)提供了更多细节。
 
 <div class="sample" markdown="1" theme="idea" data-min-compiler-version="1.3">
 
@@ -113,10 +113,10 @@ fun main() = runBlocking {
     val handler = CoroutineExceptionHandler { _, exception -> 
         println("CoroutineExceptionHandler got $exception") 
     }
-    val job = GlobalScope.launch(handler) { // root coroutine, running in GlobalScope
+    val job = GlobalScope.launch(handler) { // 根协程，运行在 GlobalScope 中
         throw AssertionError()
     }
-    val deferred = GlobalScope.async(handler) { // also root, but async instead of launch
+    val deferred = GlobalScope.async(handler) { // 同样是根协程，但使用 async 代替了 launch
         throw ArithmeticException() // 没有打印任何东西，依赖用户去调用 deferred.await()
     }
     joinAll(job, deferred)

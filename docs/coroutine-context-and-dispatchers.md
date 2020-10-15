@@ -161,25 +161,25 @@ main runBlocking: After delay in thread main
 
 #### 用 IDEA 调试
 
-The Coroutine Debugger of the Kotlin plugin simplifies debugging coroutines in IntelliJ IDEA.
+Kotlin 插件的协程调试器简化了 IntelliJ IDEA 中的协程调试.
 
-> Debugging works for versions 1.3.8 or later of `kotlinx-coroutines-core`.
+> 调试适用于 1.3.8 或更高版本的 `kotlinx-coroutines-core`。
 
-The **Debug** tool window contains the **Coroutines** tab. In this tab, you can find information about both currently running and suspended coroutines. 
-The coroutines are grouped by the dispatcher they are running on.
+**调试**工具窗口包含 **Coroutines** 标签。在这个标签中，你可以同时找到运行中与已挂起的协程的相关信息。
+这些协程以它们所运行的调度器进行分组。
 
 ![Debugging coroutines](images/coroutine-idea-debugging-1.png)
 
-With the coroutine debugger, you can:
-* Check the state of each coroutine.
-* See the values of local and captured variables for both running and suspended coroutines.
-* See a full coroutine creation stack, as well as a call stack inside the coroutine. The stack includes all frames with 
-variable values, even those that would be lost during standard debugging.
-* Get a full report that contains the state of each coroutine and its stack. To obtain it, right-click inside the **Coroutines** tab, and then click **Get Coroutines Dump**.
+使用协程调试器，你可以：
+* 检查每个协程的状态。
+* 查看正在运行的与挂起的的协程的局部变量以及捕获变量的值。
+* 查看完整的协程创建栈以及协程内部的调用栈。栈包含所有<!--
+-->带有变量的栈帧，甚至包含那些在标准调试期间会丢失的栈帧。
+* 获取包含每个协程的状态以及栈信息的完整报告。要获取它，请右键单击 **Coroutines** 选项卡，然后点击 **Get Coroutines Dump**。
 
-To start coroutine debugging, you just need to set breakpoints and run the application in debug mode.
+要开始协程调试，你只需要设置断点并在调试模式下运行应用程序即可。
 
-Learn more about coroutines debugging in the [tutorial](https://kotlinlang.org/docs/tutorials/coroutines/debug-coroutines-with-idea.html).
+在这篇[教程](https://kotlinlang.org/docs/tutorials/coroutines/debug-coroutines-with-idea.html)中学习更多的协程调试知识。
 
 #### 用日志调试
 
@@ -529,8 +529,8 @@ class Activity {
 
 </div>
 
-Now, we can launch coroutines in the scope of this `Activity` using the defined `scope`.
-For the demo, we launch ten coroutines that delay for a different time:
+现在，我们可以使用定义的 `scope` 在这个 `Activity` 的作用域内启动协程。
+对于该示例，我们启动了十个协程，它们会延迟不同的时间：
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
 
