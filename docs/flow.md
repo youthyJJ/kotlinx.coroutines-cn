@@ -209,7 +209,7 @@ I'm not blocked 3
 * 流使用 [emit][FlowCollector.emit] 函数 _发射_ 值。 
 * 流使用 [collect][collect] 函数 _收集_ 值。
 
-> 我们可以在 `simple` 的 `flow { ... }` 函数体内使用 [delay] 代替 `Thread.sleep`
+> 我们可以在 `simple` 的 `flow { ... }` 函数体内使用 `Thread.sleep` 代替 [delay]
 以观察主线程在本案例中被阻塞了。
 
 ### 流是冷的
