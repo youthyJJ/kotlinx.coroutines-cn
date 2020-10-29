@@ -413,9 +413,9 @@ The second child is cancelled because the supervisor was cancelled
 
 #### 监督作用域
 
-对于*作用域*的并发，可以用 [supervisorScope] 来替代 [coroutineScope] 来实现相同的目的。它只会单向的传播<!--
+对于*作用域*的并发，可以用 [supervisorScope][_supervisorScope] 来替代 [coroutineScope][_coroutineScope] 来实现相同的目的。它只会单向的传播<!--
 -->并且当作业自身执行失败的时候将所有子作业全部取消。作业自身也会在所有的子作业执行结束前等待，
-就像 [coroutineScope] 所做的那样。
+就像 [coroutineScope][_coroutineScope] 所做的那样。
 
 <div class="sample" markdown="1" theme="idea" data-highlight-only>
 
@@ -464,7 +464,7 @@ Caught an assertion error
 常规的作业和监督作业之间的另一个重要区别是异常处理。
 监督协程中的每一个子作业应该通过异常处理机制处理自身的异常。
 这种差异来自于子作业的执行失败不会传播给它的父作业的事实。
-这意味着在 [supervisorScope] 内部直接启动的协程*确实*使用了<!--
+这意味着在 [supervisorScope][_supervisorScope] 内部直接启动的协程*确实*使用了<!--
 -->设置在它们作用域内的 [CoroutineExceptionHandler]，与父协程的方式相同
 （参见 [CoroutineExceptionHandler](#coroutineexceptionhandler) 小节以获知更多细节）。
 
@@ -517,8 +517,8 @@ The scope is completed
 [runBlocking]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/run-blocking.html
 [SupervisorJob()]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-supervisor-job.html
 [Job()]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-job.html
-[coroutineScope]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/coroutine-scope.html
-[supervisorScope]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/supervisor-scope.html
+[_coroutineScope]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/coroutine-scope.html
+[_supervisorScope]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/supervisor-scope.html
 <!--- INDEX kotlinx.coroutines.channels -->
 [actor]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/actor.html
 [produce]: https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/produce.html
